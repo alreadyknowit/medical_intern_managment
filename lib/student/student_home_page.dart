@@ -1,36 +1,29 @@
+
 import 'package:flutter/material.dart';
-import 'form_data.dart';
-import 'constants.dart';
+import 'package:internship_managing_system/models/new_form_add.dart';
+import 'package:internship_managing_system/student/student_profile.dart';
+import 'package:internship_managing_system/models/form_data.dart';
+import '../constants.dart';
 
-void main() {
-  runApp(const InternshipManagingSystem());
-}
+class StudentHomePage extends StatefulWidget {
 
-class InternshipManagingSystem extends StatelessWidget {
-  const InternshipManagingSystem({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  StudentHomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<StudentHomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  String _valueEtkilesim = "Gözlem";
-  String _valueKapsam = "Öykü";
-  String _valueOrtam = "Poliklinik";
-  String _valueDoktor = "Esra Demir";
-  String _valueStajTuru = "Ortopedi";
-  String _valueCinsiyet = "Diğer";
+class _HomePageState extends State<StudentHomePage> {
+
+  final FormAdd _formAdd = FormAdd();
+   FormData _formData=FormData();
+
+  final String _valueEtkilesim = "Gözlem";
+  final String _valueKapsam = "Öykü";
+  final String _valueOrtam = "Poliklinik";
+//  String _valueDoktor = "Esra Demir";
+  final String _valueStajTuru = "Ortopedi";
+  final String _valueCinsiyet = "Diğer";
   final String hintTextCinsiyet = "Cinsiyet:";
   final String hintTextStajTuru = "Staj Türü:";
   final String hintTextEtkilesim = "Etkileşim Türü:";
@@ -38,41 +31,43 @@ class _HomePageState extends State<HomePage> {
   final String hintTextOrtam = "Gerçekleştiği Ortam:";
   final String hintTextDoktor = "Klinik Eğitici:";
 
-  void onChangedCinsiyet(String? newVal) {
+  void onChangedCinsiyet(String newVal) {
     setState(() {
-      _valueCinsiyet = newVal!;
+     _formData.setCinsiyet(newVal);
     });
   }
 
   void onChangedStajTuru(String? newVal) {
     setState(() {
-      _valueStajTuru = newVal!;
+      _formData.setStajTuru(newVal!);
     });
   }
 
-  void onChangedEtkilesim(String? newVal) {
+  void onChangedEtkilesim(String newVal) {
     setState(() {
-      _valueEtkilesim = newVal!;
+      _formData.setEtkilesimTuru(newVal);
     });
   }
 
-  void onChangedKapsam(String? newVal) {
+  void onChangedKapsam(String newVal) {
     setState(() {
-      _valueKapsam = newVal!;
+      _formData.setKapsam(newVal);
     });
   }
 
-  void onChangedOrtam(String? newVal) {
+  void onChangedOrtam(String newVal) {
     setState(() {
-      _valueOrtam = newVal!;
+
+     _formData.setOrtam(newVal);
     });
   }
-
+/*
   void onChangedDoktor(String? newVal) {
     setState(() {
-      _valueDoktor = newVal!;
+      _formData.set = newVal!;
     });
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +108,11 @@ class _HomePageState extends State<HomePage> {
       "Fehmi Öztürk",
       "Mehmet Öz"
     ];
+
     return Scaffold(
       backgroundColor: const Color(0xffC9A7E3),
       appBar: AppBar(
-        //  backgroundColor: Colors.teal.shade400,
+               //  backgroundColor: Colors.teal.shade400,
         title: const Text('Hasta Etkileşim Kaydı'),
         centerTitle: true,
         backgroundColor: const Color(0xffB27FDA),
@@ -124,62 +120,61 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
           child: Center(
-        child: ListView(
-          children: [
-            myTextFieldRow("Kayıt No: ", 10),
-            myDropDownContainer(_valueStajTuru, _stajTuruItems,
-                hintTextStajTuru, onChangedStajTuru),
-            myDropDownContainer(
-                _valueDoktor, _doktorItems, hintTextDoktor, onChangedDoktor),
-            myTextFieldRow("Hastanın Yaşı:", 3),
-            myDropDownContainer(_valueCinsiyet, _cinsiyetItems,
-                hintTextCinsiyet, onChangedCinsiyet),
-            myTextFieldRow("Şikayet:", 50),
-            myTextFieldRow("Ayırıcı Tanı:", 50),
-            myTextFieldRow("Kesin Tanı:", 50),
-            myTextFieldRow("Tedavi Yöntemi:", 100),
-            myDropDownContainer(_valueEtkilesim, _etkilesimTuruItems,
-                hintTextEtkilesim, onChangedEtkilesim),
-            myDropDownContainer(
-                _valueKapsam, _kapsamItems, hintTextKapsam, onChangedKapsam),
-            myDropDownContainer(
-                _valueOrtam, _ortamItems, hintTextOrtam, onChangedOrtam),
-           const SizedBox(height: 20,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            child: ListView(
               children: [
-                SizedBox(
-            width: 150,
-                  height: 50,
-                  child: TextButton(
+                myTextFieldRow("Kayıt No: ", 10,_formData.setKayitNo),
+                myDropDownContainer(_valueStajTuru, _stajTuruItems,
+                    hintTextStajTuru, onChangedStajTuru),
+               // myDropDownContainer(_valueDoktor, _doktorItems, hintTextDoktor, onChangedDoktor),
+                myTextFieldRow("Hastanın Yaşı:", 3, _formData.setYas),
+                myDropDownContainer(_valueCinsiyet, _cinsiyetItems, hintTextCinsiyet, onChangedCinsiyet),
+                myTextFieldRow("Şikayet:", 10,_formData.setSikayet),
+                myTextFieldRow("Ayırıcı Tanı:", 50,_formData.setAyiriciTani),
+                myTextFieldRow("Kesin Tanı:", 50,_formData.setKesinTani),
+                myTextFieldRow("Tedavi Yöntemi:", 100,_formData.setTedaviYontemi),
+                myDropDownContainer(_valueEtkilesim, _etkilesimTuruItems, hintTextEtkilesim, onChangedEtkilesim),
+                myDropDownContainer(_valueKapsam, _kapsamItems, hintTextKapsam, onChangedKapsam),
+                myDropDownContainer(_valueOrtam, _ortamItems, hintTextOrtam, onChangedOrtam),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      height: 50,
+                      child: TextButton(
+                        onPressed: () {
+                        setState(() {
 
-                    onPressed: () {
-                      setState(() {
+                          _formAdd.addNewFormToList(_formData);
+                          _formData=FormData();
 
-                      });
-                    },
-                    child: Text(
-                      "GÖNDER",
-                      style: kTextStyle.copyWith(fontSize: 20),
-                    ),
-                    style: ButtonStyle(
-
-
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xff4F4DBB),
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> StudentProfile(formAdd: _formAdd)));
+                        });
+                        },
+                        child: Text(
+                          "GÖNDER",
+                          style: kTextStyle.copyWith(fontSize: 20),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xff4F4DBB),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      )),
+          )),
     );
   }
+  //TextFieldWidget
+  Row myTextFieldRow(String text, int? maxLength,Function function) {
 
-  Row myTextFieldRow(String text, int? maxLength) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -193,6 +188,9 @@ class _HomePageState extends State<HomePage> {
         Expanded(
           child: TextField(
             focusNode: FocusNode(),
+            onChanged: (input){
+             function(input);
+            },
             autofocus: false,
             style: kTextStyle,
             maxLength: maxLength,
@@ -203,16 +201,15 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.all(Radius.circular(3))),
               //labelText: text,
               labelStyle:
-                  kTextStyle.copyWith(fontSize: 12, color: Colors.white54),
+              kTextStyle.copyWith(fontSize: 12, color: Colors.white54),
             ),
           ),
         ),
       ],
     );
   }
-
-  Container myDropDownContainer(
-      String initialVal, List<String> listItems, String text, Function myFunc) {
+//DropDownWidget
+  Container myDropDownContainer(String initialVal, List<String> listItems, String text, Function myFunc) {
     return Container(
       margin: const EdgeInsets.all(8),
       child: Row(
@@ -234,7 +231,7 @@ class _HomePageState extends State<HomePage> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     isExpanded: false,
-                    onTap: () => myFunc(initialVal),
+                    onTap: () => myFunc(),
                     borderRadius: BorderRadius.circular(5),
                     value: initialVal,
                     icon: const Icon(
@@ -247,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                     style: kTextStyle.copyWith(color: Colors.black),
                     onChanged: (val) => myFunc(val),
                     items:
-                        listItems.map<DropdownMenuItem<String>>((String val) {
+                    listItems.map<DropdownMenuItem<String>>((String val) {
                       return DropdownMenuItem(
                         value: val,
                         child: Text(
