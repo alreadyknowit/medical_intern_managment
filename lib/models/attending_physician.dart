@@ -1,4 +1,4 @@
-import 'package:internship_managing_system/user.dart';
+import 'package:internship_managing_system/models/user.dart';
 
 class AttendingPhysician extends User{
   String name;

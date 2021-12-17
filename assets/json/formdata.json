@@ -1,0 +1,13 @@
+[
+
+
+  {
+    "stajTuru": [  "Ortopedi", "Kardiyoloji","Dermatoloji", "Pediatri"],
+    "cinsiyet": ["Erkek","Kadın", "Diğer"],
+    "etkilesimTuru": [  "Gözlem", "Yardımla yapma","Yardımsız yapma","Sanal olgu"],
+    "kapsam": [  "Öykü", "Fizik Bakı", "Tanısal akıl Yürütme", "Teropötik akıl yürütme"],
+    "ortam": ["Poliklinik","Servis","Acil","Ameliyathane","Dış Kurum"],
+    "doktor": [ "Diğer", "Esra Demir","Mehmet Uçar","Kemal Yurdakul","Fehmi Öztürk","Mehmet Öz"]
+  }
+
+]
