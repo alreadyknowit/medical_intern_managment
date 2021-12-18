@@ -106,7 +106,7 @@ class _HomePageState extends State<StudentHomePage> {
                       myTextFieldRow("Kayıt No: ", 10, _formData.setKayitNo),
                       myDropDownContainer(_valueStajTuru, listStajTuru,
                           hintTextStajTuru, onChangedStajTuru),
-                       myDropDownContainer(_valueDoktor, listDoktor, hintTextDoktor, onChangedDoktor),
+                      myDropDownContainer(_valueDoktor, listDoktor, hintTextDoktor, onChangedDoktor),
                       myTextFieldRow("Hastanın Yaşı:", 3, _formData.setYas),
                       myDropDownContainer(_valueCinsiyet, listCinsiyet,
                           hintTextCinsiyet, onChangedCinsiyet),
@@ -150,7 +150,7 @@ class _HomePageState extends State<StudentHomePage> {
                               ),
                               style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(
+                                MaterialStateProperty.all<Color>(
                                   const Color(0xff4F4DBB),
                                 ),
                               ),
@@ -171,7 +171,7 @@ class _HomePageState extends State<StudentHomePage> {
 
   Future<List<FormContent>> readJsonData() async {
     final jsonData =
-        await rootBundle.rootBundle.loadString('assets/json/formdata.json');
+    await rootBundle.rootBundle.loadString('assets/json/formdata.json');
     return [
       for (final e in json.decode(jsonData)) FormContent.fromJson(e),
     ];
@@ -205,7 +205,7 @@ class _HomePageState extends State<StudentHomePage> {
                   borderRadius: BorderRadius.all(Radius.circular(3))),
               //labelText: text,
               labelStyle:
-                  kTextStyle.copyWith(fontSize: 12, color: Colors.white54),
+              kTextStyle.copyWith(fontSize: 12, color: Colors.white54),
             ),
           ),
         ),
@@ -249,7 +249,7 @@ class _HomePageState extends State<StudentHomePage> {
                     style: kTextStyle.copyWith(color: Colors.black),
                     onChanged: (val) => myFunc(val),
                     items:
-                        listItems.map<DropdownMenuItem<String>>((String val) {
+                    listItems.map<DropdownMenuItem<String>>((String val) {
                       return DropdownMenuItem(
                         value: val,
                         child: Text(
