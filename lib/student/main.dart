@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/student/student_home_page.dart';
+import 'package:internship_managing_system/student/side_bar.dart';
+
 
 
 
@@ -22,7 +23,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StudentHomePage();
+    return SideBar();
   }
 }
 

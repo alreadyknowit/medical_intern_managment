@@ -4,15 +4,9 @@ import 'package:internship_managing_system/models/form_data.dart';
 
 class FormPage extends StatelessWidget {
 FormData formData= FormData();
-
 FormPage({Key? key, required this.formData}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return Scaffold(
       backgroundColor: Colors.grey[850],
       appBar: AppBar(

@@ -7,10 +7,9 @@ import 'package:internship_managing_system/models/form_data.dart';
 import 'form_page.dart';
 
 class StudentProfile extends StatelessWidget {
-  FormAdd formAdd;
+   FormAdd formAdd =  FormAdd();
   StudentProfile({required this.formAdd});
   final PageController _pageController = PageController(initialPage: 0);
-
   @override
   Widget build(BuildContext context) {
     // formAdd.addNewFormToList(widget.form);
