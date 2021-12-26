@@ -2,66 +2,78 @@ import 'package:flutter/cupertino.dart';
 import 'package:internship_managing_system/models/attending_physician.dart';
 
 class FormData {
-  late String kayitNo;
-  late String stajTuru;
-  late String doktor; //TODO: Convert string to AttendingPhysician type object
+   String? _kayitNo;
+   String? _stajTuru;
+   String? _doktor; //TODO: Convert string to AttendingPhysician type object
   // late AttendingPhysician klinikEgitici;
-  late String yas; // TODO: Convert to string later
-  late String cinsiyet;
-  late String sikayet;
-  late String ayiriciTani;
-  late String kesinTani;
-  late String tedaviYontemi;
-  late String etkilesimTuru;
-  late String kapsam;
-  late String gerceklestigiOrtam;
+   String? _yas; // TODO: Convert to string later
+   String? _cinsiyet;
+   String? _sikayet;
+   String? _ayiriciTani;
+   String? _kesinTani;
+   String? _tedaviYontemi;
+   String? _etkilesimTuru;
+   String? _kapsam;
+   String? _gerceklestigiOrtam;
   //DateTime tarih;
 
+    String getKayitNo()=>_kayitNo!;
+    String getStajTuru()=>_stajTuru!;
+    String getDoktor()=>_doktor!;
+    String getYas()=>_yas!;
+    String getCinsiyet()=>_cinsiyet!;
+    String getSikayet()=>_sikayet!;
+    String getAyiriciTani()=>_ayiriciTani!;
+    String getKesinTani()=>_kesinTani!;
+    String getTedaviYontemi()=>_tedaviYontemi!;
+    String getEtkilesimTuru()=>_etkilesimTuru!;
+    String getKapsam()=>_kapsam!;
+    String getOrtam()=>_gerceklestigiOrtam!;
   void setStajTuru(String stajTuru) {
-    this.stajTuru = stajTuru;
+    _stajTuru = stajTuru;
   }
 
   void setCinsiyet(String cinsiyet) {
-    this.cinsiyet = cinsiyet;
+    _cinsiyet = cinsiyet;
   }
 
   void setEtkilesimTuru(String etkilesim) {
-    etkilesimTuru = etkilesim;
+    _etkilesimTuru = etkilesim;
   }
 
   void setKapsam(String kapsam) {
-    this.kapsam = kapsam;
+    _kapsam = kapsam;
   }
 
   void setOrtam(String ortam) {
-    gerceklestigiOrtam = ortam;
+    _gerceklestigiOrtam = ortam;
   }
 
   void setKayitNo(String kayitNo) {
-    this.kayitNo = kayitNo;
+    _kayitNo = kayitNo;
   }
 
   void setYas(String yas) {
-    this.yas = yas;
+    _yas = yas;
   }
 
   void setSikayet(String sikayet) {
-    this.sikayet = sikayet;
+    _sikayet = sikayet;
   }
 
   void setAyiriciTani(String ayiriciTani) {
-    this.ayiriciTani = ayiriciTani;
+    _ayiriciTani = ayiriciTani;
   }
 
   void setKesinTani(String kesinTani) {
-    this.kesinTani = kesinTani;
+    _kesinTani = kesinTani;
   }
 
   void setTedaviYontemi(String tedaviYontemi) {
-    this.tedaviYontemi = tedaviYontemi;
+    _tedaviYontemi = tedaviYontemi;
   }
   void setDoktor(String doktor){
-    this.doktor=doktor;
+    _doktor=doktor;
 
   }
 /*

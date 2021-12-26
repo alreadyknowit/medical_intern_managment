@@ -13,7 +13,7 @@ FormPage({Key? key, required this.formData}) : super(key: key);
         titleSpacing: 1.5,
         centerTitle: true,
         title:  Text(
-          formData.kayitNo,
+          formData.getKayitNo(),
           style: kTextStyle,
         ),
       ),
@@ -24,18 +24,18 @@ FormPage({Key? key, required this.formData}) : super(key: key);
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            studentFormPageRowInstance('Kayit No', formData.kayitNo),
-            studentFormPageRowInstance('Staj Türü', formData.stajTuru),
-            studentFormPageRowInstance('Klinik Eğitici', formData.doktor), //TODO implement attending physician
-            studentFormPageRowInstance('Hastanın Yaşı', formData.yas),
-            studentFormPageRowInstance('Cinsiyet', formData.cinsiyet),
-            studentFormPageRowInstance('Şikayet', formData.sikayet),
-            studentFormPageRowInstance('Ayırıcı Tanı', formData.ayiriciTani),
-            studentFormPageRowInstance('Kesin Tanı', formData.kesinTani),
-            studentFormPageRowInstance('Tedavi Yönetimi', formData.tedaviYontemi),
-            studentFormPageRowInstance('Kapsamı', formData.kapsam),
-            studentFormPageRowInstance('Etkileşim Türü', formData.etkilesimTuru),
-            studentFormPageRowInstance('Gerçekleştiği Ortam', formData.gerceklestigiOrtam),
+            studentFormPageRowInstance('Kayit No', formData.getKayitNo()),
+            studentFormPageRowInstance('Staj Türü', formData.getStajTuru()),
+            studentFormPageRowInstance('Klinik Eğitici', formData.getDoktor()), //TODO implement attending physician
+            studentFormPageRowInstance('Hastanın Yaşı', formData.getYas()),
+            studentFormPageRowInstance('Cinsiyet', formData.getCinsiyet()),
+            studentFormPageRowInstance('Şikayet', formData.getSikayet()),
+            studentFormPageRowInstance('Ayırıcı Tanı', formData.getAyiriciTani()),
+            studentFormPageRowInstance('Kesin Tanı', formData.getKesinTani()),
+            studentFormPageRowInstance('Tedavi Yönetimi', formData.getTedaviYontemi()),
+            studentFormPageRowInstance('Kapsamı', formData.getKapsam()),
+            studentFormPageRowInstance('Etkileşim Türü', formData.getEtkilesimTuru()),
+            studentFormPageRowInstance('Gerçekleştiği Ortam', formData.getOrtam()),
             studentFormPageRowInstance('Tarih', '10.12.2021'), // TODO implement date
           ],
         ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/models/new_form_add.dart';
+import 'package:internship_managing_system/student/saved_forms.dart';
 import 'package:internship_managing_system/student/student_home_page.dart';
-import 'package:internship_managing_system/student/student_profile.dart';
+import 'package:internship_managing_system/student/student_forms.dart';
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
 
@@ -10,7 +11,7 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  var currentPage = DrawerSections.formlarim;
+  var currentPage = DrawerSections.taslaklar;
 
  @override
   Widget build(BuildContext context) {
@@ -19,8 +20,8 @@ class _SideBarState extends State<SideBar> {
    var container;
    if (currentPage == DrawerSections.hastaEtkilesim) {
      container = StudentHomePage();
-   } else if (currentPage == DrawerSections.formlarim) {
-     container = StudentProfile(formAdd: formAdd,); //TODO: FormAdd kaldır.
+   } else if (currentPage == DrawerSections.taslaklar) {
+     container = const SavedForms(); //TODO: FormAdd kaldır.
    }
 
     return  Scaffold(
@@ -50,8 +51,8 @@ class _SideBarState extends State<SideBar> {
               currentPage == DrawerSections.hastaEtkilesim ? true : false),
           menuItem(2, "Tıbbi Uygulama Kaydı", Icons.local_hospital,
               currentPage == DrawerSections.tibbiUygulama ? true : false),
-          menuItem(3, "Formlarım", Icons.event,
-              currentPage == DrawerSections.formlarim ? true : false),
+          menuItem(3, "Taslaklar", Icons.event,
+              currentPage == DrawerSections.taslaklar ? true : false),
           const Divider(),
           menuItem(4, "Settings", Icons.settings_outlined,
               currentPage == DrawerSections.settings ? true : false),
@@ -80,7 +81,7 @@ class _SideBarState extends State<SideBar> {
             } else if (id == 2) {
               currentPage = DrawerSections.tibbiUygulama;
             } else if (id == 3) {
-              currentPage = DrawerSections.formlarim;
+              currentPage = DrawerSections.taslaklar;
             } else if (id == 4) {
               currentPage = DrawerSections.settings;
             } else if (id == 5) {
@@ -123,7 +124,7 @@ class _SideBarState extends State<SideBar> {
 enum DrawerSections {
   hastaEtkilesim,
   tibbiUygulama,
-  formlarim,
+  taslaklar,
   notes,
   settings,
   notifications,
