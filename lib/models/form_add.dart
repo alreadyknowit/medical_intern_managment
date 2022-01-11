@@ -9,5 +9,16 @@ class FormAdd with ChangeNotifier{
     _list.add(form);
     notifyListeners();
   }
+
+
+  void updateUserList(int index,FormData data){
+    _list.removeAt(index);
+    _list.insert(index, data);
+    notifyListeners();
+  }
+  void deleteFormInstance(int index){
+    _list.removeAt(index);
+    notifyListeners();
+  }
   List<FormData> getForms()=>_list;
 }

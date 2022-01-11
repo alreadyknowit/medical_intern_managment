@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/constants.dart';
-import 'package:internship_managing_system/student/student_home_page.dart';
+import 'package:internship_managing_system/student/form_page.dart';
 
 class ApprovedPage extends StatelessWidget {
   const ApprovedPage({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class ApprovedPage extends StatelessWidget {
               margin: const EdgeInsets.all(12),
               child: TextButton(
                 onPressed: () => Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => StudentHomePage())),
+                    MaterialPageRoute(builder: (context) => FormPage())),
                 child: Text(
                   "Anasayfaya dön",
                   style: kTextStyle.copyWith(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/new_form_add.dart';
-import 'package:internship_managing_system/student/saved_forms.dart';
-import 'package:internship_managing_system/student/student_home_page.dart';
-import 'package:internship_managing_system/student/student_forms.dart';
+import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/form_page.dart';
+import 'package:internship_managing_system/student/drafts.dart';
+import 'package:provider/provider.dart';
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
 
@@ -15,13 +15,11 @@ class _SideBarState extends State<SideBar> {
 
  @override
   Widget build(BuildContext context) {
-   FormAdd formAdd =  FormAdd();
-
-   var container;
+   dynamic container;
    if (currentPage == DrawerSections.hastaEtkilesim) {
-     container = StudentHomePage();
+     container = const FormPage();
    } else if (currentPage == DrawerSections.taslaklar) {
-     container = const SavedForms(); //TODO: FormAdd kaldır.
+     container =   Drafts(); //TODO: FormAdd kaldır.
    }
 
     return  Scaffold(

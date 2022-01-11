@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:internship_managing_system/models/attending_physician.dart';
 
-class FormData {
+
+import 'package:flutter/cupertino.dart';
+
+
+class FormData  with ChangeNotifier{
    String? _kayitNo;
    String? _stajTuru;
    String? _doktor; //TODO: Convert string to AttendingPhysician type object
@@ -17,82 +19,76 @@ class FormData {
    String? _gerceklestigiOrtam;
   //DateTime tarih;
 
-    String getKayitNo()=>_kayitNo!;
-    String getStajTuru()=>_stajTuru!;
-    String getDoktor()=>_doktor!;
-    String getYas()=>_yas!;
-    String getCinsiyet()=>_cinsiyet!;
-    String getSikayet()=>_sikayet!;
-    String getAyiriciTani()=>_ayiriciTani!;
-    String getKesinTani()=>_kesinTani!;
-    String getTedaviYontemi()=>_tedaviYontemi!;
-    String getEtkilesimTuru()=>_etkilesimTuru!;
-    String getKapsam()=>_kapsam!;
-    String getOrtam()=>_gerceklestigiOrtam!;
+    String getKayitNo()=>_kayitNo ?? "";
+    String getStajTuru()=>_stajTuru ?? "Diğer";
+    String getDoktor()=>_doktor ?? "Diğer";
+    String getYas()=>_yas ?? "";
+    String getCinsiyet()=>_cinsiyet ??  "Diğer";
+    String getSikayet()=>_sikayet ?? "";
+    String getAyiriciTani()=>_ayiriciTani ?? "";
+    String getKesinTani()=>_kesinTani ?? "";
+    String getTedaviYontemi()=>_tedaviYontemi ?? "";
+    String getEtkilesimTuru()=>_etkilesimTuru ?? "Gözlem";
+    String getKapsam()=>_kapsam  ?? "Öykü";
+    String getOrtam()=>_gerceklestigiOrtam ?? "Poliklinik";
+
   void setStajTuru(String stajTuru) {
     _stajTuru = stajTuru;
+    notifyListeners();
   }
 
   void setCinsiyet(String cinsiyet) {
     _cinsiyet = cinsiyet;
+    notifyListeners();
   }
 
   void setEtkilesimTuru(String etkilesim) {
     _etkilesimTuru = etkilesim;
+    notifyListeners();
   }
 
   void setKapsam(String kapsam) {
     _kapsam = kapsam;
+    notifyListeners();
   }
 
   void setOrtam(String ortam) {
     _gerceklestigiOrtam = ortam;
+    notifyListeners();
   }
 
   void setKayitNo(String kayitNo) {
     _kayitNo = kayitNo;
+    notifyListeners();
   }
 
   void setYas(String yas) {
     _yas = yas;
+    notifyListeners();
   }
 
   void setSikayet(String sikayet) {
     _sikayet = sikayet;
+    notifyListeners();
   }
 
   void setAyiriciTani(String ayiriciTani) {
     _ayiriciTani = ayiriciTani;
+    notifyListeners();
   }
 
   void setKesinTani(String kesinTani) {
     _kesinTani = kesinTani;
+    notifyListeners();
   }
 
   void setTedaviYontemi(String tedaviYontemi) {
     _tedaviYontemi = tedaviYontemi;
+    notifyListeners();
   }
   void setDoktor(String doktor){
     _doktor=doktor;
+    notifyListeners();
 
   }
-/*
-  FormData.fromJson(Map<String,dynamic> jsonFile){
-
-  }
-*/
-/*
-  FormData(
-      {required this.ayiriciTani,
-      required this.cinsiyet,
-      required this.etkilesimTuru,
-      required this.gerceklestigiOrtam,
-      required this.kapsam,
-      required this.kayitNo,
-      required this.kesinTani,
-      required this.klinikEgitici,
-      required this.sikayet,
-      required this.stajTuru,
-      required this.tedaviYontemi,
-      required this.yas});*/
 }

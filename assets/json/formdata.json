@@ -2,7 +2,7 @@
 
 
   {
-    "stajTuru": [  "Ortopedi", "Kardiyoloji","Dermatoloji", "Pediatri"],
+    "stajTuru": [  "Ortopedi", "Kardiyoloji","Dermatoloji", "Pediatri", "Diğer"],
     "cinsiyet": ["Erkek","Kadın", "Diğer"],
     "etkilesimTuru": [  "Gözlem", "Yardımla yapma","Yardımsız yapma","Sanal olgu"],
     "kapsam": [  "Öykü", "Fizik Bakı", "Tanısal akıl Yürütme", "Teropötik akıl yürütme"],
