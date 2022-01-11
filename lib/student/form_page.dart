@@ -3,6 +3,7 @@ import 'package:internship_managing_system/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_content_list.dart';
 import 'package:internship_managing_system/models/form_add.dart';
 import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/services/DbService.dart';
 import 'package:internship_managing_system/shared.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
@@ -16,6 +17,30 @@ class FormPage extends StatefulWidget {
 }
 
 class _HomePageState extends State<FormPage> {
+  final DbService _db = DbService();
+  Future<FormData>? _futureFormData;
+  void handleSave(){
+    setState(() {
+      if (formArguments != null) {
+        print("form arg is not null");
+        Provider.of<FormAdd>(context, listen: false)
+            .updateUserList(index!, _formData);
+      } else {
+        print("this one executed");
+        Provider.of<FormAdd>(context, listen: false)
+            .addNewFormToList(_formData);
+      }
+
+      alertDialog(context).then((_) => _formKey.currentState!.reset());
+    });
+  }
+  void handleSubmit(){
+  setState(() {
+    _futureFormData= _db.createForm(_kayit.text,_valueStajTuru,_valueDoktor,_yas.text,_valueCinsiyet,_sikayet.text,_ayirici.text,_kesin.text,_tedavi.text,_valueOrtam,_valueEtkilesim,_valueKapsam);
+    print("Form gönderildi");
+  });
+  }
+
   String? isEmpty(String val) {
     String? text;
     setState(() {
@@ -111,8 +136,8 @@ class _HomePageState extends State<FormPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            submitButton(context, "Taslağa At"),
-                            submitButton(context, "GÖNDER"),
+                            submitButton(context, "Taslağa At",handleSave),
+                            submitButton(context, "GÖNDER",handleSubmit),
                           ],
                         ),
                       ],
@@ -129,28 +154,13 @@ class _HomePageState extends State<FormPage> {
 
   //Kullanıcı kaydet butonuna basarsa local olarak kaydedecek
 
-  Container submitButton(BuildContext context, String title) {
+  Container submitButton(BuildContext context, String title,Function handleSubmit) {
     return Container(
       width: 120,
       height: 50,
       margin: const EdgeInsets.all(12),
       child: TextButton(
-        onPressed: () {
-          setState(() {
-            if (formArguments != null) {
-              print("form arg is not null");
-              Provider.of<FormAdd>(context, listen: false)
-                  .updateUserList(index!, _formData);
-            } else {
-              print("this one executed");
-              Provider.of<FormAdd>(context, listen: false)
-                  .addNewFormToList(_formData);
-            }
-
-
-            alertDialog(context).then((_) => _formKey.currentState!.reset());
-          });
-        },
+        onPressed: ()=> handleSubmit(),
         child: Text(
           title,
           style: kTextStyle.copyWith(

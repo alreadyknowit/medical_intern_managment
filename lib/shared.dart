@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/student/drafts.dart';
 
 alertDialog( BuildContext context) {
   return showDialog(
@@ -11,7 +12,7 @@ alertDialog( BuildContext context) {
             TextButton(
               child: const Text('Tamam'),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>Drafts()));
               },
             ),
           ],
