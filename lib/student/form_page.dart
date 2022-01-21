@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_content_list.dart';
-import 'package:internship_managing_system/models/form_add.dart';
+import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/services/DbService.dart';
-import 'package:internship_managing_system/shared.dart';
+import 'package:internship_managing_system/shared/shared.dart';
+import 'package:internship_managing_system/student/drafts.dart';
 import 'package:provider/provider.dart';
-import '../constants.dart';
+import '../shared/constants.dart';
 import 'package:flutter/services.dart' as rootBundle;
 import 'dart:convert';
 
@@ -17,51 +18,13 @@ class FormPage extends StatefulWidget {
 }
 
 class _HomePageState extends State<FormPage> {
-  final DbService _db = DbService();
-  Future<FormData>? _futureFormData;
-  void handleSave(){
-    setState(() {
-      if (formArguments != null) {
-        print("form arg is not null");
-        Provider.of<FormAdd>(context, listen: false)
-            .updateUserList(index!, _formData);
-      } else {
-        print("this one executed");
-        Provider.of<FormAdd>(context, listen: false)
-            .addNewFormToList(_formData);
-      }
-
-      alertDialog(context).then((_) => _formKey.currentState!.reset());
-    });
-  }
-  void handleSubmit(){
-  setState(() {
-    _futureFormData= _db.createForm(_kayit.text,_valueStajTuru,_valueDoktor,_yas.text,_valueCinsiyet,_sikayet.text,_ayirici.text,_kesin.text,_tedavi.text,_valueOrtam,_valueEtkilesim,_valueKapsam);
-    print("Form gönderildi");
-  });
-  }
-
-  String? isEmpty(String val) {
-    String? text;
-    setState(() {
-      if (val.isEmpty) {
-        text = 'Boş bırakılamaz';
-      }
-    });
-    return text;
-  }
-
-  final FormData _formData = FormData();
-  late FormData? args;
-  late int? index;
-  FormArguments? formArguments;
   @override
   Widget build(BuildContext context) {
-    formArguments = ModalRoute.of(context)?.settings.arguments as FormArguments?;
-
-    if (formArguments != null ) {
-      args=formArguments?.formData;
-      index=formArguments?.index;
+    formArguments =
+        ModalRoute.of(context)?.settings.arguments as FormArguments?;
+    if (formArguments != null) {
+      args = formArguments?.formData;
+      index = formArguments?.index;
       //textField
       _kayit.text = args!.getKayitNo();
       _yas.text = args!.getYas();
@@ -70,23 +33,25 @@ class _HomePageState extends State<FormPage> {
       _kesin.text = args!.getKesinTani();
       _tedavi.text = args!.getTedaviYontemi();
 
-        //dropdown
+      //dropdown
       _valueCinsiyet = args!.getCinsiyet();
       _valueDoktor = args!.getDoktor();
       _valueEtkilesim = args!.getEtkilesimTuru();
       _valueKapsam = args!.getKapsam();
       _valueOrtam = args!.getOrtam();
       _valueStajTuru = args!.getStajTuru();
-
     }
+    void handleDelete() {
+      setState(() {
+        Provider.of<FormList>(context, listen: false)
+            .deleteFormInstance(index!);
+        alertDraft(context, "Başarıyla silindi").then((_) => Navigator.push(
+            context, MaterialPageRoute(builder: (builder) => Drafts())));
+      });
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xffffe0b2),
-      appBar: AppBar(
-        title: const Text('Hasta Etkileşim Kaydı'),
-        centerTitle: true,
-        backgroundColor: const Color(0xffffb74d),
-        elevation: 0,
-      ),
       body: SafeArea(
           child: FutureBuilder(
               future: readJsonData(),
@@ -136,8 +101,20 @@ class _HomePageState extends State<FormPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            submitButton(context, "Taslağa At",handleSave),
-                            submitButton(context, "GÖNDER",handleSubmit),
+                            Expanded(
+                              child: submitButton(Icons.drafts_sharp, context,
+                                  "Sakla", handleSave),
+                            ),
+                            Expanded(
+                              child: formArguments != null
+                                  ? submitButton(Icons.delete, context, "Sil",
+                                      handleDelete)
+                                  : Container(),
+                            ),
+                            Expanded(
+                              child: submitButton(
+                                  Icons.send, context, "İlet", handleSubmit),
+                            ),
                           ],
                         ),
                       ],
@@ -154,17 +131,32 @@ class _HomePageState extends State<FormPage> {
 
   //Kullanıcı kaydet butonuna basarsa local olarak kaydedecek
 
-  Container submitButton(BuildContext context, String title,Function handleSubmit) {
+  Container submitButton(IconData icon, BuildContext context, String title,
+      Function handleSubmit) {
     return Container(
-      width: 120,
+      width: 90,
       height: 50,
       margin: const EdgeInsets.all(12),
       child: TextButton(
-        onPressed: ()=> handleSubmit(),
-        child: Text(
-          title,
-          style: kTextStyle.copyWith(
-              fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+        onPressed: () => handleSubmit(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              title,
+              style: kTextStyle.copyWith(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+          ],
         ),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
@@ -198,8 +190,7 @@ class _HomePageState extends State<FormPage> {
             child: Container(
               height: 50,
               decoration: BoxDecoration(
-                  color: Colors.orangeAccent,
-                  borderRadius: BorderRadius.circular(5)),
+                  color: Colors.orange, borderRadius: BorderRadius.circular(5)),
               child: DropdownButtonFormField<String>(
                 //    autovalidateMode: AutovalidateMode.always,
                 //menuMaxHeight: 300,
@@ -219,12 +210,11 @@ class _HomePageState extends State<FormPage> {
                 ),
                 iconSize: 24,
                 elevation: 16,
-                dropdownColor: Colors.deepOrange,
+                dropdownColor: Colors.orange,
                 style: kTextStyle.copyWith(color: Colors.black),
                 onChanged: (val) => myFunc(val),
                 items: listItems.map<DropdownMenuItem<String>>((String? val) {
                   return DropdownMenuItem(
-                    //TODO: Set default values
                     value: val == null ? val = initialVal : val = val,
                     child: Text(
                       val,
@@ -288,15 +278,12 @@ class _HomePageState extends State<FormPage> {
     );
   }
 
-  Future<List<FormContent>> readJsonData() async {
-    final jsonData = await rootBundle.rootBundle.loadString('assets/json/formdata.json');
-    return [
-      for (final e in json.decode(jsonData)) FormContent.fromJson(e),
-    ];
-  }
-
+  final DbService _db = DbService();
+  final FormData _formData = FormData();
+  late FormData? args;
+  late int? index;
+  FormArguments? formArguments;
   final _formKey = GlobalKey<FormState>();
-
   String _valueEtkilesim = "Gözlem";
   String _valueKapsam = "Öykü";
   String _valueOrtam = "Poliklinik";
@@ -309,7 +296,6 @@ class _HomePageState extends State<FormPage> {
   final String hintTextKapsam = "Kapsam:";
   final String hintTextOrtam = "Gerçekleştiği Ortam:";
   final String hintTextDoktor = "Klinik Eğitici:";
-
   final TextEditingController _kayit = TextEditingController();
   final TextEditingController _yas = TextEditingController();
   final TextEditingController _sikayet = TextEditingController();
@@ -357,5 +343,59 @@ class _HomePageState extends State<FormPage> {
       _valueDoktor = newVal;
       _formData.setDoktor(newVal);
     });
+  }
+
+  void handleSubmit() {
+    Future<FormData>? _futureFormData;
+    setState(() {
+      if (_formKey.currentState!.validate()) {
+        _futureFormData = _db.createForm(
+            _kayit.text,
+            _valueStajTuru,
+            _valueDoktor,
+            _yas.text,
+            _valueCinsiyet,
+            _sikayet.text,
+            _ayirici.text,
+            _kesin.text,
+            _tedavi.text,
+            _valueOrtam,
+            _valueEtkilesim,
+            _valueKapsam);
+        Provider.of<FormList>(context, listen: false).addSentList(_formData);
+        alertSent(context);
+      }
+    });
+  }
+
+  void handleSave() {
+    setState(() {
+      if (formArguments != null) {
+        Provider.of<FormList>(context, listen: false)
+            .updateDraftList(index!, _formData);
+      } else {
+        Provider.of<FormList>(context, listen: false).addDraftList(_formData);
+      }
+    });
+    alertDraft(context, "Başaryla taslağa kaydedildi")
+        .then((_) => _formKey.currentState!.reset());
+  }
+
+  String? isEmpty(String val) {
+    String? text;
+    setState(() {
+      if (val.isEmpty) {
+        text = 'Boş bırakılamaz';
+      }
+    });
+    return text;
+  }
+
+  Future<List<FormContent>> readJsonData() async {
+    final jsonData =
+        await rootBundle.rootBundle.loadString('assets/json/formdata.json');
+    return [
+      for (final e in json.decode(jsonData)) FormContent.fromJson(e),
+    ];
   }
 }

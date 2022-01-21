@@ -1,43 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/not%20managed/accepted_forms.dart';
 import 'package:internship_managing_system/student/form_page.dart';
 import 'package:internship_managing_system/student/drafts.dart';
-import 'package:provider/provider.dart';
-class SideBar extends StatefulWidget {
-  const SideBar({Key? key}) : super(key: key);
+import 'package:internship_managing_system/student/not%20managed/notifications.dart';
+import 'package:internship_managing_system/student/not%20managed/rejected_forms.dart';
+import 'package:internship_managing_system/student/sent_forms.dart';
+import 'package:internship_managing_system/student/not%20managed/settings.dart';
 
+class SideBar extends StatefulWidget {
+
+   const SideBar({Key? key,}) : super(key: key);
   @override
   _SideBarState createState() => _SideBarState();
 }
 
 class _SideBarState extends State<SideBar> {
-  var currentPage = DrawerSections.taslaklar;
+  var currentPage = DrawerSections.hastaEtkilesim;
+  Text? title;
 
- @override
+
+  @override
   Widget build(BuildContext context) {
-   dynamic container;
-   if (currentPage == DrawerSections.hastaEtkilesim) {
-     container = const FormPage();
-   } else if (currentPage == DrawerSections.taslaklar) {
-     container =   Drafts(); //TODO: FormAdd kaldır.
-   }
+    dynamic container;
+    if (currentPage == DrawerSections.hastaEtkilesim) {
+      title=const Text("Hasta Etkileşim Formu");
+      container = const FormPage();
+    } else if (currentPage == DrawerSections.taslaklar) {
+      title=const Text("Taslaklar");
+      container = Drafts();
+    } else if (currentPage == DrawerSections.gonderilenFormlar) {
+      title=const Text("Gönderilen Fromlar");
+      container = const SentForms();
+    }else if (currentPage == DrawerSections.onaylananFormlar) {
+      title=const Text("Onaylanan Formlar");
+      container = const AcceptedForms();
+    }else if (currentPage == DrawerSections.reddedilenFormlar) {
+      title=const Text("Reddedilen Formlar");
+      container = const RejectedForms();
+    }else if (currentPage == DrawerSections.settings) {
+      title=const Text("Ayarlar");
+      container = const Settings();
+    }else if (currentPage == DrawerSections.notifications) {
+      title=const Text("Bildirimler");
+      container = const Notifications();
+    }
 
-    return  Scaffold(
-        body: container,
+  int counter=5;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+          centerTitle: true,
+          title: title,
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (builder)=>FormPage()));
+          }, icon:const Icon(Icons.home))
+        ],
+      ),
+      body: container,
       drawer: Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-                  myDrawerList()
-            ],
-          ),
+        backgroundColor: Colors.orange,
+        child: ListView(
+          children: [myDrawerList(counter)],
         ),
       ),
-
     );
   }
 
-  Widget myDrawerList() {
+  Widget myDrawerList(int counter) {
     return Container(
       padding: const EdgeInsets.only(
         top: 15,
@@ -45,31 +75,37 @@ class _SideBarState extends State<SideBar> {
       child: Column(
         // shows the list of menu drawer
         children: [
+          menuItem(0, "Internship Application",null , false),
+          const Divider(),
           menuItem(1, "Hasta Etkileşim Kaydı", Icons.dashboard_outlined,
               currentPage == DrawerSections.hastaEtkilesim ? true : false),
-          menuItem(2, "Tıbbi Uygulama Kaydı", Icons.local_hospital,
-              currentPage == DrawerSections.tibbiUygulama ? true : false),
-          menuItem(3, "Taslaklar", Icons.event,
+          const Divider(),
+          menuItem(2, "Onay Bekleyen Formlar", Icons.pending,
+              currentPage == DrawerSections.gonderilenFormlar ? true : false),
+          menuItem(3, "Onaylanan Formlar", Icons.check,
+              currentPage == DrawerSections.onaylananFormlar ? true : false),
+          menuItem(4, "Reddedilen Formlar", Icons.warning,
+              currentPage == DrawerSections.reddedilenFormlar ? true : false),
+          menuItem(5, "Taslaklar($counter)", Icons.event,
               currentPage == DrawerSections.taslaklar ? true : false),
           const Divider(),
-          menuItem(4, "Settings", Icons.settings_outlined,
+          menuItem(6, "Ayarlar", Icons.settings_outlined,
               currentPage == DrawerSections.settings ? true : false),
-          menuItem(5, "Notifications", Icons.notifications_outlined,
+          menuItem(7, "Bildirimler", Icons.notifications_outlined,
               currentPage == DrawerSections.notifications ? true : false),
           const Divider(),
-          menuItem(6, "Privacy policy", Icons.privacy_tip_outlined,
+          menuItem(8, "Gizlilik Politikası", Icons.privacy_tip_outlined,
               currentPage == DrawerSections.privacy_policy ? true : false),
-          menuItem(7, "Send feedback", Icons.feedback_outlined,
+          menuItem(9, "Geri Bildirim", Icons.feedback_outlined,
               currentPage == DrawerSections.send_feedback ? true : false),
         ],
       ),
     );
   }
 
-
-  Widget menuItem(int id, String title, IconData icon, bool selected) {
+  Widget menuItem(int id, String title, IconData? icon, bool selected) {
     return Material(
-      color: selected ? Colors.grey[300] : Colors.transparent,
+      color: selected ? Colors.deepOrangeAccent : Colors.orange,
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
@@ -77,16 +113,20 @@ class _SideBarState extends State<SideBar> {
             if (id == 1) {
               currentPage = DrawerSections.hastaEtkilesim;
             } else if (id == 2) {
-              currentPage = DrawerSections.tibbiUygulama;
+              currentPage = DrawerSections.gonderilenFormlar;
             } else if (id == 3) {
-              currentPage = DrawerSections.taslaklar;
+              currentPage = DrawerSections.onaylananFormlar;
             } else if (id == 4) {
-              currentPage = DrawerSections.settings;
+              currentPage = DrawerSections.reddedilenFormlar;
             } else if (id == 5) {
-              currentPage = DrawerSections.notifications;
+              currentPage = DrawerSections.taslaklar;
             } else if (id == 6) {
-              currentPage = DrawerSections.privacy_policy;
+              currentPage = DrawerSections.settings;
             } else if (id == 7) {
+              currentPage = DrawerSections.notifications;
+            } else if (id == 8) {
+              currentPage = DrawerSections.privacy_policy;
+            } else if (id == 9) {
               currentPage = DrawerSections.send_feedback;
             }
           });
@@ -119,11 +159,13 @@ class _SideBarState extends State<SideBar> {
     );
   }
 }
+
 enum DrawerSections {
   hastaEtkilesim,
-  tibbiUygulama,
+  gonderilenFormlar,
+  onaylananFormlar,
+  reddedilenFormlar,
   taslaklar,
-  notes,
   settings,
   notifications,
   privacy_policy,

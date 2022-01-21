@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/models/form_add.dart';
+import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/student/side_bar.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<FormAdd>(create: (context) => FormAdd()),
+    ChangeNotifierProvider<FormList>(create: (context) => FormList()),
     ChangeNotifierProvider<FormData>(create: (context) => FormData()),
   ], child: const InternshipManagingSystem()));
 }
@@ -27,6 +27,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SideBar();
+    return const SideBar();
   }
 }

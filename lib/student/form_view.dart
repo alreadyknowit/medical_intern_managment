@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/constants.dart';
+import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/models/form_data.dart';
-import 'package:provider/provider.dart';
 
 class FormView extends StatelessWidget {
-late FormData formData;
-
+final FormData formData;
+const FormView({Key? key, required this.formData}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-
-   formData= Provider.of<FormData>(context,listen: false);
     return Scaffold(
-
       appBar: AppBar(
         titleSpacing: 1.5,
         centerTitle: true,
@@ -29,7 +25,7 @@ late FormData formData;
           children: [
             studentFormPageRowInstance('Kayit No', formData.getKayitNo()),
             studentFormPageRowInstance('Staj Türü', formData.getStajTuru()),
-            studentFormPageRowInstance('Klinik Eğitici', formData.getDoktor()), //TODO implement attending physician
+            studentFormPageRowInstance('Klinik Eğitici', formData.getDoktor()),
             studentFormPageRowInstance('Hastanın Yaşı', formData.getYas()),
             studentFormPageRowInstance('Cinsiyet', formData.getCinsiyet()),
             studentFormPageRowInstance('Şikayet', formData.getSikayet()),
