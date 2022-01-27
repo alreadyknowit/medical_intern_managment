@@ -190,7 +190,7 @@ class _HomePageState extends State<FormPage> {
             child: Container(
               height: 50,
               decoration: BoxDecoration(
-                  color: Colors.orange, borderRadius: BorderRadius.circular(5)),
+                  color: Color(0xffF9A825), borderRadius: BorderRadius.circular(5)),
               child: DropdownButtonFormField<String>(
                 //    autovalidateMode: AutovalidateMode.always,
                 //menuMaxHeight: 300,
@@ -241,18 +241,22 @@ class _HomePageState extends State<FormPage> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          width: 80,
-          height: height,
-          child: Text(
-            text,
-            style: kTextStyle.copyWith(color: Colors.black54),
+        Expanded(
+          flex: 1,
+          child: SizedBox(
+            width: 80,
+            height: height,
+            child: Text(
+              text,
+              style: kTextStyle.copyWith(color: Colors.black54),
+            ),
           ),
         ),
-        const SizedBox(
+        /*   const SizedBox(
           width: 10,
-        ),
+        ),*/
         Expanded(
+          flex: 2,
           child: TextFormField(
             controller: controller,
             validator: (value) => regexFunction(value),

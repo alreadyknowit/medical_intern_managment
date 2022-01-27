@@ -8,8 +8,9 @@ import 'package:internship_managing_system/student/sent_forms.dart';
 import 'package:internship_managing_system/student/not%20managed/settings.dart';
 
 class SideBar extends StatefulWidget {
-
-   const SideBar({Key? key,}) : super(key: key);
+  const SideBar({
+    Key? key,
+  }) : super(key: key);
   @override
   _SideBarState createState() => _SideBarState();
 }
@@ -18,48 +19,50 @@ class _SideBarState extends State<SideBar> {
   var currentPage = DrawerSections.hastaEtkilesim;
   Text? title;
 
-
   @override
   Widget build(BuildContext context) {
     dynamic container;
     if (currentPage == DrawerSections.hastaEtkilesim) {
-      title=const Text("Hasta Etkileşim Formu");
+      title = const Text("Hasta Etkileşim Formu");
       container = const FormPage();
     } else if (currentPage == DrawerSections.taslaklar) {
-      title=const Text("Taslaklar");
+      title = const Text("Taslaklar");
       container = Drafts();
     } else if (currentPage == DrawerSections.gonderilenFormlar) {
-      title=const Text("Gönderilen Fromlar");
+      title = const Text("Gönderilen Fromlar");
       container = const SentForms();
-    }else if (currentPage == DrawerSections.onaylananFormlar) {
-      title=const Text("Onaylanan Formlar");
+    } else if (currentPage == DrawerSections.onaylananFormlar) {
+      title = const Text("Onaylanan Formlar");
       container = const AcceptedForms();
-    }else if (currentPage == DrawerSections.reddedilenFormlar) {
-      title=const Text("Reddedilen Formlar");
+    } else if (currentPage == DrawerSections.reddedilenFormlar) {
+      title = const Text("Reddedilen Formlar");
       container = const RejectedForms();
-    }else if (currentPage == DrawerSections.settings) {
-      title=const Text("Ayarlar");
+    } else if (currentPage == DrawerSections.settings) {
+      title = const Text("Ayarlar");
       container = const Settings();
-    }else if (currentPage == DrawerSections.notifications) {
-      title=const Text("Bildirimler");
+    } else if (currentPage == DrawerSections.notifications) {
+      title = const Text("Bildirimler");
       container = const Notifications();
     }
 
-  int counter=5;
+    int counter = 5;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.orange,
-          centerTitle: true,
-          title: title,
+        backgroundColor: const Color(0xffF9A825),
+        centerTitle: true,
+        title: title,
         actions: [
-          IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (builder)=>FormPage()));
-          }, icon:const Icon(Icons.home))
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => FormPage()));
+              },
+              icon: const Icon(Icons.home))
         ],
       ),
       body: container,
       drawer: Drawer(
-        backgroundColor: Colors.orange,
+        backgroundColor: Color(0xffF9A825),
         child: ListView(
           children: [myDrawerList(counter)],
         ),
@@ -75,7 +78,7 @@ class _SideBarState extends State<SideBar> {
       child: Column(
         // shows the list of menu drawer
         children: [
-          menuItem(0, "Internship Application",null , false),
+          menuItem(0, "Internship Application", null, false),
           const Divider(),
           menuItem(1, "Hasta Etkileşim Kaydı", Icons.dashboard_outlined,
               currentPage == DrawerSections.hastaEtkilesim ? true : false),
@@ -105,7 +108,7 @@ class _SideBarState extends State<SideBar> {
 
   Widget menuItem(int id, String title, IconData? icon, bool selected) {
     return Material(
-      color: selected ? Colors.deepOrangeAccent : Colors.orange,
+      color: selected ?const Color(0xffFF8F00) :const Color(0xffF9A825),
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
