@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/arguments/form_args.dart';
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/arguments/form_args.dart';
+import 'package:internship_managing_system/student/models/form_data.dart';
 import 'package:internship_managing_system/student/form_page.dart';
 
 class CustomListTile extends StatefulWidget {
   final FormData formData;
   final int index;
+
   const CustomListTile({Key? key, required this.formData, required this.index})
       : super(key: key);
 

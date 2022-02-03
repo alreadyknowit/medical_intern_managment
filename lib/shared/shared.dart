@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/models/form_data.dart';
 import 'package:internship_managing_system/student/side_bar.dart';
 
 alertDraft(BuildContext context, String text) {
@@ -24,7 +24,7 @@ alertDraft(BuildContext context, String text) {
                 style: kTextStyle.copyWith(color: Colors.white),
               ),
               onPressed: () {
-                Navigator.push(context,
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => SideBar()));
               },
             ),
@@ -52,7 +52,7 @@ alertSent(BuildContext context) {
                 style: kTextStyle.copyWith(color: Colors.white),
               ),
               onPressed: () {
-                Navigator.push(context,
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (builder) => const SideBar()));
               },
             ),

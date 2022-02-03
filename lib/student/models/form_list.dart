@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/models/form_data.dart';
 
 class FormList with ChangeNotifier {
   final List<FormData> _draftList = [];

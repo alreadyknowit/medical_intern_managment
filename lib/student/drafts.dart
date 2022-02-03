@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/models/form_list.dart';
+import 'package:internship_managing_system/student/models/form_data.dart';
+import 'package:internship_managing_system/student/models/form_list.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:provider/provider.dart';
+
+import 'form_page.dart';
 
 class Drafts extends StatelessWidget {
   bool isChecked = false;
@@ -13,6 +15,9 @@ class Drafts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     List<FormData> _forms = Provider.of<FormList>(context).getDraftList();
     return Scaffold(
       backgroundColor: const Color(0xffffe0b2), //const Color(0xff7986cb),

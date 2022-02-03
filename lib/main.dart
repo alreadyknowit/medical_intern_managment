@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/models/form_list.dart';
+import 'package:internship_managing_system/attending_physician/attending_physician.dart';
+import 'package:internship_managing_system/student/models/form_data.dart';
+import 'package:internship_managing_system/student/models/form_list.dart';
 import 'package:internship_managing_system/student/side_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,14 @@ class InternshipManagingSystem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
+      theme: ThemeData(
+       elevatedButtonTheme: ElevatedButtonThemeData(
+         style: ButtonStyle(
+          backgroundColor:MaterialStateProperty.all<Color>(Colors.orange)
+         )
+       ),
+      ),
       home: HomePage(),
     );
   }
@@ -27,6 +35,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SideBar();
+    return  //SideBar();
+    AttendingPhysician();
   }
 }

@@ -1,4 +1,4 @@
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/models/form_data.dart';
 
 class FormArguments{
   FormData formData;

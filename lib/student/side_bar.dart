@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/shared/filter_page.dart';
 import 'package:internship_managing_system/student/not%20managed/accepted_forms.dart';
 import 'package:internship_managing_system/student/form_page.dart';
 import 'package:internship_managing_system/student/drafts.dart';
@@ -18,6 +19,10 @@ class SideBar extends StatefulWidget {
 class _SideBarState extends State<SideBar> {
   var currentPage = DrawerSections.hastaEtkilesim;
   Text? title;
+
+  void handleAppBarButton(){
+   Navigator.push(context,MaterialPageRoute(builder:(context)=> FilterPage()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +58,8 @@ class _SideBarState extends State<SideBar> {
         title: title,
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => FormPage()));
-              },
-              icon: const Icon(Icons.home))
+              onPressed: ()=> handleAppBarButton(),
+              icon: currentPage==DrawerSections.hastaEtkilesim ? Container() :  const Icon(Icons.filter_list))
         ],
       ),
       body: container,
