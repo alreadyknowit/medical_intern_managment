@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/student/models/form_data.dart';
+import 'package:internship_managing_system/models/form_data.dart';
 
 class FormView extends StatelessWidget {
   final FormData formData;
@@ -8,37 +8,52 @@ class FormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Container(
-    width: 300,
-      height: 500,
-      decoration: const BoxDecoration(
-        color: Colors.orange,
+      decoration:  BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [ Color.fromRGBO(120, 80, 90, 1) ,Color.fromRGBO(120, 75, 90, 0.5) ],
+          begin: Alignment.topRight,
+          stops: [1, 1],
+          end: Alignment.bottomLeft,
+        ),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          studentFormPageRowInstance('Kayit No', formData.getKayitNo()),
-          studentFormPageRowInstance('Staj Türü', formData.getStajTuru()),
-          studentFormPageRowInstance('Klinik Eğitici', formData.getDoktor()),
-          studentFormPageRowInstance('Hastanın Yaşı', formData.getYas()),
-          studentFormPageRowInstance('Cinsiyet', formData.getCinsiyet()),
-          studentFormPageRowInstance('Şikayet', formData.getSikayet()),
-          studentFormPageRowInstance(
-              'Ayırıcı Tanı', formData.getAyiriciTani()),
-          studentFormPageRowInstance('Kesin Tanı', formData.getKesinTani()),
-          studentFormPageRowInstance(
-              'Tedavi Yönetimi', formData.getTedaviYontemi()),
-          studentFormPageRowInstance('Kapsamı', formData.getKapsam()),
-          studentFormPageRowInstance(
-              'Etkileşim Türü', formData.getEtkilesimTuru()),
-          studentFormPageRowInstance(
-              'Gerçekleştiği Ortam', formData.getOrtam()),
-          studentFormPageRowInstance(
-              'Tarih', '10.12.2021'), // TODO implement date
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            studentFormPageRowInstance('Kayit No', formData.getKayitNo()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Staj Türü', formData.getStajTuru()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Klinik Eğitici', formData.getDoktor()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Hastanın Yaşı', formData.getYas()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Cinsiyet', formData.getCinsiyet()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Şikayet', formData.getSikayet()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Ayırıcı Tanı', formData.getAyiriciTani()),
+            const SizedBox(height: 5,),
+            studentFormPageRowInstance('Kesin Tanı', formData.getKesinTani()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Tedavi Yönetimi', formData.getTedaviYontemi()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance('Kapsamı', formData.getKapsam()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance(
+                'Etkileşim Türü', formData.getEtkilesimTuru()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance(
+                'Gerçekleştiği Ortam', formData.getOrtam()),
+            const SizedBox(height: 10,),
+            studentFormPageRowInstance(
+                'Tarih', '10.12.2021'), // TODO implement date
+          ],
+        ),
       ),
     );
   }
-
   Row studentFormPageRowInstance(String label, String content) {
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -48,17 +63,27 @@ class FormView extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             '$label:',
-            style: kTextStyle.copyWith(
+            overflow: TextOverflow.ellipsis,
+            maxLines: 10,
+            style: TEXT_STYLE.copyWith(
               fontSize: 12,
+              color: Colors.white54
             ),
           ),
         ),
         const SizedBox(
           width: 5,
         ),
-        Text(
-          content.toUpperCase(),
-          style: kTextStyle.copyWith(fontSize: 20),
+        Expanded(
+          child: Text(
+            content.toUpperCase(),
+          
+            style: TEXT_STYLE.copyWith(
+                fontSize: 12,
+                color: Colors.white54
+            ),
+
+          ),
         ),
       ],
     );

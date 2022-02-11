@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
-import 'package:internship_managing_system/student/models/form_data.dart';
-import 'package:internship_managing_system/student/form_page.dart';
+import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/screens/form_page.dart';
+
 
 class CustomListTile extends StatefulWidget {
   final FormData formData;
@@ -33,7 +35,7 @@ class _CustomListTileState extends State<CustomListTile> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        color: const Color(0xffF9A825),
+        color: LIGHT_BUTTON_COLOR,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -45,10 +47,8 @@ class _CustomListTileState extends State<CustomListTile> {
                   topLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20))),
           style: ListTileStyle.list,
-          tileColor: const Color(0xffF9A825),
-          hoverColor: Colors.orange,
           onTap: () => pushToFormPage(widget.formData),
-          leading: Text(widget.formData.getKayitNo()),
+          leading: Text(widget.formData.getTarih().toString()),
           title: Text(widget.formData.getStajTuru()),
           subtitle: Text(widget.formData.getDoktor()),
           isThreeLine: true,

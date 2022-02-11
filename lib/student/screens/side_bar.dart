@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/filter_page.dart';
 import 'package:internship_managing_system/student/not%20managed/accepted_forms.dart';
-import 'package:internship_managing_system/student/form_page.dart';
-import 'package:internship_managing_system/student/drafts.dart';
+import 'package:internship_managing_system/student/screens/drafts.dart';
 import 'package:internship_managing_system/student/not%20managed/notifications.dart';
 import 'package:internship_managing_system/student/not%20managed/rejected_forms.dart';
-import 'package:internship_managing_system/student/sent_forms.dart';
+import 'package:internship_managing_system/student/screens/sent_forms.dart';
 import 'package:internship_managing_system/student/not%20managed/settings.dart';
+
+import 'form_page.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({
@@ -53,7 +56,7 @@ class _SideBarState extends State<SideBar> {
     int counter = 5;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xffF9A825),
+
         centerTitle: true,
         title: title,
         actions: [
@@ -64,7 +67,7 @@ class _SideBarState extends State<SideBar> {
       ),
       body: container,
       drawer: Drawer(
-        backgroundColor: Color(0xffF9A825),
+
         child: ListView(
           children: [myDrawerList(counter)],
         ),
@@ -80,37 +83,37 @@ class _SideBarState extends State<SideBar> {
       child: Column(
         // shows the list of menu drawer
         children: [
-          menuItem(0, "Internship Application", null, false),
+          menuItem(0, "Internship Application", FontAwesomeIcons.bookMedical, false),
           const Divider(),
-          menuItem(1, "Hasta Etkileşim Kaydı", Icons.dashboard_outlined,
+          menuItem(1, "Hasta Etkileşim Kaydı", FontAwesomeIcons.map,
               currentPage == DrawerSections.hastaEtkilesim ? true : false),
           const Divider(),
-          menuItem(2, "Onay Bekleyen Formlar", Icons.pending,
+          menuItem(2, "Onay Bekleyen Formlar", FontAwesomeIcons.ellipsisH,
               currentPage == DrawerSections.gonderilenFormlar ? true : false),
-          menuItem(3, "Onaylanan Formlar", Icons.check,
+          menuItem(3, "Onaylanan Formlar", FontAwesomeIcons.heart,
               currentPage == DrawerSections.onaylananFormlar ? true : false),
-          menuItem(4, "Reddedilen Formlar", Icons.warning,
+          menuItem(4, "Reddedilen Formlar", FontAwesomeIcons.exclamationTriangle,
               currentPage == DrawerSections.reddedilenFormlar ? true : false),
-          menuItem(5, "Taslaklar($counter)", Icons.event,
+          menuItem(5, "Taslaklar($counter)",  FontAwesomeIcons.database,
               currentPage == DrawerSections.taslaklar ? true : false),
           const Divider(),
-          menuItem(6, "Ayarlar", Icons.settings_outlined,
+          menuItem(6, "Ayarlar", FontAwesomeIcons.wrench,
               currentPage == DrawerSections.settings ? true : false),
-          menuItem(7, "Bildirimler", Icons.notifications_outlined,
+          menuItem(7, "Bildirimler", FontAwesomeIcons.bell,
               currentPage == DrawerSections.notifications ? true : false),
           const Divider(),
           menuItem(8, "Gizlilik Politikası", Icons.privacy_tip_outlined,
               currentPage == DrawerSections.privacy_policy ? true : false),
-          menuItem(9, "Geri Bildirim", Icons.feedback_outlined,
+          menuItem(9, "Geri Bildirim", FontAwesomeIcons.comment,
               currentPage == DrawerSections.send_feedback ? true : false),
         ],
       ),
     );
   }
 
-  Widget menuItem(int id, String title, IconData? icon, bool selected) {
+  Widget menuItem(int id, String title, IconData icon, bool selected) {
     return Material(
-      color: selected ?const Color(0xffFF8F00) :const Color(0xffF9A825),
+      color: selected ?const Color(0xff5f5f5) :const Color(0xf000000),
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
@@ -144,17 +147,14 @@ class _SideBarState extends State<SideBar> {
                 child: Icon(
                   icon,
                   size: 20,
-                  color: Colors.black,
+                  color: ICON_COLOR
                 ),
               ),
               Expanded(
                 flex: 3,
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
+                  style: TEXT_STYLE,
                 ),
               ),
             ],

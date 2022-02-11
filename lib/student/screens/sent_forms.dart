@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/student/models/form_list.dart';
-import 'package:internship_managing_system/student/models/form_data.dart';
+import 'package:internship_managing_system/models/form_list.dart';
+import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:provider/provider.dart';
-import '../shared/form_view.dart';
+
 class SentForms extends StatefulWidget {
   const SentForms({Key? key}) : super(key: key);
 
@@ -32,18 +33,13 @@ class _SentFormsState extends State<SentForms> {
 
   @override
   Widget build(BuildContext context) {
-
-    void pushToFormPage(FormData formData) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => FormView(formData: formData,)));
-    }
-
-
+    //TODO: when clicking on a list tile item need to push to the FormView page.
     List<FormData> _forms = Provider.of<FormList>(context).getSentList();
     return Scaffold(
       body: ListView.separated(
         separatorBuilder: (BuildContext context, int index) => const Divider(
           height: 5,
+          color: LIGHT_BUTTON_COLOR,
         ),
         itemCount: _forms.length,
         itemBuilder: (BuildContext context, int index) {

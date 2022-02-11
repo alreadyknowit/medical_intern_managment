@@ -1,13 +1,12 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
-import 'package:internship_managing_system/student/models/form_content_list.dart';
-import 'package:internship_managing_system/student/models/form_list.dart';
-import 'package:internship_managing_system/student/models/form_data.dart';
+import 'package:internship_managing_system/models/form_content_list.dart';
+import 'package:internship_managing_system/models/form_list.dart';
+import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/screens/side_bar.dart';
 import 'package:internship_managing_system/student/services/DbService.dart';
-import 'package:internship_managing_system/shared/shared.dart';
-import 'package:internship_managing_system/student/drafts.dart';
+import 'package:internship_managing_system/shared/custom_alert.dart';
+import 'package:internship_managing_system/student/screens/drafts.dart';
 import 'package:provider/provider.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:flutter/services.dart' as rootBundle;
@@ -48,12 +47,11 @@ class _HomePageState extends State<FormPage> {
         Provider.of<FormList>(context, listen: false)
             .deleteFormInstance(index!);
         alertDraft(context, "Başarıyla silindi").then((_) => Navigator.push(
-            context, MaterialPageRoute(builder: (builder) => Drafts())));
+            context, MaterialPageRoute(builder: (builder) => SideBar())));
       });
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xffffe0b2),
       body: SafeArea(
           child: FutureBuilder(
               future: readJsonData(),
@@ -89,20 +87,17 @@ class _HomePageState extends State<FormPage> {
                           height: 20,
                         ),
                         myTextFieldRow(1, "Kayıt No ", 10,
-                            _formData.setKayitNo, isEmpty, _kayit),
+                            _formData.setKayitNo, isEmpty, _kayit,80),
                         myTextFieldRow(1, "Hastanın Yaşı", 3, _formData.setYas,
-                            isEmpty, _yas),
+                            isEmpty, _yas,80),
                         myTextFieldRow(1, "Şikayet", 10, _formData.setSikayet,
-                            isEmpty, _sikayet),
+                            isEmpty, _sikayet,80),
                         myTextFieldRow(1, "Ayırıcı Tanı", 10,
-                            _formData.setAyiriciTani, isEmpty, _ayirici),
-                        myTextFieldRow(3, "Kesin Tanı", 50,
-                            _formData.setKesinTani, isEmpty, _kesin),
-                        myTextFieldRow(5, "Tedavi Yöntemi", 100,
-                            _formData.setTedaviYontemi, isEmpty, _tedavi),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                            _formData.setAyiriciTani, isEmpty, _ayirici,80),
+                        myTextFieldRow(5, "Kesin Tanı", 50,
+                            _formData.setKesinTani, isEmpty, _kesin,130),
+                        myTextFieldRow(5, "Tedavi Yöntemi", 200,
+                            _formData.setTedaviYontemi, isEmpty, _tedavi,130),
                       ],
                     ),
                   );
@@ -113,7 +108,7 @@ class _HomePageState extends State<FormPage> {
                 }
               })),
       bottomNavigationBar: Container(
-        height: 40,
+        height: 44,
         width: double.infinity,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -136,9 +131,10 @@ class _HomePageState extends State<FormPage> {
       String title, Function handleSubmit) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
+        primary: PRIMARY_BUTTON_COLOR,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0)),
-        minimumSize: const Size(100, double.infinity), //////// HERE
+        minimumSize: const Size(120, double.infinity), //////// HERE
       ),
       onPressed: () => handleSubmit(),
       child: Container(
@@ -161,7 +157,7 @@ class _HomePageState extends State<FormPage> {
             width: 120,
             child: Text(
               text,
-              style: kTextStyle,
+              style: TEXT_STYLE,
             ),
           ),
           const SizedBox(
@@ -171,7 +167,7 @@ class _HomePageState extends State<FormPage> {
             child: Container(
               height: 50,
               decoration: BoxDecoration(
-                  color: Color(0xffF9A825),
+                  color: Colors.grey[700],
                   borderRadius: BorderRadius.circular(5)),
               child: DropdownButtonFormField<String>(
                 //    autovalidateMode: AutovalidateMode.always,
@@ -188,19 +184,19 @@ class _HomePageState extends State<FormPage> {
                 value: initialVal,
                 icon: const Icon(
                   Icons.arrow_downward,
-                  color: Colors.black38,
+                  color: ICON_COLOR,
                 ),
                 iconSize: 24,
                 elevation: 16,
-                dropdownColor: Colors.orange,
-                style: kTextStyle.copyWith(color: Colors.black),
+                dropdownColor: Colors.grey[800],
+                style: TEXT_STYLE,
                 onChanged: (val) => myFunc(val),
                 items: listItems.map<DropdownMenuItem<String>>((String? val) {
                   return DropdownMenuItem(
                     value: val == null ? val = initialVal : val = val,
                     child: Text(
                       val,
-                      style: kTextStyle.copyWith(color: Colors.black),
+                      style: TEXT_STYLE,
                     ),
                   );
                 }).toList(),
@@ -219,22 +215,22 @@ class _HomePageState extends State<FormPage> {
       int? maxLength,
       Function function,
       Function regexFunction,
-      TextEditingController controller) {
+      TextEditingController controller, double height) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+
           children: [
             SizedBox(
               child: Text(
                 text,
-                style: kTextStyle.copyWith(color: Colors.black54),
+                style: TEXT_STYLE,
               ),
             ),
             const SizedBox(height:8,),
             SizedBox(
-              height: 80,
+              height: height,
               child: TextFormField(
                 controller: controller,
                 validator: (value) => regexFunction(value),
@@ -243,7 +239,7 @@ class _HomePageState extends State<FormPage> {
                 },
                 autofocus: false,
                 textAlignVertical: TextAlignVertical.bottom,
-                style: kTextStyle.copyWith(fontSize: 16),
+                style: TEXT_STYLE.copyWith(fontSize: 16),
                 maxLength: maxLength,
                 maxLines: null, //TODO:Arrange maxlines for the inputs
                 keyboardType: TextInputType.multiline,
@@ -350,7 +346,7 @@ class _HomePageState extends State<FormPage> {
             _valueEtkilesim,
             _valueKapsam);
         Provider.of<FormList>(context, listen: false).addSentList(_formData);
-        alertSent(context);
+        alertDraft(context, 'Başarıyla gönderildi');
       }
     });
   }
@@ -386,32 +382,3 @@ class _HomePageState extends State<FormPage> {
     ];
   }
 }
-/*
-    child: TextButton(
-
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                title,
-                style: kTextStyle.copyWith(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              Icon(
-                icon,
-                color: Colors.white,
-              ),
-            ],
-          ),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-              const Color(0xffffa726),
-            ),
-          ),
-        ),
- */

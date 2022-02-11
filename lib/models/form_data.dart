@@ -1,7 +1,5 @@
-
-
 import 'package:flutter/cupertino.dart';
-
+import 'package:date_format/date_format.dart';
 
 class FormData  with ChangeNotifier{
    String? kayitNo;
@@ -17,21 +15,26 @@ class FormData  with ChangeNotifier{
    String? etkilesimTuru;
    String? kapsam;
    String? gerceklestigiOrtam;
-  //DateTime tarih;
-
+   bool? isAccepted;
+   bool? isRejected;
+   final formattedStr = formatDate(DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, '\n    ', HH, ':', nn]);
     String getKayitNo()=>kayitNo ?? "";
     String getStajTuru()=>stajTuru ?? "Diğer";
     String getDoktor()=>doktor ?? "Diğer";
-    String getYas()=>yas ?? "";
+    String getYas()=>yas ?? "-";
     String getCinsiyet()=>cinsiyet ??  "Diğer";
-    String getSikayet()=>sikayet ?? "";
-    String getAyiriciTani()=>ayiriciTani ?? "";
-    String getKesinTani()=>kesinTani ?? "";
-    String getTedaviYontemi()=>tedaviYontemi ?? "";
+    String getSikayet()=>sikayet ?? "-";
+    String getAyiriciTani()=>ayiriciTani ?? "-";
+    String getKesinTani()=>kesinTani ?? "-";
+    String getTedaviYontemi()=>tedaviYontemi ?? "-";
     String getEtkilesimTuru()=>etkilesimTuru ?? "Gözlem";
     String getKapsam()=>kapsam  ?? "Öykü";
     String getOrtam()=>gerceklestigiOrtam ?? "Poliklinik";
-
+    String getTarih() {
+      print(DateTime.now());
+      print(formattedStr);
+      return formattedStr;
+    }
 
 
 FormData({this.kayitNo, this.stajTuru,this.doktor,this.yas,this.cinsiyet,this.sikayet,this.ayiriciTani,this.kesinTani,this.tedaviYontemi,this.etkilesimTuru,this.kapsam,this.gerceklestigiOrtam});

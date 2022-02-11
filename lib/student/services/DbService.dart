@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:internship_managing_system/student/models/form_data.dart';
+import 'package:internship_managing_system/models/form_data.dart';
 class DbService{
 
 Future<FormData> createForm(String kayitNo,String stajTuru,String doktor,String yas,String cinsiyet,String sikayet,String ayirici,String kesin,String tedavi,String ortam,String etkilesim,String kapsam) async {

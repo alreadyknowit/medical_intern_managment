@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/attending_physician/attending_physician.dart';
-import 'package:internship_managing_system/student/models/form_data.dart';
-import 'package:internship_managing_system/student/models/form_list.dart';
-import 'package:internship_managing_system/student/side_bar.dart';
+import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
+import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/models/form_list.dart';
+import 'package:internship_managing_system/student/screens/side_bar.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<FormList>(create: (context) => FormList()),
-    ChangeNotifierProvider<FormData>(create: (context) => FormData()),
-  ], child: const InternshipManagingSystem()));
+  runApp(const InternshipManagingSystem());
 }
 
 class InternshipManagingSystem extends StatelessWidget {
@@ -17,25 +15,19 @@ class InternshipManagingSystem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      theme: ThemeData(
-       elevatedButtonTheme: ElevatedButtonThemeData(
-         style: ButtonStyle(
-          backgroundColor:MaterialStateProperty.all<Color>(Colors.orange)
-         )
-       ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FormList>(create: (context) => FormList()),
+        ChangeNotifierProvider<FormData>(create: (context) => FormData()),
+        ChangeNotifierProvider(create: (context) => FeedbackPositionProvider()),
+      ],
+      builder: (context, _) => MaterialApp(
+        theme: ThemeData.dark(),
+        themeMode: ThemeMode.dark,
+        home: SideBar(),//AttendingPhysician(),
       ),
-      home: HomePage(),
     );
   }
+
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return  //SideBar();
-    AttendingPhysician();
-  }
-}
