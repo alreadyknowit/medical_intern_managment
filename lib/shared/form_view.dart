@@ -9,12 +9,7 @@ class FormView extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Container(
       decoration:  BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [ Color.fromRGBO(120, 80, 90, 1) ,Color.fromRGBO(120, 75, 90, 0.5) ],
-          begin: Alignment.topRight,
-          stops: [1, 1],
-          end: Alignment.bottomLeft,
-        ),
+       color: BACKGROUND_COLOR,
         borderRadius: BorderRadius.circular(10),
       ),
       child: SingleChildScrollView(
@@ -27,7 +22,7 @@ class FormView extends StatelessWidget {
             const SizedBox(height: 10,),
             studentFormPageRowInstance('Klinik Eğitici', formData.getDoktor()),
             const SizedBox(height: 10,),
-            studentFormPageRowInstance('Hastanın Yaşı', formData.getYas()),
+            studentFormPageRowInstance('Hastanın Yaşı', formData.getYas().toString()),
             const SizedBox(height: 10,),
             studentFormPageRowInstance('Cinsiyet', formData.getCinsiyet()),
             const SizedBox(height: 10,),
@@ -37,7 +32,7 @@ class FormView extends StatelessWidget {
             const SizedBox(height: 5,),
             studentFormPageRowInstance('Kesin Tanı', formData.getKesinTani()),
             const SizedBox(height: 10,),
-            studentFormPageRowInstance('Tedavi Yönetimi', formData.getTedaviYontemi()),
+            studentFormPageRowInstance('Tedavi YÖNTEMİ', formData.getTedaviYontemi()),
             const SizedBox(height: 10,),
             studentFormPageRowInstance('Kapsamı', formData.getKapsam()),
             const SizedBox(height: 10,),
@@ -48,7 +43,7 @@ class FormView extends StatelessWidget {
                 'Gerçekleştiği Ortam', formData.getOrtam()),
             const SizedBox(height: 10,),
             studentFormPageRowInstance(
-                'Tarih', '10.12.2021'), // TODO implement date
+                'Tarih', formData.getTarih()), // TODO implement date
           ],
         ),
       ),
@@ -62,12 +57,12 @@ class FormView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            '$label:',
+            '${label.toUpperCase()}:',
             overflow: TextOverflow.ellipsis,
             maxLines: 10,
             style: TEXT_STYLE.copyWith(
               fontSize: 12,
-              color: Colors.white54
+              fontWeight: FontWeight.w700
             ),
           ),
         ),
@@ -76,11 +71,9 @@ class FormView extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            content.toUpperCase(),
-          
+            content,
             style: TEXT_STYLE.copyWith(
                 fontSize: 12,
-                color: Colors.white54
             ),
 
           ),

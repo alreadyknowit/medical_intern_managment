@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/shared/filter_page.dart';
 import 'package:internship_managing_system/student/not%20managed/accepted_forms.dart';
 import 'package:internship_managing_system/student/screens/drafts.dart';
 import 'package:internship_managing_system/student/not%20managed/notifications.dart';
@@ -23,9 +22,6 @@ class _SideBarState extends State<SideBar> {
   var currentPage = DrawerSections.hastaEtkilesim;
   Text? title;
 
-  void handleAppBarButton(){
-   Navigator.push(context,MaterialPageRoute(builder:(context)=> FilterPage()));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +55,6 @@ class _SideBarState extends State<SideBar> {
 
         centerTitle: true,
         title: title,
-        actions: [
-          IconButton(
-              onPressed: ()=> handleAppBarButton(),
-              icon: currentPage==DrawerSections.hastaEtkilesim ? Container() :  const Icon(Icons.filter_list))
-        ],
       ),
       body: container,
       drawer: Drawer(

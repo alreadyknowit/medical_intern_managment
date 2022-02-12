@@ -89,11 +89,11 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
     centerTitle: true,
     backgroundColor: Colors.transparent,
     elevation: 0,
-    actions: const [
-      Icon(Icons.notifications, color:  Color.fromRGBO(120, 80, 90, 0.8) ),
-      SizedBox(width: 16),
+    actions:  [
+      Icon(Icons.notifications, color:  BACKGROUND_COLOR.withOpacity(0.8) ),
+      const SizedBox(width: 16),
     ],
-    leading: const Icon(Icons.person, color: Color.fromRGBO(120, 80, 90, 0.8) ),
-    title: const FaIcon(FontAwesomeIcons.bookMedical, color: Color.fromRGBO(120, 80, 90, 1), size:40,),
+    leading:  Icon(Icons.person, color: BACKGROUND_COLOR.withOpacity(0.8) ),
+    title:  FaIcon(FontAwesomeIcons.bookMedical, color: BACKGROUND_COLOR.withOpacity(0.8), size:40,),
   );
 }

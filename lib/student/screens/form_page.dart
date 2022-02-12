@@ -3,10 +3,10 @@ import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_content_list.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/student/screens/side_bar.dart';
-import 'package:internship_managing_system/student/services/DbService.dart';
-import 'package:internship_managing_system/shared/custom_alert.dart';
 import 'package:internship_managing_system/student/screens/drafts.dart';
+import 'package:internship_managing_system/student/services/DbService.dart';
+import 'package:internship_managing_system/shared/custom_snackbar.dart';
+import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:provider/provider.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:flutter/services.dart' as rootBundle;
@@ -19,6 +19,7 @@ class FormPage extends StatefulWidget {
 }
 
 class _HomePageState extends State<FormPage> {
+  final SQFLiteHelper _helper = SQFLiteHelper.instance;
   @override
   Widget build(BuildContext context) {
     formArguments =
@@ -28,7 +29,7 @@ class _HomePageState extends State<FormPage> {
       index = formArguments?.index;
       //textField
       _kayit.text = args!.getKayitNo();
-      _yas.text = args!.getYas();
+      _yas.text = args!.getYas().toString();
       _sikayet.text = args!.getSikayet();
       _ayirici.text = args!.getAyiriciTani();
       _kesin.text = args!.getKesinTani();
@@ -44,10 +45,9 @@ class _HomePageState extends State<FormPage> {
     }
     void handleDelete() {
       setState(() {
-        Provider.of<FormList>(context, listen: false)
-            .deleteFormInstance(index!);
-        alertDraft(context, "Başarıyla silindi").then((_) => Navigator.push(
-            context, MaterialPageRoute(builder: (builder) => SideBar())));
+        _helper.remove(formArguments!.formData.id);
+        customSnackBar(context, 'Başarıyla silindi');
+        Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
       });
     }
 
@@ -86,18 +86,18 @@ class _HomePageState extends State<FormPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        myTextFieldRow(1, "Kayıt No ", 10,
-                            _formData.setKayitNo, isEmpty, _kayit,80),
+                        myTextFieldRow(1, "Kayıt No ", 10, _formData.setKayitNo,
+                            isEmpty, _kayit, 80),
                         myTextFieldRow(1, "Hastanın Yaşı", 3, _formData.setYas,
-                            isEmpty, _yas,80),
+                            isNumeric, _yas, 80),
                         myTextFieldRow(1, "Şikayet", 10, _formData.setSikayet,
-                            isEmpty, _sikayet,80),
+                            isEmpty, _sikayet, 80),
                         myTextFieldRow(1, "Ayırıcı Tanı", 10,
-                            _formData.setAyiriciTani, isEmpty, _ayirici,80),
+                            _formData.setAyiriciTani, isEmpty, _ayirici, 80),
                         myTextFieldRow(5, "Kesin Tanı", 50,
-                            _formData.setKesinTani, isEmpty, _kesin,130),
+                            _formData.setKesinTani, isEmpty, _kesin, 130),
                         myTextFieldRow(5, "Tedavi Yöntemi", 200,
-                            _formData.setTedaviYontemi, isEmpty, _tedavi,130),
+                            _formData.setTedaviYontemi, isEmpty, _tedavi, 130),
                       ],
                     ),
                   );
@@ -113,12 +113,11 @@ class _HomePageState extends State<FormPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            submitButton(Icons.send, context, "İlet", handleSubmit),
+            submitButton(Icons.send, context, "İLET", handleSubmit),
             formArguments != null
-                ? submitButton(Icons.delete, context, "Sil", handleDelete)
+                ? submitButton(Icons.delete, context, "SİL", handleDelete)
                 : Container(),
-            submitButton(Icons.drafts_sharp, context, "Sakla", handleSave),
-
+            submitButton(Icons.drafts_sharp, context, "SAKLA", handleSave),
           ],
         ),
       ),
@@ -126,14 +125,12 @@ class _HomePageState extends State<FormPage> {
   }
 
   //Kullanıcı kaydet butonuna basarsa local olarak kaydedecek
-
-  ElevatedButton submitButton(IconData icon, BuildContext context,
-      String title, Function handleSubmit) {
+  ElevatedButton submitButton(IconData icon, BuildContext context, String title,
+      Function handleSubmit) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         primary: PRIMARY_BUTTON_COLOR,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         minimumSize: const Size(120, double.infinity), //////// HERE
       ),
       onPressed: () => handleSubmit(),
@@ -170,13 +167,6 @@ class _HomePageState extends State<FormPage> {
                   color: Colors.grey[700],
                   borderRadius: BorderRadius.circular(5)),
               child: DropdownButtonFormField<String>(
-                //    autovalidateMode: AutovalidateMode.always,
-                //menuMaxHeight: 300,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return " null gönderdi";
-                  }
-                },
                 decoration: const InputDecoration(border: InputBorder.none),
                 isExpanded: true,
                 //onTap: () => myFunc,
@@ -215,12 +205,12 @@ class _HomePageState extends State<FormPage> {
       int? maxLength,
       Function function,
       Function regexFunction,
-      TextEditingController controller, double height) {
+      TextEditingController controller,
+      double height) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
-
           children: [
             SizedBox(
               child: Text(
@@ -228,15 +218,15 @@ class _HomePageState extends State<FormPage> {
                 style: TEXT_STYLE,
               ),
             ),
-            const SizedBox(height:8,),
+            const SizedBox(
+              height: 8,
+            ),
             SizedBox(
               height: height,
               child: TextFormField(
                 controller: controller,
                 validator: (value) => regexFunction(value),
-                onChanged: (input) {
-                  function(input);
-                },
+                onChanged: (input) => function(input.toString()),
                 autofocus: false,
                 textAlignVertical: TextAlignVertical.bottom,
                 style: TEXT_STYLE.copyWith(fontSize: 16),
@@ -247,7 +237,7 @@ class _HomePageState extends State<FormPage> {
                 expands: false,
                 decoration: const InputDecoration(
                   isDense: true,
-                  contentPadding: EdgeInsets.fromLTRB(0,0,0,20),
+                  contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.green),
                       borderRadius: BorderRadius.all(Radius.circular(3))),
@@ -290,6 +280,9 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueCinsiyet = newVal!;
       _formData.setCinsiyet(_valueCinsiyet);
+      if(formArguments != null) {
+        formArguments?.formData.setCinsiyet(newVal);
+      }
     });
   }
 
@@ -297,6 +290,9 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueStajTuru = newVal;
       _formData.setStajTuru(newVal);
+      if(formArguments != null) {
+        formArguments?.formData.setStajTuru(newVal);
+      }
     });
   }
 
@@ -304,6 +300,9 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueEtkilesim = newVal;
       _formData.setEtkilesimTuru(newVal);
+      if(formArguments != null) {
+        formArguments?.formData.setEtkilesimTuru(newVal);
+      }
     });
   }
 
@@ -311,6 +310,9 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueKapsam = newVal;
       _formData.setKapsam(newVal);
+      if(formArguments != null) {
+        formArguments?.formData.setKapsam(newVal);
+      }
     });
   }
 
@@ -318,6 +320,9 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueOrtam = newVal;
       _formData.setOrtam(newVal);
+      if(formArguments != null) {
+        formArguments?.formData.setOrtam(newVal);
+      }
     });
   }
 
@@ -325,6 +330,9 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueDoktor = newVal;
       _formData.setDoktor(newVal);
+      if(formArguments != null) {
+        formArguments?.formData.setDoktor(newVal);
+      }
     });
   }
 
@@ -346,22 +354,35 @@ class _HomePageState extends State<FormPage> {
             _valueEtkilesim,
             _valueKapsam);
         Provider.of<FormList>(context, listen: false).addSentList(_formData);
-        alertDraft(context, 'Başarıyla gönderildi');
+        customSnackBar(context, 'Başarıyla gönderildi');
       }
     });
+
   }
 
   void handleSave() {
     setState(() {
       if (formArguments != null) {
-        Provider.of<FormList>(context, listen: false)
-            .updateDraftList(index!, _formData);
+        formArguments?.formData.setKayitNo(_kayit.text);
+        formArguments?.formData.setYas(_yas.text);
+        formArguments?.formData.setSikayet(_sikayet.text);
+        formArguments?.formData.setAyiriciTani(_ayirici.text);
+        formArguments?.formData.setKesinTani(_kesin.text);
+        formArguments?.formData.setTedaviYontemi(_tedavi.text);
+        _helper.update(formArguments!.formData);
+        customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       } else {
-        Provider.of<FormList>(context, listen: false).addDraftList(_formData);
+        _helper.insert(_formData);
+        customSnackBar(context, 'Başarıyla taslağa kaydedildi');
+        // Provider.of<FormList>(context, listen: false).addDraftList(_formData);
       }
     });
-    alertDraft(context, "Başaryla taslağa kaydedildi")
-        .then((_) => _formKey.currentState!.reset());
+  }
+
+  String? isNumeric(String num) {
+    if (int.tryParse(num) == null) {
+      return 'Hastanın yaşı rakamlardan oluşmalıdır';
+    }
   }
 
   String? isEmpty(String val) {

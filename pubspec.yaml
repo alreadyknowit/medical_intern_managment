@@ -40,6 +40,8 @@ dependencies:
   date_format: ^2.0.5
   sqflite: ^2.0.2
   path: ^1.8.0
+  another_flushbar: ^1.10.28
+  google_fonts: ^2.3.1
 
 dev_dependencies:
   flutter_test:

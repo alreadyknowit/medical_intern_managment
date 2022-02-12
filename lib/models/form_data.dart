@@ -25,12 +25,12 @@ class FormData with ChangeNotifier {
   String getKayitNo() => kayitNo ?? "";
   String getStajTuru() => stajTuru ?? "Diğer";
   String getDoktor() => doktor ?? "Diğer";
-  String getYas() => yas ?? "-";
+  String getYas() => yas ?? " ";
   String getCinsiyet() => cinsiyet ?? "Diğer";
-  String getSikayet() => sikayet ?? "-";
-  String getAyiriciTani() => ayiriciTani ?? "-";
-  String getKesinTani() => kesinTani ?? "-";
-  String getTedaviYontemi() => tedaviYontemi ?? "-";
+  String getSikayet() => sikayet ?? " ";
+  String getAyiriciTani() => ayiriciTani ?? " ";
+  String getKesinTani() => kesinTani ?? "";
+  String getTedaviYontemi() => tedaviYontemi ?? " ";
   String getEtkilesimTuru() => etkilesimTuru ?? "Gözlem";
   String getKapsam() => kapsam ?? "Öykü";
   String getOrtam() => gerceklestigiOrtam ?? "Poliklinik";
@@ -54,6 +54,7 @@ class FormData with ChangeNotifier {
       this.etkilesimTuru,
       this.kapsam,
       this.gerceklestigiOrtam});
+
   factory FormData.fromJson(Map<String, dynamic> json) {
     return FormData(kayitNo: json['kayit_no']);
   }

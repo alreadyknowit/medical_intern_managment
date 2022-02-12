@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
+import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/student/screens/form_page.dart';
@@ -25,13 +26,12 @@ class _CustomListTileState extends State<CustomListTile> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const FormPage(),
+            builder: (context) => const FormPage() ,
             settings: RouteSettings(
               arguments: arguments,
             )),
       );
     }
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(

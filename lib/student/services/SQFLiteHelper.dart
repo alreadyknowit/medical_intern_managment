@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SQFLiteHelper {
-  final _databaseName = 'drafts.db';
+  final _databaseName = 'myDrafts.db';
   final _databaseVersion = 1;
   final _tableName = 'drafts_table';
   static const columnId = 'id';
@@ -35,7 +35,7 @@ class SQFLiteHelper {
         version: _databaseVersion, onCreate: _onCreate);
   }
   Future _onCreate(Database db, int version) async {
-    print("on create is used "); // this line never executed so, never a db is created.
+    print("on create is used ");
     await db.execute('''
     CREATE TABLE $_tableName (
     $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,7 +47,7 @@ class SQFLiteHelper {
     $columnEtkilesimTuru TEXT,
     $columnKapsam TEXT,
     $columnOrtam TEXT,
-    $columnYas INTEGER,
+    $columnYas TEXT,
     $columnAyiriciTani TEXT,
     $columnKesinTani TEXT,
     $columnTedaviYontemi TEXT
@@ -57,21 +57,8 @@ class SQFLiteHelper {
   Future<int> insert(FormData form) async {
     Database db =  await instance.getDatabase ; //The error occuring here
     print("db is: " + db.toString());
-    return await db.insert(_tableName, {
-      columnId:form.id,
-      columnKayitNo: form.kayitNo,
-      columnSikayet: form.sikayet,
-      columnStajTuru:form.stajTuru,
-      columnKlinikEgitici:form.doktor,
-      columnCinsiyet:form.cinsiyet,
-      columnEtkilesimTuru:form.etkilesimTuru,
-      columnKapsam:form.kapsam,
-      columnOrtam:form.gerceklestigiOrtam,
-      columnYas:form.yas,
-      columnAyiriciTani:form.ayiriciTani,
-      columnKesinTani:form.kesinTani,
-      columnTedaviYontemi:form.tedaviYontemi
-    });
+    print(form.id);
+    return await db.insert(_tableName, form.toMap());
   }
 
   Future<List<FormData>> getForms() async {
@@ -81,4 +68,16 @@ class SQFLiteHelper {
     return formList;
 
   }
+  Future<int> update(FormData form) async {
+    Database db = await instance.getDatabase ;
+    int id = form.toMap()['id'];
+    print("id is: " + id.toString());
+    return await db.update(_tableName, form.toMap(),
+        where: '$columnId =?', whereArgs: [id]);
+  }
+  Future<int> remove(int? id) async {
+    Database db = await instance.getDatabase ;
+    return await db.delete(_tableName, where: '$columnId = ?', whereArgs: [id]);
+  }
+
 }
