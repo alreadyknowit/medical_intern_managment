@@ -1,32 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/student/screens/form_page.dart';
 
-
-class CustomListTile extends StatefulWidget {
+class CustomListTile extends StatelessWidget {
   final FormData formData;
   final int index;
-
-  const CustomListTile({Key? key, required this.formData, required this.index})
-      : super(key: key);
-
-  @override
-  _CustomListTileState createState() => _CustomListTileState();
-}
-
-class _CustomListTileState extends State<CustomListTile> {
+  CustomListTile({required this.formData,required this.index});
   @override
   Widget build(BuildContext context) {
     FormArguments arguments =
-        FormArguments(formData: widget.formData, index: widget.index);
+        FormArguments(formData: formData, index: index);
     void pushToFormPage(FormData formData) {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const FormPage() ,
+            builder: (context) => const FormPage(),
             settings: RouteSettings(
               arguments: arguments,
             )),
@@ -47,10 +37,10 @@ class _CustomListTileState extends State<CustomListTile> {
                   topLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20))),
           style: ListTileStyle.list,
-          onTap: () => pushToFormPage(widget.formData),
-          leading: Text(widget.formData.getTarih().toString()),
-          title: Text(widget.formData.getStajTuru()),
-          subtitle: Text(widget.formData.getDoktor()),
+          onTap: () => pushToFormPage(formData),
+          leading: Text(formData.getTarih().toString()),
+          title: Text(formData.getStajTuru()),
+          subtitle: Text(formData.getDoktor()),
           isThreeLine: true,
         ),
       ),

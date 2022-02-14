@@ -7,6 +7,7 @@ import 'package:internship_managing_system/student/not%20managed/notifications.d
 import 'package:internship_managing_system/student/not%20managed/rejected_forms.dart';
 import 'package:internship_managing_system/student/screens/sent_forms.dart';
 import 'package:internship_managing_system/student/not%20managed/settings.dart';
+import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 
 import 'form_page.dart';
 
@@ -19,12 +20,27 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
+  //TODO: The list item counter is not refreshing when it changed.
   var currentPage = DrawerSections.hastaEtkilesim;
   Text? title;
+  final SQFLiteHelper _helper = SQFLiteHelper.instance;
+  int counter=0;
+   getCounter()async {
+       counter= await _helper.getForms().then((value) {
+         return value.length;
 
+     });
+  }
+  @override
+  void initState() {
+    super.initState();
+    getCounter();
+  }
 
   @override
   Widget build(BuildContext context) {
+
+
     dynamic container;
     if (currentPage == DrawerSections.hastaEtkilesim) {
       title = const Text("Hasta Etkileşim Formu");
@@ -49,16 +65,13 @@ class _SideBarState extends State<SideBar> {
       container = const Notifications();
     }
 
-    int counter = 5;
     return Scaffold(
       appBar: AppBar(
-
         centerTitle: true,
         title: title,
       ),
       body: container,
       drawer: Drawer(
-
         child: ListView(
           children: [myDrawerList(counter)],
         ),
@@ -74,7 +87,8 @@ class _SideBarState extends State<SideBar> {
       child: Column(
         // shows the list of menu drawer
         children: [
-          menuItem(0, "Internship Application", FontAwesomeIcons.bookMedical, false),
+          menuItem(
+              0, "Internship Application", FontAwesomeIcons.bookMedical, false),
           const Divider(),
           menuItem(1, "Hasta Etkileşim Kaydı", FontAwesomeIcons.map,
               currentPage == DrawerSections.hastaEtkilesim ? true : false),
@@ -83,9 +97,12 @@ class _SideBarState extends State<SideBar> {
               currentPage == DrawerSections.gonderilenFormlar ? true : false),
           menuItem(3, "Onaylanan Formlar", FontAwesomeIcons.heart,
               currentPage == DrawerSections.onaylananFormlar ? true : false),
-          menuItem(4, "Reddedilen Formlar", FontAwesomeIcons.exclamationTriangle,
+          menuItem(
+              4,
+              "Reddedilen Formlar",
+              FontAwesomeIcons.exclamationTriangle,
               currentPage == DrawerSections.reddedilenFormlar ? true : false),
-          menuItem(5, "Taslaklar($counter)",  FontAwesomeIcons.database,
+          menuItem(5, "Taslaklar($counter)", FontAwesomeIcons.database,
               currentPage == DrawerSections.taslaklar ? true : false),
           const Divider(),
           menuItem(6, "Ayarlar", FontAwesomeIcons.wrench,
@@ -104,7 +121,7 @@ class _SideBarState extends State<SideBar> {
 
   Widget menuItem(int id, String title, IconData icon, bool selected) {
     return Material(
-      color: selected ?const Color(0xff5f5f5) :const Color(0xf000000),
+      color: selected ? const Color(0xff5f5f5) : const Color(0xf000000),
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
@@ -135,11 +152,7 @@ class _SideBarState extends State<SideBar> {
           child: Row(
             children: [
               Expanded(
-                child: Icon(
-                  icon,
-                  size: 20,
-                  color: ICON_COLOR
-                ),
+                child: Icon(icon, size: 20, color: ICON_COLOR),
               ),
               Expanded(
                 flex: 3,

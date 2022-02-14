@@ -3,13 +3,12 @@ import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_content_list.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/student/screens/drafts.dart';
 import 'package:internship_managing_system/student/services/DbService.dart';
 import 'package:internship_managing_system/shared/custom_snackbar.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:provider/provider.dart';
 import 'package:internship_managing_system/shared/constants.dart';
-import 'package:flutter/services.dart' as rootBundle;
+import 'package:flutter/services.dart' as root_bundle;
 import 'dart:convert';
 
 class FormPage extends StatefulWidget {
@@ -46,8 +45,9 @@ class _HomePageState extends State<FormPage> {
     void handleDelete() {
       setState(() {
         _helper.remove(formArguments!.formData.id);
+        Navigator.pop(context);
         customSnackBar(context, 'Başarıyla silindi');
-        Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
+        //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
       });
     }
 
@@ -107,7 +107,7 @@ class _HomePageState extends State<FormPage> {
                   );
                 }
               })),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 44,
         width: double.infinity,
         child: Row(
@@ -199,7 +199,7 @@ class _HomePageState extends State<FormPage> {
   }
 
   //TextFieldWidget
-  Container myTextFieldRow(
+  Padding myTextFieldRow(
       int minLine,
       String text,
       int? maxLength,
@@ -207,46 +207,44 @@ class _HomePageState extends State<FormPage> {
       Function regexFunction,
       TextEditingController controller,
       double height) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          children: [
-            SizedBox(
-              child: Text(
-                text,
-                style: TEXT_STYLE,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        children: [
+          SizedBox(
+            child: Text(
+              text,
+              style: TEXT_STYLE,
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          SizedBox(
+            height: height,
+            child: TextFormField(
+              controller: controller,
+              validator: (value) => regexFunction(value),
+              onChanged: (input) => function(input.toString()),
+              autofocus: false,
+              textAlignVertical: TextAlignVertical.bottom,
+              style: TEXT_STYLE.copyWith(fontSize: 16),
+              maxLength: maxLength,
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+              minLines: minLine,
+              expands: false,
+              decoration: const InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                    borderRadius: BorderRadius.all(Radius.circular(3))),
+                // labelStyle:kTextStyle.copyWith(fontSize: 16, color: Colors.white54),
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            SizedBox(
-              height: height,
-              child: TextFormField(
-                controller: controller,
-                validator: (value) => regexFunction(value),
-                onChanged: (input) => function(input.toString()),
-                autofocus: false,
-                textAlignVertical: TextAlignVertical.bottom,
-                style: TEXT_STYLE.copyWith(fontSize: 16),
-                maxLength: maxLength,
-                maxLines: null, //TODO:Arrange maxlines for the inputs
-                keyboardType: TextInputType.multiline,
-                minLines: minLine,
-                expands: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
-                      borderRadius: BorderRadius.all(Radius.circular(3))),
-                  // labelStyle:kTextStyle.copyWith(fontSize: 16, color: Colors.white54),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -280,7 +278,7 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueCinsiyet = newVal!;
       _formData.setCinsiyet(_valueCinsiyet);
-      if(formArguments != null) {
+      if (formArguments != null) {
         formArguments?.formData.setCinsiyet(newVal);
       }
     });
@@ -290,7 +288,7 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueStajTuru = newVal;
       _formData.setStajTuru(newVal);
-      if(formArguments != null) {
+      if (formArguments != null) {
         formArguments?.formData.setStajTuru(newVal);
       }
     });
@@ -300,7 +298,7 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueEtkilesim = newVal;
       _formData.setEtkilesimTuru(newVal);
-      if(formArguments != null) {
+      if (formArguments != null) {
         formArguments?.formData.setEtkilesimTuru(newVal);
       }
     });
@@ -310,7 +308,7 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueKapsam = newVal;
       _formData.setKapsam(newVal);
-      if(formArguments != null) {
+      if (formArguments != null) {
         formArguments?.formData.setKapsam(newVal);
       }
     });
@@ -320,7 +318,7 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueOrtam = newVal;
       _formData.setOrtam(newVal);
-      if(formArguments != null) {
+      if (formArguments != null) {
         formArguments?.formData.setOrtam(newVal);
       }
     });
@@ -330,7 +328,7 @@ class _HomePageState extends State<FormPage> {
     setState(() {
       _valueDoktor = newVal;
       _formData.setDoktor(newVal);
-      if(formArguments != null) {
+      if (formArguments != null) {
         formArguments?.formData.setDoktor(newVal);
       }
     });
@@ -357,7 +355,6 @@ class _HomePageState extends State<FormPage> {
         customSnackBar(context, 'Başarıyla gönderildi');
       }
     });
-
   }
 
   void handleSave() {
@@ -370,6 +367,7 @@ class _HomePageState extends State<FormPage> {
         formArguments?.formData.setKesinTani(_kesin.text);
         formArguments?.formData.setTedaviYontemi(_tedavi.text);
         _helper.update(formArguments!.formData);
+        Navigator.pop(context);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       } else {
         _helper.insert(_formData);
@@ -397,7 +395,7 @@ class _HomePageState extends State<FormPage> {
 
   Future<List<FormContent>> readJsonData() async {
     final jsonData =
-        await rootBundle.rootBundle.loadString('assets/json/formdata.json');
+        await root_bundle.rootBundle.loadString('assets/json/formdata.json');
     return [
       for (final e in json.decode(jsonData)) FormContent.fromJson(e),
     ];

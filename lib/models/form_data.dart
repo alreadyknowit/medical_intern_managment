@@ -35,8 +35,6 @@ class FormData with ChangeNotifier {
   String getKapsam() => kapsam ?? "Öykü";
   String getOrtam() => gerceklestigiOrtam ?? "Poliklinik";
   String getTarih() {
-    print(DateTime.now());
-    print(formattedStr);
     return formattedStr;
   }
 

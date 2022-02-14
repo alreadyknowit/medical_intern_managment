@@ -6,6 +6,6 @@ customSnackBar(BuildContext context, String text) {
     message: text,
     backgroundColor: Colors.grey.shade700,
     duration: const Duration(seconds: 2),
-    flushbarPosition: FlushbarPosition.TOP,
+    flushbarPosition: FlushbarPosition.BOTTOM,
   ).show(context);
 }
