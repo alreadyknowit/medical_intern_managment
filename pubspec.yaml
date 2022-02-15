@@ -43,6 +43,7 @@ dependencies:
   another_flushbar: ^1.10.28
   google_fonts: ^2.3.1
   pull_to_refresh: ^2.0.0
+  mysql1: ^0.19.2
 
 dev_dependencies:
   flutter_test:

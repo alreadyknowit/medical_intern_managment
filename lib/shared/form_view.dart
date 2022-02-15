@@ -43,7 +43,7 @@ class FormView extends StatelessWidget {
                 'Gerçekleştiği Ortam', formData.getOrtam()),
             const SizedBox(height: 10,),
             studentFormPageRowInstance(
-                'Tarih', formData.getTarih()),
+                'Tarih', formData.getTarih()!),
           ],
         ),
       ),
@@ -60,10 +60,7 @@ class FormView extends StatelessWidget {
             '${label.toUpperCase()}:',
             overflow: TextOverflow.ellipsis,
             maxLines: 10,
-            style: TEXT_STYLE.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w700
-            ),
+            style: TEXT_STYLE
           ),
         ),
         const SizedBox(
@@ -72,9 +69,7 @@ class FormView extends StatelessWidget {
         Expanded(
           child: Text(
             content,
-            style: TEXT_STYLE.copyWith(
-                fontSize: 12,
-            ),
+            style: TEXT_STYLE
 
           ),
         ),

@@ -8,7 +8,6 @@ import 'package:internship_managing_system/student/not%20managed/rejected_forms.
 import 'package:internship_managing_system/student/screens/sent_forms.dart';
 import 'package:internship_managing_system/student/not%20managed/settings.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
-
 import 'form_page.dart';
 
 class SideBar extends StatefulWidget {
@@ -24,23 +23,20 @@ class _SideBarState extends State<SideBar> {
   var currentPage = DrawerSections.hastaEtkilesim;
   Text? title;
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
-  int counter=0;
-   getCounter()async {
-       counter= await _helper.getForms().then((value) {
-         return value.length;
-
-     });
-  }
   @override
   void initState() {
     super.initState();
     getCounter();
   }
 
+  //int counter = 0;
+  getCounter() async {
+    return await _helper.getForms().then((value) => value.length);
+
+  }
+
   @override
   Widget build(BuildContext context) {
-
-
     dynamic container;
     if (currentPage == DrawerSections.hastaEtkilesim) {
       title = const Text("Hasta Etkileşim Formu");
@@ -73,13 +69,16 @@ class _SideBarState extends State<SideBar> {
       body: container,
       drawer: Drawer(
         child: ListView(
-          children: [myDrawerList(counter)],
+          children: [myDrawerList(getCounter())],
         ),
       ),
     );
   }
 
-  Widget myDrawerList(int counter) {
+  Widget myDrawerList(Future<dynamic> res) {
+
+    int counter=0;
+
     return Container(
       padding: const EdgeInsets.only(
         top: 15,
@@ -102,7 +101,10 @@ class _SideBarState extends State<SideBar> {
               "Reddedilen Formlar",
               FontAwesomeIcons.exclamationTriangle,
               currentPage == DrawerSections.reddedilenFormlar ? true : false),
-          menuItem(5, "Taslaklar($counter)", FontAwesomeIcons.database,
+          menuItem(
+              5,
+              "Taslaklar(0})",
+              FontAwesomeIcons.database,
               currentPage == DrawerSections.taslaklar ? true : false),
           const Divider(),
           menuItem(6, "Ayarlar", FontAwesomeIcons.wrench,

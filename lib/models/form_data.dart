@@ -8,8 +8,7 @@ class FormData with ChangeNotifier {
   String? kayitNo;
   String? stajTuru;
   String? doktor; //TODO: Convert string to AttendingPhysician type object
-  // late AttendingPhysician klinikEgitici;
-  String? yas; // TODO: Convert to string later
+  String? yas; // TODO: Convert to int later
   String? cinsiyet;
   String? sikayet;
   String? ayiriciTani;
@@ -18,10 +17,10 @@ class FormData with ChangeNotifier {
   String? etkilesimTuru;
   String? kapsam;
   String? gerceklestigiOrtam;
-  bool? isAccepted;
-  bool? isRejected;
-  final formattedStr = formatDate(
-      DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, '\n    ', HH, ':', nn]);
+
+  String? tarih;
+  String? status;
+  String? getTarih() => tarih;
   String getKayitNo() => kayitNo ?? "";
   String getStajTuru() => stajTuru ?? "Diğer";
   String getDoktor() => doktor ?? "Diğer";
@@ -34,12 +33,11 @@ class FormData with ChangeNotifier {
   String getEtkilesimTuru() => etkilesimTuru ?? "Gözlem";
   String getKapsam() => kapsam ?? "Öykü";
   String getOrtam() => gerceklestigiOrtam ?? "Poliklinik";
-  String getTarih() {
-    return formattedStr;
-  }
-
+  String getStatus() => status ?? 'not implemented';
   FormData(
-      {this.id,
+      {this.status,
+      this.tarih,
+      this.id,
       this.kayitNo,
       this.stajTuru,
       this.doktor,
@@ -52,7 +50,6 @@ class FormData with ChangeNotifier {
       this.etkilesimTuru,
       this.kapsam,
       this.gerceklestigiOrtam});
-
   factory FormData.fromJson(Map<String, dynamic> json) {
     return FormData(kayitNo: json['kayit_no']);
   }
@@ -89,6 +86,15 @@ class FormData with ChangeNotifier {
       SQFLiteHelper.columnOrtam: gerceklestigiOrtam,
       SQFLiteHelper.columnKapsam: kapsam,
     };
+  }
+
+  void setStatus(String status) {
+    this.status = status;
+  }
+
+  void setTarih() {
+    tarih = formatDate(
+        DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, ',', HH, ':', nn]);
   }
 
   void setStajTuru(String stajTuru) {

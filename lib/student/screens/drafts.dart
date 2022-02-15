@@ -22,8 +22,12 @@ class _DraftsState extends State<Drafts> {
   }
 
   Future<void> _refresh() async {
-    await  _helper.getForms();
+
+    await _helper.getForms().then((value) {
+      setState(() {});
+    });
   }
+
 //TODO: RefreshIndicator not working.
 //TODO:When the list changed nothing is happening until the draft section is rebuilt
   @override
@@ -34,8 +38,12 @@ class _DraftsState extends State<Drafts> {
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
-              return const Center(
-                  child: Text("Henüz kaydedilmiş taslak bulunmamaktadır."));
+              return Center(
+                  child: Text(
+                "Henüz kaydedilmiş taslak bulunmamaktadır.",
+                textAlign: TextAlign.center,
+                style: TEXT_STYLE,
+              ));
             }
             if (snapshot.hasError) {
               return Center(
@@ -46,18 +54,22 @@ class _DraftsState extends State<Drafts> {
             }
             if (snapshot.connectionState == ConnectionState.done) {
               return RefreshIndicator(
-             triggerMode: RefreshIndicatorTriggerMode.anywhere,
                 backgroundColor: Colors.grey[700],
                 color: LIGHT_BUTTON_COLOR,
                 onRefresh: _refresh,
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return CustomListTile(
-                        formData: snapshot.data![index], index: index);
-                  },
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return CustomListTile(
+                          formData: snapshot.data![index], index: index);
+                    },
+                  ),
                 ),
               );
             }

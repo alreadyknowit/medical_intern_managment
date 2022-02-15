@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/shared/custom_alert.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_content_list.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/student/services/DbService.dart';
 import 'package:internship_managing_system/shared/custom_snackbar.dart';
+import 'package:internship_managing_system/student/services/MySqlHelper.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:provider/provider.dart';
 import 'package:internship_managing_system/shared/constants.dart';
@@ -19,6 +21,7 @@ class FormPage extends StatefulWidget {
 
 class _HomePageState extends State<FormPage> {
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
+  final MySqlHelper _mySqlHelper = MySqlHelper();
   @override
   Widget build(BuildContext context) {
     formArguments =
@@ -146,21 +149,14 @@ class _HomePageState extends State<FormPage> {
       String initialVal, List<String> listItems, String text, Function myFunc) {
     return Container(
       margin: const EdgeInsets.all(8),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Column(
         children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              text,
-              style: TEXT_STYLE,
-            ),
+          Text(
+            text,
+            style: TEXT_STYLE,
           ),
-          const SizedBox(
-            width: 20,
-          ),
-          Expanded(
+          Padding(
+            padding: const EdgeInsets.all(15.0),
             child: Container(
               height: 50,
               decoration: BoxDecoration(
@@ -169,13 +165,12 @@ class _HomePageState extends State<FormPage> {
               child: DropdownButtonFormField<String>(
                 decoration: const InputDecoration(border: InputBorder.none),
                 isExpanded: true,
-                //onTap: () => myFunc,
-                //borderRadius: BorderRadius.circular(5),
                 value: initialVal,
                 icon: const Icon(
                   Icons.arrow_downward,
                   color: ICON_COLOR,
                 ),
+                validator: (val) => val==null? 'Seçim zorunludur!'  : null,
                 iconSize: 24,
                 elevation: 16,
                 dropdownColor: Colors.grey[800],
@@ -184,9 +179,11 @@ class _HomePageState extends State<FormPage> {
                 items: listItems.map<DropdownMenuItem<String>>((String? val) {
                   return DropdownMenuItem(
                     value: val == null ? val = initialVal : val = val,
-                    child: Text(
-                      val,
-                      style: TEXT_STYLE,
+                    child: Center(
+                      child: Text(
+                        val,
+                        style: TEXT_STYLE,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -275,86 +272,89 @@ class _HomePageState extends State<FormPage> {
   final TextEditingController _tedavi = TextEditingController();
 
   void onChangedCinsiyet(String? newVal) {
-    setState(() {
-      _valueCinsiyet = newVal!;
-      _formData.setCinsiyet(_valueCinsiyet);
-      if (formArguments != null) {
-        formArguments?.formData.setCinsiyet(newVal);
-      }
-    });
+    if (formArguments != null) {
+      formArguments?.formData.setCinsiyet(newVal!);
+    } else {
+      setState(() {
+        _valueCinsiyet = newVal!;
+        _formData.setCinsiyet(_valueCinsiyet);
+      });
+    }
   }
 
-  void onChangedStajTuru(String newVal) {
-    setState(() {
-      _valueStajTuru = newVal;
-      _formData.setStajTuru(newVal);
-      if (formArguments != null) {
-        formArguments?.formData.setStajTuru(newVal);
-      }
-    });
+  void onChangedStajTuru(String? newVal) {
+    if (formArguments != null) {
+      formArguments?.formData.setStajTuru(newVal!);
+    } else {
+      setState(() {
+        _valueStajTuru = newVal!;
+        _formData.setStajTuru(newVal);
+      });
+    }
   }
 
   void onChangedEtkilesim(String newVal) {
-    setState(() {
-      _valueEtkilesim = newVal;
-      _formData.setEtkilesimTuru(newVal);
-      if (formArguments != null) {
-        formArguments?.formData.setEtkilesimTuru(newVal);
-      }
-    });
+    if (formArguments != null) {
+      formArguments?.formData.setEtkilesimTuru(newVal);
+    } else {
+      setState(() {
+        _valueEtkilesim = newVal;
+        _formData.setEtkilesimTuru(newVal);
+      });
+    }
   }
 
   void onChangedKapsam(String newVal) {
-    setState(() {
-      _valueKapsam = newVal;
-      _formData.setKapsam(newVal);
-      if (formArguments != null) {
-        formArguments?.formData.setKapsam(newVal);
-      }
-    });
+    if (formArguments != null) {
+      formArguments?.formData.setKapsam(newVal);
+    } else {
+      setState(() {
+        _valueKapsam = newVal;
+        _formData.setKapsam(newVal);
+      });
+    }
   }
 
   void onChangedOrtam(String newVal) {
-    setState(() {
-      _valueOrtam = newVal;
-      _formData.setOrtam(newVal);
-      if (formArguments != null) {
-        formArguments?.formData.setOrtam(newVal);
-      }
-    });
+    if (formArguments != null) {
+      formArguments?.formData.setOrtam(newVal);
+    } else {
+      setState(() {
+        _valueOrtam = newVal;
+        _formData.setOrtam(newVal);
+      });
+    }
   }
 
   void onChangedDoktor(String newVal) {
-    setState(() {
-      _valueDoktor = newVal;
-      _formData.setDoktor(newVal);
-      if (formArguments != null) {
-        formArguments?.formData.setDoktor(newVal);
-      }
-    });
+    if (formArguments != null) {
+      formArguments?.formData.setDoktor(newVal);
+    } else {
+      setState(() {
+        _valueDoktor = newVal;
+        _formData.setDoktor(newVal);
+      });
+    }
   }
 
-  void handleSubmit() {
-    Future<FormData>? _futureFormData;
-    setState(() {
-      if (_formKey.currentState!.validate()) {
-        _futureFormData = _db.createForm(
-            _kayit.text,
-            _valueStajTuru,
-            _valueDoktor,
-            _yas.text,
-            _valueCinsiyet,
-            _sikayet.text,
-            _ayirici.text,
-            _kesin.text,
-            _tedavi.text,
-            _valueOrtam,
-            _valueEtkilesim,
-            _valueKapsam);
-        Provider.of<FormList>(context, listen: false).addSentList(_formData);
+  void handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      onChangedCinsiyet(_valueCinsiyet);
+      onChangedStajTuru(_valueStajTuru);
+      onChangedDoktor(_valueDoktor);
+      onChangedEtkilesim(_valueEtkilesim);
+      onChangedKapsam(_valueKapsam);
+      onChangedOrtam(_valueOrtam);
+      _formData.setTarih();
+      _formData.setStatus('waiting');
+      print(_formData.getStatus());
+      bool res = await _mySqlHelper.insertData(_formData).then((val) => val);
+      if (res) {
         customSnackBar(context, 'Başarıyla gönderildi');
+      } else {
+        showMyDialog(context);
       }
-    });
+    }
   }
 
   void handleSave() {
@@ -366,13 +366,13 @@ class _HomePageState extends State<FormPage> {
         formArguments?.formData.setAyiriciTani(_ayirici.text);
         formArguments?.formData.setKesinTani(_kesin.text);
         formArguments?.formData.setTedaviYontemi(_tedavi.text);
+        formArguments?.formData.setTarih();
         _helper.update(formArguments!.formData);
         Navigator.pop(context);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       } else {
         _helper.insert(_formData);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
-        // Provider.of<FormList>(context, listen: false).addDraftList(_formData);
       }
     });
   }
