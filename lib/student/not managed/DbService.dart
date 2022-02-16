@@ -4,7 +4,6 @@ import 'package:internship_managing_system/models/form_data.dart';
 
 class DbService {
   Future<FormData> createForm(
-
       String kayitNo,
       String stajTuru,
       String doktor,

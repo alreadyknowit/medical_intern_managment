@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_alert.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_content_list.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/student/services/DbService.dart';
+import 'package:internship_managing_system/student/not%20managed/DbService.dart';
 import 'package:internship_managing_system/shared/custom_snackbar.dart';
 import 'package:internship_managing_system/student/services/MySqlHelper.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
@@ -22,6 +23,7 @@ class FormPage extends StatefulWidget {
 class _HomePageState extends State<FormPage> {
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
   final MySqlHelper _mySqlHelper = MySqlHelper();
+
   @override
   Widget build(BuildContext context) {
     formArguments =
@@ -45,16 +47,9 @@ class _HomePageState extends State<FormPage> {
       _valueOrtam = args!.getOrtam();
       _valueStajTuru = args!.getStajTuru();
     }
-    void handleDelete() {
-      setState(() {
-        _helper.remove(formArguments!.formData.id);
-        Navigator.pop(context);
-        customSnackBar(context, 'Başarıyla silindi');
-        //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
-      });
-    }
 
-    return Scaffold(
+
+    return isLoading ? spinkit :Scaffold(
       body: SafeArea(
           child: FutureBuilder(
               future: readJsonData(),
@@ -246,7 +241,7 @@ class _HomePageState extends State<FormPage> {
     );
   }
 
-  final DbService _db = DbService();
+
   final FormData _formData = FormData();
   late FormData? args;
   late int? index;
@@ -270,6 +265,7 @@ class _HomePageState extends State<FormPage> {
   final TextEditingController _ayirici = TextEditingController();
   final TextEditingController _kesin = TextEditingController();
   final TextEditingController _tedavi = TextEditingController();
+  bool isLoading=false;
 
   void onChangedCinsiyet(String? newVal) {
     if (formArguments != null) {
@@ -336,23 +332,62 @@ class _HomePageState extends State<FormPage> {
       });
     }
   }
-
+  void handleDelete() {
+    setState(() {
+      _helper.remove(formArguments!.formData.id);
+      Navigator.pop(context);
+      customSnackBar(context, 'Başarıyla silindi');
+      //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
+    });
+  }
   void handleSubmit() async {
     if (_formKey.currentState!.validate()) {
-      onChangedCinsiyet(_valueCinsiyet);
-      onChangedStajTuru(_valueStajTuru);
-      onChangedDoktor(_valueDoktor);
-      onChangedEtkilesim(_valueEtkilesim);
-      onChangedKapsam(_valueKapsam);
-      onChangedOrtam(_valueOrtam);
-      _formData.setTarih();
-      _formData.setStatus('waiting');
-      print(_formData.getStatus());
-      bool res = await _mySqlHelper.insertData(_formData).then((val) => val);
-      if (res) {
-        customSnackBar(context, 'Başarıyla gönderildi');
-      } else {
-        errorAlert(context);
+      if (formArguments != null) {
+        formArguments?.formData.setKayitNo(_kayit.text);
+        formArguments?.formData.setYas(_yas.text);
+        formArguments?.formData.setSikayet(_sikayet.text);
+        formArguments?.formData.setAyiriciTani(_ayirici.text);
+        formArguments?.formData.setKesinTani(_kesin.text);
+        formArguments?.formData.setTedaviYontemi(_tedavi.text);
+        onChangedCinsiyet(_valueCinsiyet);
+        onChangedStajTuru(_valueStajTuru);
+        onChangedDoktor(_valueDoktor);
+        onChangedEtkilesim(_valueEtkilesim);
+        onChangedKapsam(_valueKapsam);
+        onChangedOrtam(_valueOrtam);
+        formArguments?.formData.setTarih();
+        formArguments?.formData.setStatus('waiting');
+        bool res = await _mySqlHelper.insertData(formArguments!.formData).then((val){
+        //  _helper.update(formArguments!.formData);
+          return val;
+        });
+        if (res) {
+          customSnackBar(context, 'Başarıyla gönderildi');
+        } else {
+          errorAlert(context);
+        }
+      }else{
+        onChangedCinsiyet(_valueCinsiyet);
+        onChangedStajTuru(_valueStajTuru);
+        onChangedDoktor(_valueDoktor);
+        onChangedEtkilesim(_valueEtkilesim);
+        onChangedKapsam(_valueKapsam);
+        onChangedOrtam(_valueOrtam);
+        _formData.setTarih();
+        _formData.setStatus('waiting');
+          isLoading=true;
+        bool res = await _mySqlHelper.insertData(_formData).then((val) {
+         setState(() {
+           isLoading=false;
+           _formKey.currentState?.dispose();
+         });
+          return val;
+        });
+        if (res) {
+          customSnackBar(context, 'Başarıyla gönderildi');
+        } else {
+          errorAlert(context);
+        }
       }
     }
   }
@@ -367,11 +402,13 @@ class _HomePageState extends State<FormPage> {
         formArguments?.formData.setKesinTani(_kesin.text);
         formArguments?.formData.setTedaviYontemi(_tedavi.text);
         formArguments?.formData.setTarih();
+        print(formArguments?.formData.tarih);
         _helper.update(formArguments!.formData);
         Navigator.pop(context);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       } else {
         _formData.setTarih();
+        print(_formData.tarih);
         _helper.insert(_formData);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       }

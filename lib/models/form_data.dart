@@ -20,7 +20,7 @@ class FormData with ChangeNotifier {
 
   String? tarih;
   String? status;
-  String? getTarih() => tarih;
+  String getTarih() => tarih ?? formatDate(DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, ' ', HH, ':', nn]);
   String getKayitNo() => kayitNo ?? "";
   String getStajTuru() => stajTuru ?? "Diğer";
   String getDoktor() => doktor ?? "Diğer";
@@ -94,7 +94,7 @@ class FormData with ChangeNotifier {
 
   void setTarih() {
     tarih = formatDate(
-        DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, ',', HH, ':', nn]);
+        DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, ' ', HH, ':', nn]);
   }
 
   void setStajTuru(String stajTuru) {

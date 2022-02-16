@@ -7,6 +7,8 @@ import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:internship_managing_system/student/services/MySqlHelper.dart';
 import 'package:provider/provider.dart';
 
+import '../../shared/form_view.dart';
+
 class PendingForms extends StatefulWidget {
   const PendingForms({Key? key}) : super(key: key);
 
@@ -50,6 +52,7 @@ class _PendingFormsState extends State<PendingForms> {
                         text:
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
+                      //TODO: emoji
                       TextSpan(
                         text: '🧭 🏳️\u200d🌈', // emoji characters
                         style: TextStyle(
@@ -76,7 +79,7 @@ class _PendingFormsState extends State<PendingForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index);
+                          formData: snapshot.data![index], index: index,isFormView: true,);
                     },
                   ),
                 ),

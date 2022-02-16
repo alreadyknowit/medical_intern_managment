@@ -6,7 +6,6 @@ import 'package:internship_managing_system/attending_physician/services/MySqlHel
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:internship_managing_system/attending_physician//data/formInstances.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/attending_physician//widget/form_card_widget.dart';
 
@@ -18,16 +17,21 @@ class AttendingPhysician extends StatefulWidget {
 class _AttendingPhysicianState extends State<AttendingPhysician> {
   final MySqlHelper _mySqlHelper = MySqlHelper();
   List<FormData> formList = [];
-  bool isLoading = true;
+  bool isLoading = false;
   getForms() async {
+    setState(() {
+      isLoading=true;
+    });
     formList = await _mySqlHelper.fetchWaitingForms().then((value) {
       setState(() {
-        isLoading = !isLoading;
+        isLoading = false;
       });
+
       return value;
     });
     print(formList.length);
   }
+
 
   @override
   void initState() {
@@ -43,26 +47,33 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
           appBar: buildAppBar(),
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: isLoading
-                  ? spinkit
-                  : Column(
-                      children: [
-                        formList.isEmpty
-                            ? const Text('No more forms')
-                            : Stack(children: formList.map(buildForm).toList()),
-                        const SizedBox(
-                          height: 40,
+                padding: const EdgeInsets.all(8),
+                child: isLoading
+                    ? spinkit
+                    :  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            formList.isEmpty
+                                ? const Center(child:Text('Başka form kalmadı...') ,)
+                                : Stack(
+                                    children: formList.map(buildForm).toList()),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            Expanded(
+                                child: Text(
+                              "Onaylamak için sağa doğru, reddetmek için sola doğru kaydırın.",
+                              textAlign: TextAlign.center,
+                              style: TEXT_STYLE.copyWith(fontSize: 14),
+                            )),
+                          ],
                         ),
-                        Expanded(
-                            child: Text(
-                          "Onaylamak için sağa doğru, reddetmek için sola doğru kaydırın.",
-                          textAlign: TextAlign.center,
-                          style: TEXT_STYLE.copyWith(fontSize: 14),
-                        )),
-                      ],
-                    ),
-            ),
+                        ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: getForms,
+            backgroundColor: PRIMARY_BUTTON_COLOR,
+            child: const Icon(Icons.refresh),
           ),
         );
       });

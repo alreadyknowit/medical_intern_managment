@@ -45,7 +45,7 @@ class _SideBarState extends State<SideBar> {
       title = const Text("Taslaklar");
       container = Drafts();
     } else if (currentPage == DrawerSections.gonderilenFormlar) {
-      title = const Text("Gönderilen Fromlar");
+      title = const Text("Onay Bekleyen Fromlar");
       container = const PendingForms();
     } else if (currentPage == DrawerSections.onaylananFormlar) {
       title = const Text("Onaylanan Formlar");

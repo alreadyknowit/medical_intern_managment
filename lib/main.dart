@@ -4,7 +4,6 @@ import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/student/screens/side_bar.dart';
 import 'package:provider/provider.dart';
-
 import 'attending_physician/attending_physician.dart';
 
 void main() {
@@ -26,7 +25,7 @@ class InternshipManagingSystem extends StatelessWidget {
       builder: (context, _) => MaterialApp(
         theme: ThemeData.dark(),
         themeMode: ThemeMode.dark,
-        home: SideBar(),//AttendingPhysician(),//SideBar(),//AttendingPhysician(),
+        home:SideBar(),//AttendingPhysician(),
       ),
     );
   }

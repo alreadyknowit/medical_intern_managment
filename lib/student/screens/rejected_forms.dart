@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
+import '../../shared/form_view.dart';
 import '../services/MySqlHelper.dart';
 
 import '../../models/form_data.dart';
@@ -74,7 +75,7 @@ class _RejectedFormsState extends State<RejectedForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index);
+                          formData: snapshot.data![index], index: index,isFormView: true,);
                     },
                   ),
                 ),

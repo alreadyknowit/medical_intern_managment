@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
+import 'package:internship_managing_system/student/screens/form_page.dart';
 
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 
@@ -24,7 +25,6 @@ class _DraftsState extends State<Drafts> {
   }
 
   Future<void> _refresh() async {
-
     await _helper.getForms().then((value) {
       setState(() {});
     });
@@ -69,7 +69,7 @@ class _DraftsState extends State<Drafts> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index);
+                          formData: snapshot.data![index], index: index, isFormView: false,);
                     },
                   ),
                 ),
