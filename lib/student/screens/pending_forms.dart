@@ -1,58 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
+import 'package:internship_managing_system/student/services/MySqlHelper.dart';
+import 'package:provider/provider.dart';
 
-import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
-
-import '../../shared/custom_spinkit.dart';
-
-class Drafts extends StatefulWidget {
-  const Drafts({Key? key}) : super(key: key);
+class PendingForms extends StatefulWidget {
+  const PendingForms({Key? key}) : super(key: key);
 
   @override
-  _DraftsState createState() => _DraftsState();
+  State<PendingForms> createState() => _PendingFormsState();
 }
 
-class _DraftsState extends State<Drafts> {
-  final SQFLiteHelper _helper = SQFLiteHelper.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    _helper.getForms();
-  }
-
+class _PendingFormsState extends State<PendingForms> {
+  final MySqlHelper _mySqlHelper = MySqlHelper();
+  final String _status='waiting';
+  int limit=50;
   Future<void> _refresh() async {
 
-    await _helper.getForms().then((value) {
+    await _mySqlHelper.fetchForms(_status,limit).then((value) {
       setState(() {});
     });
   }
 
-//TODO: RefreshIndicator not working.
-//TODO:When the list changed nothing is happening until the draft section is rebuilt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<FormData>?>(
-          future: _helper.getForms(),
+          future: _mySqlHelper.fetchForms(_status,limit),
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                "Henüz kaydedilmiş taslak bulunmamaktadır.",
+                "Henüz gönderilmiş formunuz bulunmamaktadır.",
                 textAlign: TextAlign.center,
                 style: TEXT_STYLE,
               ));
             }
             if (snapshot.hasError) {
+              print(snapshot.error);
               return Center(
-                  child: Text(
-                'Bir şeyler ters gitti.',
-                style: TEXT_STYLE,
-              ));
+                child: RichText(
+                  text: const TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text:
+                            'Sanırım bir şeyler ters gitti', // non-emoji characters
+                      ),
+                      TextSpan(
+                        text: '🧭 🏳️\u200d🌈', // emoji characters
+                        style: TextStyle(
+                          fontFamily: 'EmojiOne',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
             if (snapshot.connectionState == ConnectionState.done) {
               return RefreshIndicator(

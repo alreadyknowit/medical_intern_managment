@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/student/not%20managed/accepted_forms.dart';
+import 'package:internship_managing_system/student/screens/accepted_forms.dart';
 import 'package:internship_managing_system/student/screens/drafts.dart';
 import 'package:internship_managing_system/student/not%20managed/notifications.dart';
-import 'package:internship_managing_system/student/not%20managed/rejected_forms.dart';
-import 'package:internship_managing_system/student/screens/sent_forms.dart';
+import 'package:internship_managing_system/student/screens/rejected_forms.dart';
+import 'package:internship_managing_system/student/screens/pending_forms.dart';
 import 'package:internship_managing_system/student/not%20managed/settings.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'form_page.dart';
@@ -46,7 +46,7 @@ class _SideBarState extends State<SideBar> {
       container = Drafts();
     } else if (currentPage == DrawerSections.gonderilenFormlar) {
       title = const Text("Gönderilen Fromlar");
-      container = const SentForms();
+      container = const PendingForms();
     } else if (currentPage == DrawerSections.onaylananFormlar) {
       title = const Text("Onaylanan Formlar");
       container = const AcceptedForms();

@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
+import 'package:internship_managing_system/attending_physician/services/MySqlHelper.dart';
 import 'package:internship_managing_system/shared/constants.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:internship_managing_system/attending_physician//data/formInstances.dart';
 import 'package:internship_managing_system/models/form_data.dart';
@@ -14,7 +16,26 @@ class AttendingPhysician extends StatefulWidget {
 }
 
 class _AttendingPhysicianState extends State<AttendingPhysician> {
-  final List<FormData> formList = dummyForms.cast<FormData>();
+  final MySqlHelper _mySqlHelper = MySqlHelper();
+  List<FormData> formList = [];
+  bool isLoading = true;
+  getForms() async {
+    formList = await _mySqlHelper.fetchWaitingForms().then((value) {
+      setState(() {
+        isLoading = !isLoading;
+      });
+      return value;
+    });
+    print(formList.length);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getForms();
+  }
+
   @override
   Widget build(BuildContext context) =>
       Builder(builder: (BuildContext context) {
@@ -23,22 +44,24 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  formList.isEmpty
-                      ? const Text('No more forms')
-                      : Stack(children: formList.map(buildForm).toList()),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Expanded(
-                      child: Text(
-                    "Onaylamak için sağa doğru, reddetmek için sola doğru kaydırın.",
-                    textAlign: TextAlign.center,
-                    style: TEXT_STYLE.copyWith(fontSize: 14),
-                  )),
-                ],
-              ),
+              child: isLoading
+                  ? spinkit
+                  : Column(
+                      children: [
+                        formList.isEmpty
+                            ? const Text('No more forms')
+                            : Stack(children: formList.map(buildForm).toList()),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Expanded(
+                            child: Text(
+                          "Onaylamak için sağa doğru, reddetmek için sola doğru kaydırın.",
+                          textAlign: TextAlign.center,
+                          style: TEXT_STYLE.copyWith(fontSize: 14),
+                        )),
+                      ],
+                    ),
             ),
           ),
         );
@@ -79,12 +102,12 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
   double onDragEnd(DraggableDetails details, FormData form) {
     const minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
-      print("accepted");
-      form.status = 'accept';
+      form.setStatus('accept');
+      _mySqlHelper.update(form);
       setState(() => formList.remove(form));
     } else if (details.offset.dx < -minimumDrag) {
-      print("rejected");
-      form.status = 'reject';
+      form.setStatus('reject');
+      _mySqlHelper.update(form);
       setState(() => formList.remove(form));
     }
     return details.offset.dx;

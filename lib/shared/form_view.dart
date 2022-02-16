@@ -43,7 +43,7 @@ class FormView extends StatelessWidget {
                 'Gerçekleştiği Ortam', formData.getOrtam()),
             const SizedBox(height: 10,),
             studentFormPageRowInstance(
-                'Tarih', formData.getTarih()!),
+                'Tarih', formData.getTarih().toString()),
           ],
         ),
       ),

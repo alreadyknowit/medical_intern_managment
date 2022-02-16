@@ -1,13 +1,13 @@
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:mysql1/mysql1.dart';
 
-class MySqlHelper {
-  final String _host =  'sql5.freemysqlhosting.net';//'10.0.2.2';
-  final String _user = "sql5473107";//'root';
-  final String _password = "GLbqwsiid6";//'1234';
+class MySqlHelper{
+  final String _host = 'sql5.freemysqlhosting.net';//'10.0.2.2';
+  final String _user = "sql5473107"; //'root';//
+  final String _password = "GLbqwsiid6"; //'1234';//
   final int _portNo = 3306;
   final String _tableName = 'form_table';
-  final String _db = "sql5473107"; //'forms';
+  final String _db = "sql5473107";//'forms';//
 
   final columnId = 'id';
   final columnKayitNo = 'kayit_no';
@@ -24,6 +24,7 @@ class MySqlHelper {
   final columnTedaviYontemi = 'tedavi_yontemi';
   final columnTarih = 'tarih';
   final columnStatus = 'status';
+
   Future<MySqlConnection> connectDB() async {
     var conn = null;
     try {
@@ -40,12 +41,12 @@ class MySqlHelper {
     }
   }
 
-  //get accepted forms
-  Future<List<FormData>> fetchForms(String status,int limit) async {
+  //get waiting forms
+  Future<List<FormData>> fetchWaitingForms() async {
     List<FormData> formList = [];
     try {
       MySqlConnection conn = await connectDB().then((value) => value);
-      var list = await conn.query('select * from $_tableName where $columnStatus=?  order by id DESC limit $limit',[status]);
+      var list = await conn.query('select * from $_tableName where $columnStatus=?  order by id ASC',['waiting']);
       for (var form in list) {
         list.isNotEmpty
             ? formList.add(
@@ -76,33 +77,12 @@ class MySqlHelper {
     }
   }
 
-//insert new form
-  insertData(FormData formData) async {
+  //update
+  Future<bool> update(FormData form) async {
     try {
       MySqlConnection conn = await connectDB().then((value) => value);
-      print("tarig: " + formData.tarih.toString());
-      print(formData.stajTuru);
-      await conn.query('''insert into $_tableName($columnKayitNo, 
-             $columnSikayet,$columnStajTuru,$columnKlinikEgitici,$columnCinsiyet, 
-             $columnEtkilesimTuru, $columnKapsam,$columnOrtam,$columnYas, 
-             $columnAyiriciTani, $columnKesinTani,$columnTedaviYontemi,$columnTarih,$columnStatus) 
-             values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', [
-        formData.kayitNo,
-        formData.sikayet,
-        formData.stajTuru,
-        formData.doktor,
-        formData.cinsiyet,
-        formData.etkilesimTuru,
-        formData.kapsam,
-        formData.gerceklestigiOrtam,
-        formData.yas,
-        formData.ayiriciTani,
-        formData.kesinTani,
-        formData.tedaviYontemi,
-        formData.tarih,
-        formData.status
-      ]);
-
+      await conn.query('update $_tableName set $columnStatus=? where id=?',
+          [form.status,form.id]);
       await conn.close();
       return true;
     } catch (e) {
@@ -110,4 +90,5 @@ class MySqlHelper {
       return false;
     }
   }
+
 }

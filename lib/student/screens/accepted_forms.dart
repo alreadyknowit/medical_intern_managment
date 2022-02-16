@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_list.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/shared/custom_list_tile.dart';
-import 'package:internship_managing_system/student/services/MySqlHelper.dart';
-import 'package:provider/provider.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
+import '../../models/form_data.dart';
+import '../../shared/constants.dart';
+import '../../shared/custom_list_tile.dart';
+import '../services/MySqlHelper.dart';
 
-class SentForms extends StatefulWidget {
-  const SentForms({Key? key}) : super(key: key);
+class AcceptedForms extends StatefulWidget {
+  const AcceptedForms({Key? key}) : super(key: key);
 
   @override
-  State<SentForms> createState() => _SentFormsState();
+  _AcceptedFormsState createState() => _AcceptedFormsState();
 }
 
-class _SentFormsState extends State<SentForms> {
+class _AcceptedFormsState extends State<AcceptedForms> {
   final MySqlHelper _mySqlHelper = MySqlHelper();
+  final _status = 'accept';
+  int _limit=20;
   Future<void> _refresh() async {
-    print('refresh method is called');
-    await _mySqlHelper.fetchWaitingForms().then((value) {
+    await _mySqlHelper.fetchForms(_status,_limit).then((value) {
       setState(() {});
     });
   }
@@ -26,13 +26,13 @@ class _SentFormsState extends State<SentForms> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<FormData>?>(
-          future: _mySqlHelper.fetchWaitingForms(),
+          future: _mySqlHelper.fetchForms(_status,_limit),
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                "Henüz gönderilmiş formunuz bulunmamaktadır.",
+                "Henüz reddedilen formunuz bulunmamaktadır.",
                 textAlign: TextAlign.center,
                 style: TEXT_STYLE,
               ));
@@ -47,6 +47,7 @@ class _SentFormsState extends State<SentForms> {
                         text:
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
+                      //TODO:Emoji eklenecek
                       TextSpan(
                         text: '🧭 🏳️\u200d🌈', // emoji characters
                         style: TextStyle(
@@ -79,9 +80,7 @@ class _SentFormsState extends State<SentForms> {
                 ),
               );
             }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return spinkit;
           }),
     );
   }

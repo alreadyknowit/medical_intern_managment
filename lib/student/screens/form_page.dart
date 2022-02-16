@@ -352,7 +352,7 @@ class _HomePageState extends State<FormPage> {
       if (res) {
         customSnackBar(context, 'Başarıyla gönderildi');
       } else {
-        showMyDialog(context);
+        errorAlert(context);
       }
     }
   }
@@ -371,6 +371,7 @@ class _HomePageState extends State<FormPage> {
         Navigator.pop(context);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       } else {
+        _formData.setTarih();
         _helper.insert(_formData);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       }

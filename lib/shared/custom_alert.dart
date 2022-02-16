@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 
-Future<void> showMyDialog(BuildContext context) async {
+Future<void> errorAlert(BuildContext context) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!

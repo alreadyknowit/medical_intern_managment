@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import '../services/MySqlHelper.dart';
 
 import '../../models/form_data.dart';
@@ -14,8 +15,10 @@ class RejectedForms extends StatefulWidget {
 
 class _RejectedFormsState extends State<RejectedForms> {
   final MySqlHelper _mySqlHelper = MySqlHelper();
+  final _status ='reject';
+  final _limit=20;
   Future<void> _refresh() async {
-    await _mySqlHelper.fetchRejectedForms().then((value) {
+    await _mySqlHelper.fetchForms(_status,_limit).then((value) {
       setState(() {});
     });
   }
@@ -24,7 +27,7 @@ class _RejectedFormsState extends State<RejectedForms> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<FormData>?>(
-          future: _mySqlHelper.fetchRejectedForms(),
+          future: _mySqlHelper.fetchForms(_status,_limit),
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -77,9 +80,7 @@ class _RejectedFormsState extends State<RejectedForms> {
                 ),
               );
             }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return spinkit;
           }),
     );
   }
