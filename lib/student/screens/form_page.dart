@@ -5,15 +5,16 @@ import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_content_list.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/student/not%20managed/DbService.dart';
 import 'package:internship_managing_system/shared/custom_snackbar.dart';
 import 'package:internship_managing_system/student/services/MySqlHelper.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:provider/provider.dart';
-import 'package:internship_managing_system/shared/constants.dart';
 import 'package:flutter/services.dart' as root_bundle;
 import 'dart:convert';
 
+import '../widgets/widgets.dart';
+
+//TODO: add loading page until the form loaded
 class FormPage extends StatefulWidget {
   const FormPage({Key? key}) : super(key: key);
   @override
@@ -23,9 +24,14 @@ class FormPage extends StatefulWidget {
 class _HomePageState extends State<FormPage> {
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
   final MySqlHelper _mySqlHelper = MySqlHelper();
-
   @override
   Widget build(BuildContext context) {
+    @override
+    initState() {
+      fetchFormContent();
+      super.initState();
+    }
+
     formArguments =
         ModalRoute.of(context)?.settings.arguments as FormArguments?;
     if (formArguments != null) {
@@ -48,60 +54,60 @@ class _HomePageState extends State<FormPage> {
       _valueStajTuru = args!.getStajTuru();
     }
 
-
-    return isLoading ? spinkit :Scaffold(
+    return Scaffold(
       body: SafeArea(
           child: FutureBuilder(
-              future: readJsonData(),
+              future: fetchFormContent(), //readJsonData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text(snapshot.error.toString());
                 } else if (snapshot.hasData) {
-                  var items = snapshot.data as List<dynamic>;
-                  var listStajTuru = items[0].stajTuruItems;
-                  var listCinsiyet = items[0].cinsiyetItems;
-                  var listEtkilesim = items[0].etkilesimTuruItems;
-                  var listKapsam = items[0].kapsamItems;
-                  var listOrtam = items[0].ortamItems;
-                  var listDoktor = items[0].doktorItems;
-                  return Form(
-                    key: _formKey,
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        myDropDownContainer(_valueStajTuru, listStajTuru,
-                            hintTextStajTuru, onChangedStajTuru),
-                        myDropDownContainer(_valueDoktor, listDoktor,
-                            hintTextDoktor, onChangedDoktor),
-                        myDropDownContainer(_valueCinsiyet, listCinsiyet,
-                            hintTextCinsiyet, onChangedCinsiyet),
-                        myDropDownContainer(_valueEtkilesim, listEtkilesim,
-                            hintTextEtkilesim, onChangedEtkilesim),
-                        myDropDownContainer(_valueKapsam, listKapsam,
-                            hintTextKapsam, onChangedKapsam),
-                        myDropDownContainer(_valueOrtam, listOrtam,
-                            hintTextOrtam, onChangedOrtam),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        myTextFieldRow(1, "Kayıt No ", 10, _formData.setKayitNo,
-                            isEmpty, _kayit, 80),
-                        myTextFieldRow(1, "Hastanın Yaşı", 3, _formData.setYas,
-                            isNumeric, _yas, 80),
-                        myTextFieldRow(1, "Şikayet", 10, _formData.setSikayet,
-                            isEmpty, _sikayet, 80),
-                        myTextFieldRow(1, "Ayırıcı Tanı", 10,
-                            _formData.setAyiriciTani, isEmpty, _ayirici, 80),
-                        myTextFieldRow(5, "Kesin Tanı", 50,
-                            _formData.setKesinTani, isEmpty, _kesin, 130),
-                        myTextFieldRow(5, "Tedavi Yöntemi", 200,
-                            _formData.setTedaviYontemi, isEmpty, _tedavi, 130),
-                      ],
-                    ),
-                  );
+                  var listOfContent = snapshot.data as List<List<String>>;
+                  var listOfDoktor = listOfContent[0];
+                  var listOfStajTuru = listOfContent[1];
+                  var listOfCinsiyet = ['Erkek', 'Kadın', 'Diğer'];
+                  var listOfKapsam = [
+                    "Öykü",
+                    "Fizik Bakı",
+                    "Tanısal akıl Yürütme",
+                    "Teropötik akıl yürütme"
+                  ];
+                  var listOfOrtam = [
+                    "Poliklinik",
+                    "Servis",
+                    "Acil",
+                    "Ameliyathane",
+                    "Dış Kurum"
+                  ];
+                  var listOfEtkilesimTuru = [
+                    "Gözlem",
+                    "Yardımla yapma",
+                    "Yardımsız yapma",
+                    "Sanal olgu"
+                  ];
+
+                  _valueDoktor = listOfDoktor[0];
+                  _valueEtkilesim = listOfEtkilesimTuru[0];
+                  _valueKapsam = listOfKapsam[0];
+                  _valueOrtam = listOfOrtam[0];
+                  _valueStajTuru = listOfStajTuru[0];
+                  _valueCinsiyet = listOfCinsiyet[0];
+
+                  Map<String,dynamic> map ={
+                    'doktor':listOfDoktor,
+                    'etkilesim':listOfEtkilesimTuru,
+                    'kapsam':listOfKapsam,
+                    'ortam':listOfOrtam,
+                    'stajTuru':listOfStajTuru,
+                    'cinsiyet':listOfCinsiyet,
+                  };
+
+                  return isLoading
+                      ? spinkit
+                      : formWidget(map);
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Center(
+                    child: spinkit,
                   );
                 }
               })),
@@ -122,137 +128,56 @@ class _HomePageState extends State<FormPage> {
     );
   }
 
-  //Kullanıcı kaydet butonuna basarsa local olarak kaydedecek
-  ElevatedButton submitButton(IconData icon, BuildContext context, String title,
-      Function handleSubmit) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: PRIMARY_BUTTON_COLOR,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-        minimumSize: const Size(120, double.infinity), //////// HERE
-      ),
-      onPressed: () => handleSubmit(),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 0),
-        child: Text(title),
-      ),
-    );
-  }
-
-//DropDownWidget
-  Container myDropDownContainer(
-      String initialVal, List<String> listItems, String text, Function myFunc) {
-    return Container(
-      margin: const EdgeInsets.all(8),
-      child: Column(
+  Form formWidget(Map<String,dynamic> map) {
+    return Form(
+      key: _formKey,
+      child: ListView(
+        shrinkWrap: true,
         children: [
-          Text(
-            text,
-            style: TEXT_STYLE,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Colors.grey[700],
-                  borderRadius: BorderRadius.circular(5)),
-              child: DropdownButtonFormField<String>(
-                decoration: const InputDecoration(border: InputBorder.none),
-                isExpanded: true,
-                value: initialVal,
-                icon: const Icon(
-                  Icons.arrow_downward,
-                  color: ICON_COLOR,
-                ),
-                validator: (val) => val==null? 'Seçim zorunludur!'  : null,
-                iconSize: 24,
-                elevation: 16,
-                dropdownColor: Colors.grey[800],
-                style: TEXT_STYLE,
-                onChanged: (val) => myFunc(val),
-                items: listItems.map<DropdownMenuItem<String>>((String? val) {
-                  return DropdownMenuItem(
-                    value: val == null ? val = initialVal : val = val,
-                    child: Center(
-                      child: Text(
-                        val,
-                        style: TEXT_STYLE,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  //TextFieldWidget
-  Padding myTextFieldRow(
-      int minLine,
-      String text,
-      int? maxLength,
-      Function function,
-      Function regexFunction,
-      TextEditingController controller,
-      double height) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        children: [
-          SizedBox(
-            child: Text(
-              text,
-              style: TEXT_STYLE,
-            ),
-          ),
+          customTypeAhead(map['stajTuru']),
+          myDropDownContainer(_valueStajTuru, map['stajTuru'], hintTextStajTuru,
+              onChangedStajTuru),
+          myDropDownContainer(
+              _valueDoktor, map['doktor'], hintTextDoktor, onChangedDoktor),
+          myDropDownContainer(_valueCinsiyet, map['cinsiyet'], hintTextCinsiyet,
+              onChangedCinsiyet),
+          myDropDownContainer(_valueEtkilesim, map['etkilesim'], hintTextEtkilesim,
+              onChangedEtkilesim),
+          myDropDownContainer(
+              _valueKapsam, map['kapsam'], hintTextKapsam, onChangedKapsam),
+          myDropDownContainer(
+              _valueOrtam, map['ortam'], hintTextOrtam, onChangedOrtam),
           const SizedBox(
-            height: 8,
+            height: 20,
           ),
-          SizedBox(
-            height: height,
-            child: TextFormField(
-              controller: controller,
-              validator: (value) => regexFunction(value),
-              onChanged: (input) => function(input.toString()),
-              autofocus: false,
-              textAlignVertical: TextAlignVertical.bottom,
-              style: TEXT_STYLE.copyWith(fontSize: 16),
-              maxLength: maxLength,
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              minLines: minLine,
-              expands: false,
-              decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green),
-                    borderRadius: BorderRadius.all(Radius.circular(3))),
-                // labelStyle:kTextStyle.copyWith(fontSize: 16, color: Colors.white54),
-              ),
-            ),
-          ),
+          myTextFieldRow(
+              1, "Kayıt No ", 10, _formData.setKayitNo, isEmpty, _kayit, 80),
+          myTextFieldRow(
+              1, "Hastanın Yaşı", 3, _formData.setYas, isNumeric, _yas, 80),
+          myTextFieldRow(
+              1, "Şikayet", 10, _formData.setSikayet, isEmpty, _sikayet, 80),
+          myTextFieldRow(1, "Ayırıcı Tanı", 10, _formData.setAyiriciTani,
+              isEmpty, _ayirici, 80),
+          myTextFieldRow(5, "Kesin Tanı", 50, _formData.setKesinTani, isEmpty,
+              _kesin, 130),
+          myTextFieldRow(5, "Tedavi Yöntemi", 200, _formData.setTedaviYontemi,
+              isEmpty, _tedavi, 130),
         ],
       ),
     );
   }
-
 
   final FormData _formData = FormData();
   late FormData? args;
   late int? index;
   FormArguments? formArguments;
   final _formKey = GlobalKey<FormState>();
-  String _valueEtkilesim = "Gözlem";
-  String _valueKapsam = "Öykü";
-  String _valueOrtam = "Poliklinik";
-  String _valueDoktor = "Diğer";
-  String _valueStajTuru = "Ortopedi";
-  String _valueCinsiyet = "Erkek"; // initial value
+  late String _valueEtkilesim;
+  late String _valueKapsam;
+  late String _valueOrtam;
+  late String _valueDoktor;
+  late String _valueStajTuru;
+  late String _valueCinsiyet; // initial value
   final String hintTextCinsiyet = "Cinsiyet:";
   final String hintTextStajTuru = "Staj Türü:";
   final String hintTextEtkilesim = "Etkileşim Türü:";
@@ -265,7 +190,7 @@ class _HomePageState extends State<FormPage> {
   final TextEditingController _ayirici = TextEditingController();
   final TextEditingController _kesin = TextEditingController();
   final TextEditingController _tedavi = TextEditingController();
-  bool isLoading=false;
+  bool isLoading = false;
 
   void onChangedCinsiyet(String? newVal) {
     if (formArguments != null) {
@@ -332,6 +257,7 @@ class _HomePageState extends State<FormPage> {
       });
     }
   }
+
   void handleDelete() {
     setState(() {
       _helper.remove(formArguments!.formData.id);
@@ -340,6 +266,7 @@ class _HomePageState extends State<FormPage> {
       //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
     });
   }
+
   void handleSubmit() async {
     if (_formKey.currentState!.validate()) {
       if (formArguments != null) {
@@ -357,8 +284,9 @@ class _HomePageState extends State<FormPage> {
         onChangedOrtam(_valueOrtam);
         formArguments?.formData.setTarih();
         formArguments?.formData.setStatus('waiting');
-        bool res = await _mySqlHelper.insertData(formArguments!.formData).then((val){
-        //  _helper.update(formArguments!.formData);
+        bool res =
+            await _mySqlHelper.insertData(formArguments!.formData).then((val) {
+          //  _helper.update(formArguments!.formData);
           return val;
         });
         if (res) {
@@ -366,7 +294,7 @@ class _HomePageState extends State<FormPage> {
         } else {
           errorAlert(context);
         }
-      }else{
+      } else {
         onChangedCinsiyet(_valueCinsiyet);
         onChangedStajTuru(_valueStajTuru);
         onChangedDoktor(_valueDoktor);
@@ -375,12 +303,12 @@ class _HomePageState extends State<FormPage> {
         onChangedOrtam(_valueOrtam);
         _formData.setTarih();
         _formData.setStatus('waiting');
-          isLoading=true;
+        isLoading = true;
         bool res = await _mySqlHelper.insertData(_formData).then((val) {
-         setState(() {
-           isLoading=false;
-           _formKey.currentState?.dispose();
-         });
+          setState(() {
+            isLoading = false;
+            _formKey.currentState?.dispose();
+          });
           return val;
         });
         if (res) {
@@ -402,13 +330,13 @@ class _HomePageState extends State<FormPage> {
         formArguments?.formData.setKesinTani(_kesin.text);
         formArguments?.formData.setTedaviYontemi(_tedavi.text);
         formArguments?.formData.setTarih();
-        print(formArguments?.formData.tarih);
+
         _helper.update(formArguments!.formData);
         Navigator.pop(context);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       } else {
         _formData.setTarih();
-        print(_formData.tarih);
+
         _helper.insert(_formData);
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       }
@@ -429,6 +357,18 @@ class _HomePageState extends State<FormPage> {
       }
     });
     return text;
+  }
+
+  Future<List<List<String>>> fetchFormContent() async {
+    List<List<String>> res = [];
+
+    var listDoktor = await _mySqlHelper.fetchFormContent(
+        _mySqlHelper.columnDoktorName, _mySqlHelper.doktorTableName);
+    var listStajTuru = await _mySqlHelper.fetchFormContent(
+        _mySqlHelper.columnStajTuruName, _mySqlHelper.stajTuruTableName);
+    res.add(listDoktor);
+    res.add(listStajTuru);
+    return res;
   }
 
   Future<List<FormContent>> readJsonData() async {

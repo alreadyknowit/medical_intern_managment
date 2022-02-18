@@ -1,14 +1,22 @@
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:mysql1/mysql1.dart';
 
+//TODO: close connections
 class MySqlHelper {
-  final String _host =  'sql5.freemysqlhosting.net';//'10.0.2.2';
-  final String _user = "sql5473107";//'root';
-  final String _password = "GLbqwsiid6";//'1234';
+  final String _host = '10.0.2.2'; //'sql5.freemysqlhosting.net';//
+  final String _user = 'root'; //"sql5473107";//
+  final String _password = '1234'; //"GLbqwsiid6";//
   final int _portNo = 3306;
-  final String _tableName = 'form_table';
-  final String _db = "sql5473107"; //'forms';
+  final String _formTableName = 'form_table';
+  final String _db = 'forms'; // "sql5473107"; //
+  final String doktorTableName = 'attending_table';
+  final String stajTuruTableName = 'staj_turu_table';
 
+  //attending_table
+  final columnDoktorName = 'doktor_ad';
+  final columnStajTuruName = 'staj_turu';
+
+  //form_table
   final columnId = 'id';
   final columnKayitNo = 'kayit_no';
   final columnSikayet = 'sikayet';
@@ -25,7 +33,7 @@ class MySqlHelper {
   final columnTarih = 'tarih';
   final columnStatus = 'status';
   Future<MySqlConnection> connectDB() async {
-    var conn = null;
+    late var conn;
     try {
       conn = await MySqlConnection.connect(ConnectionSettings(
           port: _portNo,
@@ -33,6 +41,7 @@ class MySqlHelper {
           password: _password,
           db: _db,
           user: _user));
+      print('connected');
       return conn;
     } catch (e) {
       print(e);
@@ -40,49 +49,73 @@ class MySqlHelper {
     }
   }
 
-  //get accepted forms
-  Future<List<FormData>> fetchForms(String status,int limit) async {
-    List<FormData> formList = [];
+  //get form content from db
+  Future<List<String>> fetchFormContent(
+      String columnName, String tableName) async {
+    List<String> resultList = [];
+    late MySqlConnection conn;
     try {
-      MySqlConnection conn = await connectDB().then((value) => value);
-      var list = await conn.query('select * from $_tableName where $columnStatus=?  order by id DESC limit $limit',[status]);
+      conn = await connectDB();
+      var list = await conn.query('select $columnName from $tableName');
+      for (var item in list) {
+        resultList.add(item[columnName]);
+      }
+      return resultList;
+    } catch (e) {
+      print(e);
+      return resultList;
+    } finally {
+      await conn.close();
+    }
+  }
+
+  //get accepted forms
+  Future<List<FormData>> fetchForms(String status, int limit) async {
+    List<FormData> formList = [];
+    late MySqlConnection conn;
+    try {
+      conn = await connectDB().then((value) => value);
+      var list = await conn.query(
+          'select * from $_formTableName where $columnStatus=?  order by id DESC limit $limit',
+          [status]);
       for (var form in list) {
         list.isNotEmpty
             ? formList.add(
-          FormData(
-              id: form[columnId],
-              kayitNo: form[columnKayitNo],
-              stajTuru: form[columnStajTuru],
-              yas: form[columnYas].toString(),
-              doktor: form[columnKlinikEgitici],
-              cinsiyet: form[columnCinsiyet],
-              sikayet: form[columnSikayet].toString(),
-              ayiriciTani: form[columnAyiriciTani].toString(),
-              kesinTani: form[columnKesinTani].toString(),
-              tedaviYontemi: form[columnTedaviYontemi].toString(),
-              etkilesimTuru: form[columnEtkilesimTuru],
-              kapsam: form[columnKapsam],
-              gerceklestigiOrtam: form[columnOrtam],
-              tarih: form[columnTarih],
-              status: form[columnStatus]),
-        )
+                FormData(
+                    id: form[columnId],
+                    kayitNo: form[columnKayitNo],
+                    stajTuru: form[columnStajTuru],
+                    yas: form[columnYas].toString(),
+                    doktor: form[columnKlinikEgitici],
+                    cinsiyet: form[columnCinsiyet],
+                    sikayet: form[columnSikayet].toString(),
+                    ayiriciTani: form[columnAyiriciTani].toString(),
+                    kesinTani: form[columnKesinTani].toString(),
+                    tedaviYontemi: form[columnTedaviYontemi].toString(),
+                    etkilesimTuru: form[columnEtkilesimTuru],
+                    kapsam: form[columnKapsam],
+                    gerceklestigiOrtam: form[columnOrtam],
+                    tarih: form[columnTarih],
+                    status: form[columnStatus]),
+              )
             : [];
       }
-      await conn.close();
+
       return formList;
     } catch (e) {
       print(e);
       return formList;
+    } finally {
+      await conn.close();
     }
   }
 
 //insert new form
   insertData(FormData formData) async {
+    late MySqlConnection conn;
     try {
-      MySqlConnection conn = await connectDB().then((value) => value);
-      print("tarig: " + formData.tarih.toString());
-      print(formData.stajTuru);
-      await conn.query('''insert into $_tableName($columnKayitNo, 
+      conn = await connectDB().then((value) => value);
+      await conn.query('''insert into $_formTableName($columnKayitNo, 
              $columnSikayet,$columnStajTuru,$columnKlinikEgitici,$columnCinsiyet, 
              $columnEtkilesimTuru, $columnKapsam,$columnOrtam,$columnYas, 
              $columnAyiriciTani, $columnKesinTani,$columnTedaviYontemi,$columnTarih,$columnStatus) 
@@ -102,12 +135,12 @@ class MySqlHelper {
         formData.tarih,
         formData.status
       ]);
-
-      await conn.close();
       return true;
     } catch (e) {
       print(e);
       return false;
+    } finally {
+      await conn.close();
     }
   }
 }
