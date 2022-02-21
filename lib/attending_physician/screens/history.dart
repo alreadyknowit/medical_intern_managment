@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/shared/custom_spinkit.dart';
-import '../../shared/form_view.dart';
-import '../services/MySqlHelper.dart';
+import 'package:internship_managing_system/attending_physician/services/AttendingMySqlHelper.dart';
 
 import '../../models/form_data.dart';
 import '../../shared/constants.dart';
 import '../../shared/custom_list_tile.dart';
+import '../../shared/custom_spinkit.dart';
 
-class RejectedForms extends StatefulWidget {
-  const RejectedForms({Key? key}) : super(key: key);
+class HistoryForms extends StatefulWidget {
+  const HistoryForms({Key? key}) : super(key: key);
 
   @override
-  _RejectedFormsState createState() => _RejectedFormsState();
+  _HistoryFormsState createState() => _HistoryFormsState();
 }
 
-class _RejectedFormsState extends State<RejectedForms> {
-  final MySqlHelper _mySqlHelper = MySqlHelper();
-  final _status ='reject';
-  final _limit=20;
+class _HistoryFormsState extends State<HistoryForms> {
+  final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
+  final _status = 'reject';
+
   Future<void> _refresh() async {
-    await _mySqlHelper.fetchForms(_status,_limit).then((value) {
+    await _mySqlHelper.fetchForms(_status).then((value) {
       setState(() {});
     });
   }
@@ -27,8 +26,12 @@ class _RejectedFormsState extends State<RejectedForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Reddedilen Formlar'),
+      ),
       body: FutureBuilder<List<FormData>?>(
-          future: _mySqlHelper.fetchForms(_status,_limit),
+          future: _mySqlHelper.fetchForms('reject'),
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -75,7 +78,10 @@ class _RejectedFormsState extends State<RejectedForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index,routeTo: 2,);
+                        formData: snapshot.data![index],
+                        index: index,
+                        routeTo:3,
+                      );
                     },
                   ),
                 ),

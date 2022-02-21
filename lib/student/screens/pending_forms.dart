@@ -79,7 +79,7 @@ class _PendingFormsState extends State<PendingForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index,isFormView: true,);
+                          formData: snapshot.data![index], index: index,routeTo: 2,);
                     },
                   ),
                 ),

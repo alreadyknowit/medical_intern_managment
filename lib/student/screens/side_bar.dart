@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/student/screens/accepted_forms.dart';
-import 'package:internship_managing_system/student/screens/drafts.dart';
-import 'package:internship_managing_system/student/not%20managed/notifications.dart';
-import 'package:internship_managing_system/student/screens/rejected_forms.dart';
-import 'package:internship_managing_system/student/screens/pending_forms.dart';
-import 'package:internship_managing_system/student/not%20managed/settings.dart';
-import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
+import '../../shared/constants.dart';
+import 'accepted_forms.dart';
+import 'drafts.dart';
+import '../not_managed/notifications.dart';
+import 'rejected_forms.dart';
+import 'pending_forms.dart';
+import '../not_managed/settings.dart';
+import '../services/SQFLiteHelper.dart';
 import 'form_page.dart';
 
 class SideBar extends StatefulWidget {
@@ -32,7 +32,6 @@ class _SideBarState extends State<SideBar> {
   //int counter = 0;
   getCounter() async {
     return await _helper.getForms().then((value) => value.length);
-
   }
 
   @override
@@ -76,8 +75,7 @@ class _SideBarState extends State<SideBar> {
   }
 
   Widget myDrawerList(Future<dynamic> res) {
-
-    int counter=0;
+    int counter = 0;
 
     return Container(
       padding: const EdgeInsets.only(
@@ -101,10 +99,7 @@ class _SideBarState extends State<SideBar> {
               "Reddedilen Formlar",
               FontAwesomeIcons.exclamationTriangle,
               currentPage == DrawerSections.reddedilenFormlar ? true : false),
-          menuItem(
-              5,
-              "Taslaklar(0})",
-              FontAwesomeIcons.database,
+          menuItem(5, "Taslaklar(0})", FontAwesomeIcons.database,
               currentPage == DrawerSections.taslaklar ? true : false),
           const Divider(),
           menuItem(6, "Ayarlar", FontAwesomeIcons.wrench,

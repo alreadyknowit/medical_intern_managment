@@ -75,7 +75,7 @@ class _AcceptedFormsState extends State<AcceptedForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index, isFormView: true,);
+                          formData: snapshot.data![index], index: index, routeTo: 2,);
                     },
                   ),
                 ),

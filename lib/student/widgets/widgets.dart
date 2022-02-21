@@ -4,8 +4,9 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../shared/constants.dart';
 
 //TypeAhead Auto Complete Widget
-
-Widget customTypeAhead(List<String> listItems) {
+const PADDING_VALUE = 16.0;
+Widget customTypeAhead(List<String> listItems, TextEditingController controller,
+     String? stajTuru,String labelText) {
   //check if the typed item is in the list
   List<String> getSuggestions(String query) {
     return List.of(listItems).where((item) {
@@ -15,23 +16,59 @@ Widget customTypeAhead(List<String> listItems) {
     }).toList();
   }
 
-  return TypeAheadFormField<String?>(
-      onSuggestionSelected: (val) {
-
-      },
-      itemBuilder: (context, String? suggestion) {
-        return ListTile(
-          title: Text(suggestion!),
-        );
-      },
-      suggestionsCallback: getSuggestions);
+  return Padding(
+    padding: const EdgeInsets.all(PADDING_VALUE),
+    child: Column(
+      children: [
+        Text(
+          labelText,
+          style: TEXT_STYLE,
+        ),
+        TypeAheadFormField<String?>(
+          onSuggestionSelected: (String? val) =>controller.text = val!,
+          //onSaved: (_)=>onSave(stajTuru),
+          itemBuilder: (context, String? suggestion) {
+            return ListTile(
+              title: Text(suggestion!),
+            );
+          },
+          suggestionsCallback: getSuggestions,
+          validator: (value) {
+            bool isInTheList=false;
+            for(var item in listItems){
+              if(item==value) {
+                isInTheList=true;
+              }
+            }
+            if (value == null || value.isEmpty || !isInTheList) {
+              return 'Lütfen ${labelText.toLowerCase()} seçiniz';
+            } else {
+              return null;
+            }
+          },
+          textFieldConfiguration: TextFieldConfiguration(
+              controller: controller,
+              decoration: const InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: TEXT_COLOR,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                    color: TEXT_COLOR,
+                  )))),
+        ),
+      ],
+    ),
+  );
 }
 
 //DropDownWidget
-Container myDropDownContainer(
-    String initialVal, List<String> listItems, String text, Function myFunc) {
+Container customDropDown(
+    String? dropdownValue, List<String> listItems, String text, Function myFunc) {
   return Container(
-    margin: const EdgeInsets.all(8),
+    margin: const EdgeInsets.all(4),
     child: Column(
       children: [
         Text(
@@ -39,7 +76,7 @@ Container myDropDownContainer(
           style: TEXT_STYLE,
         ),
         Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(PADDING_VALUE),
           child: Container(
             height: 50,
             decoration: BoxDecoration(
@@ -48,12 +85,12 @@ Container myDropDownContainer(
             child: DropdownButtonFormField<String>(
               decoration: const InputDecoration(border: InputBorder.none),
               isExpanded: true,
-              value: initialVal,
+              validator: (val) => val == null  || val.isEmpty ? 'Lütfen $text giriniz' :null ,
+              value: dropdownValue,
               icon: const Icon(
                 Icons.arrow_downward,
                 color: ICON_COLOR,
               ),
-              // validator: (val) => val==null? 'Seçim zorunludur!'  : null,
               iconSize: 24,
               elevation: 16,
               dropdownColor: Colors.grey[800],
@@ -61,10 +98,10 @@ Container myDropDownContainer(
               onChanged: (val) => myFunc(val),
               items: listItems.map<DropdownMenuItem<String>>((String? val) {
                 return DropdownMenuItem(
-                  value: val == null ? val = initialVal : val = val,
+                  value: val == null ? val = dropdownValue : val = val,
                   child: Center(
                     child: Text(
-                      val,
+                      val ?? listItems[0],
                       style: TEXT_STYLE,
                     ),
                   ),
@@ -96,7 +133,7 @@ ElevatedButton submitButton(
 }
 
 //TextFieldWidget
-Padding myTextFieldRow(
+Widget customTextField(
     int minLine,
     String text,
     int? maxLength,
@@ -105,7 +142,7 @@ Padding myTextFieldRow(
     TextEditingController controller,
     double height) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    padding: const EdgeInsets.symmetric(horizontal: PADDING_VALUE),
     child: Column(
       children: [
         SizedBox(

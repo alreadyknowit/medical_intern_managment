@@ -4,16 +4,16 @@ import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/student/screens/side_bar.dart';
 import 'package:provider/provider.dart';
-import 'attending_physician/attending_physician.dart';
+import 'attending_physician/screens/attending_physician.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const InternshipManagingSystem());
+  runApp( InternshipManagingSystem());
 }
 
 class InternshipManagingSystem extends StatelessWidget {
-  const InternshipManagingSystem({Key? key}) : super(key: key);
-
+   InternshipManagingSystem({Key? key}) : super(key: key);
+    FormData formData= FormData();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -25,7 +25,7 @@ class InternshipManagingSystem extends StatelessWidget {
       builder: (context, _) => MaterialApp(
         theme: ThemeData.dark(),
         themeMode: ThemeMode.dark,
-        home:SideBar(),//AttendingPhysician(),
+        home:AttendingPhysician()//SideBar(),//
       ),
     );
   }

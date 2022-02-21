@@ -97,62 +97,62 @@ class FormData with ChangeNotifier {
         DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, ' ', HH, ':', nn]);
   }
 
-  void setStajTuru(String stajTuru) {
+  void setStajTuru(String? stajTuru) {
     this.stajTuru = stajTuru;
     notifyListeners();
   }
 
-  void setCinsiyet(String cinsiyet) {
+  void setCinsiyet(String? cinsiyet) {
     this.cinsiyet = cinsiyet;
     notifyListeners();
   }
 
-  void setEtkilesimTuru(String etkilesim) {
+  void setEtkilesimTuru(String? etkilesim) {
     etkilesimTuru = etkilesim;
     notifyListeners();
   }
 
-  void setKapsam(String kapsam) {
+  void setKapsam(String? kapsam) {
     this.kapsam = kapsam;
     notifyListeners();
   }
 
-  void setOrtam(String ortam) {
+  void setOrtam(String? ortam) {
     gerceklestigiOrtam = ortam;
     notifyListeners();
   }
 
-  void setKayitNo(String kayitNo) {
+  void setKayitNo(String? kayitNo) {
     this.kayitNo = kayitNo;
     notifyListeners();
   }
 
-  void setYas(String yas) {
+  void setYas(String? yas) {
     this.yas = yas;
     notifyListeners();
   }
 
-  void setSikayet(String sikayet) {
+  void setSikayet(String? sikayet) {
     this.sikayet = sikayet;
     notifyListeners();
   }
 
-  void setAyiriciTani(String ayiriciTani) {
+  void setAyiriciTani(String? ayiriciTani) {
     this.ayiriciTani = ayiriciTani;
     notifyListeners();
   }
 
-  void setKesinTani(String kesinTani) {
+  void setKesinTani(String? kesinTani) {
     this.kesinTani = kesinTani;
     notifyListeners();
   }
 
-  void setTedaviYontemi(String tedaviYontemi) {
+  void setTedaviYontemi(String? tedaviYontemi) {
     this.tedaviYontemi = tedaviYontemi;
     notifyListeners();
   }
 
-  void setDoktor(String doktor) {
+  void setDoktor(String? doktor) {
     this.doktor = doktor;
     notifyListeners();
   }

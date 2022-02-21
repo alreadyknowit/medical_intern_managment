@@ -6,6 +6,7 @@ import 'package:internship_managing_system/models/form_content_list.dart';
 import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/custom_snackbar.dart';
+import 'package:internship_managing_system/student/screens/drafts.dart';
 import 'package:internship_managing_system/student/services/MySqlHelper.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:provider/provider.dart';
@@ -22,16 +23,17 @@ class FormPage extends StatefulWidget {
 }
 
 class _HomePageState extends State<FormPage> {
+
+  @override
+  initState() {
+    fetchFormContent();
+    super.initState();
+  }
+
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
   final MySqlHelper _mySqlHelper = MySqlHelper();
   @override
   Widget build(BuildContext context) {
-    @override
-    initState() {
-      fetchFormContent();
-      super.initState();
-    }
-
     formArguments =
         ModalRoute.of(context)?.settings.arguments as FormArguments?;
     if (formArguments != null) {
@@ -47,11 +49,11 @@ class _HomePageState extends State<FormPage> {
 
       //dropdown
       _valueCinsiyet = args!.getCinsiyet();
-      _valueDoktor = args!.getDoktor();
+      _doktorController.text = args!.getDoktor();
       _valueEtkilesim = args!.getEtkilesimTuru();
       _valueKapsam = args!.getKapsam();
       _valueOrtam = args!.getOrtam();
-      _valueStajTuru = args!.getStajTuru();
+      _stajTuruController.text = args!.getStajTuru();
     }
 
     return Scaffold(
@@ -65,7 +67,7 @@ class _HomePageState extends State<FormPage> {
                   var listOfContent = snapshot.data as List<List<String>>;
                   var listOfDoktor = listOfContent[0];
                   var listOfStajTuru = listOfContent[1];
-                  var listOfCinsiyet = ['Erkek', 'Kadın', 'Diğer'];
+
                   var listOfKapsam = [
                     "Öykü",
                     "Fizik Bakı",
@@ -85,26 +87,18 @@ class _HomePageState extends State<FormPage> {
                     "Yardımsız yapma",
                     "Sanal olgu"
                   ];
+                  var listOfCinsiyet = ['Erkek', 'Kadın', 'Diğer'];
 
-                  _valueDoktor = listOfDoktor[0];
-                  _valueEtkilesim = listOfEtkilesimTuru[0];
-                  _valueKapsam = listOfKapsam[0];
-                  _valueOrtam = listOfOrtam[0];
-                  _valueStajTuru = listOfStajTuru[0];
-                  _valueCinsiyet = listOfCinsiyet[0];
 
-                  Map<String,dynamic> map ={
-                    'doktor':listOfDoktor,
-                    'etkilesim':listOfEtkilesimTuru,
-                    'kapsam':listOfKapsam,
-                    'ortam':listOfOrtam,
-                    'stajTuru':listOfStajTuru,
-                    'cinsiyet':listOfCinsiyet,
+                  Map<String, dynamic> map = {
+                    'doktor': listOfDoktor,
+                    'etkilesim': listOfEtkilesimTuru,
+                    'kapsam': listOfKapsam,
+                    'ortam': listOfOrtam,
+                    'stajTuru': listOfStajTuru,
+                    'cinsiyet': listOfCinsiyet,
                   };
-
-                  return isLoading
-                      ? spinkit
-                      : formWidget(map);
+                  return isLoading ? spinkit : formWidget(map);
                 } else {
                   return Center(
                     child: spinkit,
@@ -117,50 +111,49 @@ class _HomePageState extends State<FormPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            submitButton(Icons.send, context, "İLET", handleSubmit),
+            submitButton(Icons.send, context, "İLET", formIlet),
             formArguments != null
                 ? submitButton(Icons.delete, context, "SİL", handleDelete)
                 : Container(),
-            submitButton(Icons.drafts_sharp, context, "SAKLA", handleSave),
+            submitButton(Icons.drafts_sharp, context, "SAKLA", formSakla),
           ],
         ),
       ),
     );
   }
 
-  Form formWidget(Map<String,dynamic> map) {
+  Form formWidget(Map<String, dynamic> map) {
     return Form(
       key: _formKey,
       child: ListView(
         shrinkWrap: true,
         children: [
-          customTypeAhead(map['stajTuru']),
-          myDropDownContainer(_valueStajTuru, map['stajTuru'], hintTextStajTuru,
-              onChangedStajTuru),
-          myDropDownContainer(
-              _valueDoktor, map['doktor'], hintTextDoktor, onChangedDoktor),
-          myDropDownContainer(_valueCinsiyet, map['cinsiyet'], hintTextCinsiyet,
+          customTypeAhead(map['stajTuru'], _stajTuruController,
+              _selectedStajTuru, 'Staj Türü'),
+          customTypeAhead(
+              map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),
+          customDropDown(_valueCinsiyet, map['cinsiyet'], hintTextCinsiyet,
               onChangedCinsiyet),
-          myDropDownContainer(_valueEtkilesim, map['etkilesim'], hintTextEtkilesim,
+          customDropDown(_valueEtkilesim, map['etkilesim'], hintTextEtkilesim,
               onChangedEtkilesim),
-          myDropDownContainer(
+          customDropDown(
               _valueKapsam, map['kapsam'], hintTextKapsam, onChangedKapsam),
-          myDropDownContainer(
+          customDropDown(
               _valueOrtam, map['ortam'], hintTextOrtam, onChangedOrtam),
           const SizedBox(
             height: 20,
           ),
-          myTextFieldRow(
+          customTextField(
               1, "Kayıt No ", 10, _formData.setKayitNo, isEmpty, _kayit, 80),
-          myTextFieldRow(
+          customTextField(
               1, "Hastanın Yaşı", 3, _formData.setYas, isNumeric, _yas, 80),
-          myTextFieldRow(
+          customTextField(
               1, "Şikayet", 10, _formData.setSikayet, isEmpty, _sikayet, 80),
-          myTextFieldRow(1, "Ayırıcı Tanı", 10, _formData.setAyiriciTani,
+          customTextField(1, "Ayırıcı Tanı", 10, _formData.setAyiriciTani,
               isEmpty, _ayirici, 80),
-          myTextFieldRow(5, "Kesin Tanı", 50, _formData.setKesinTani, isEmpty,
+          customTextField(5, "Kesin Tanı", 50, _formData.setKesinTani, isEmpty,
               _kesin, 130),
-          myTextFieldRow(5, "Tedavi Yöntemi", 200, _formData.setTedaviYontemi,
+          customTextField(5, "Tedavi Yöntemi", 200, _formData.setTedaviYontemi,
               isEmpty, _tedavi, 130),
         ],
       ),
@@ -172,12 +165,13 @@ class _HomePageState extends State<FormPage> {
   late int? index;
   FormArguments? formArguments;
   final _formKey = GlobalKey<FormState>();
-  late String _valueEtkilesim;
-  late String _valueKapsam;
-  late String _valueOrtam;
-  late String _valueDoktor;
-  late String _valueStajTuru;
-  late String _valueCinsiyet; // initial value
+  String _valueEtkilesim = 'Gözlem';
+  String _valueKapsam = 'Öykü';
+  String _valueOrtam = 'Poliklinik';
+
+  String? _selectedStajTuru;
+  String? _selectedDoktor;
+  String _valueCinsiyet = 'Erkek'; // initial value
   final String hintTextCinsiyet = "Cinsiyet:";
   final String hintTextStajTuru = "Staj Türü:";
   final String hintTextEtkilesim = "Etkileşim Türü:";
@@ -190,26 +184,20 @@ class _HomePageState extends State<FormPage> {
   final TextEditingController _ayirici = TextEditingController();
   final TextEditingController _kesin = TextEditingController();
   final TextEditingController _tedavi = TextEditingController();
+  final TextEditingController _stajTuruController = TextEditingController();
+  final TextEditingController _doktorController = TextEditingController();
   bool isLoading = false;
 
   void onChangedCinsiyet(String? newVal) {
+    print(newVal);
     if (formArguments != null) {
       formArguments?.formData.setCinsiyet(newVal!);
     } else {
       setState(() {
         _valueCinsiyet = newVal!;
-        _formData.setCinsiyet(_valueCinsiyet);
-      });
-    }
-  }
 
-  void onChangedStajTuru(String? newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setStajTuru(newVal!);
-    } else {
-      setState(() {
-        _valueStajTuru = newVal!;
-        _formData.setStajTuru(newVal);
+        _formData.setCinsiyet(_valueCinsiyet);
+        print(_formData.getCinsiyet());
       });
     }
   }
@@ -247,13 +235,19 @@ class _HomePageState extends State<FormPage> {
     }
   }
 
-  void onChangedDoktor(String newVal) {
+  //TODO: dropdown dışında hem anasayfadan hem de draft kısmından gönderim yapılabiliyor.
+  void formSakla() async {
     if (formArguments != null) {
-      formArguments?.formData.setDoktor(newVal);
+      setFormArgumentState();
+      await _helper.update(formArguments!.formData);
+      Navigator.pop(context);
+      customSnackBar(context, 'Başarıyla güncellendi.');
+
+      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>Drafts()));
     } else {
-      setState(() {
-        _valueDoktor = newVal;
-        _formData.setDoktor(newVal);
+      setFormDataState();
+      await _helper.insert(_formData).then((value) {
+        customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       });
     }
   }
@@ -267,42 +261,22 @@ class _HomePageState extends State<FormPage> {
     });
   }
 
-  void handleSubmit() async {
-    if (_formKey.currentState!.validate()) {
-      if (formArguments != null) {
-        formArguments?.formData.setKayitNo(_kayit.text);
-        formArguments?.formData.setYas(_yas.text);
-        formArguments?.formData.setSikayet(_sikayet.text);
-        formArguments?.formData.setAyiriciTani(_ayirici.text);
-        formArguments?.formData.setKesinTani(_kesin.text);
-        formArguments?.formData.setTedaviYontemi(_tedavi.text);
-        onChangedCinsiyet(_valueCinsiyet);
-        onChangedStajTuru(_valueStajTuru);
-        onChangedDoktor(_valueDoktor);
-        onChangedEtkilesim(_valueEtkilesim);
-        onChangedKapsam(_valueKapsam);
-        onChangedOrtam(_valueOrtam);
-        formArguments?.formData.setTarih();
-        formArguments?.formData.setStatus('waiting');
-        bool res =
-            await _mySqlHelper.insertData(formArguments!.formData).then((val) {
-          //  _helper.update(formArguments!.formData);
-          return val;
-        });
+  void formIlet() async {
+    if (formArguments != null) {
+      if (_formKey.currentState!.validate()) {
+        setFormArgumentState();
+        bool res = await _mySqlHelper.insertData(formArguments!.formData);
         if (res) {
+          _helper.update(formArguments!.formData);
           customSnackBar(context, 'Başarıyla gönderildi');
         } else {
           errorAlert(context);
         }
-      } else {
-        onChangedCinsiyet(_valueCinsiyet);
-        onChangedStajTuru(_valueStajTuru);
-        onChangedDoktor(_valueDoktor);
-        onChangedEtkilesim(_valueEtkilesim);
-        onChangedKapsam(_valueKapsam);
-        onChangedOrtam(_valueOrtam);
-        _formData.setTarih();
-        _formData.setStatus('waiting');
+      }
+    } else {
+      if (_formKey.currentState!.validate()) {
+        setFormDataState();
+        print(_formData.stajTuru);
         isLoading = true;
         bool res = await _mySqlHelper.insertData(_formData).then((val) {
           setState(() {
@@ -318,29 +292,6 @@ class _HomePageState extends State<FormPage> {
         }
       }
     }
-  }
-
-  void handleSave() {
-    setState(() {
-      if (formArguments != null) {
-        formArguments?.formData.setKayitNo(_kayit.text);
-        formArguments?.formData.setYas(_yas.text);
-        formArguments?.formData.setSikayet(_sikayet.text);
-        formArguments?.formData.setAyiriciTani(_ayirici.text);
-        formArguments?.formData.setKesinTani(_kesin.text);
-        formArguments?.formData.setTedaviYontemi(_tedavi.text);
-        formArguments?.formData.setTarih();
-
-        _helper.update(formArguments!.formData);
-        Navigator.pop(context);
-        customSnackBar(context, 'Başarıyla taslağa kaydedildi');
-      } else {
-        _formData.setTarih();
-
-        _helper.insert(_formData);
-        customSnackBar(context, 'Başarıyla taslağa kaydedildi');
-      }
-    });
   }
 
   String? isNumeric(String num) {
@@ -371,11 +322,130 @@ class _HomePageState extends State<FormPage> {
     return res;
   }
 
-  Future<List<FormContent>> readJsonData() async {
+  void setFormArgumentState() {
+    //textfield
+    formArguments?.formData.setKayitNo(_kayit.text);
+    formArguments?.formData.setYas(_yas.text);
+    formArguments?.formData.setSikayet(_sikayet.text);
+    formArguments?.formData.setAyiriciTani(_ayirici.text);
+    formArguments?.formData.setKesinTani(_kesin.text);
+    formArguments?.formData.setTedaviYontemi(_tedavi.text);
+
+  //typeahead
+    formArguments?.formData.setStajTuru(_stajTuruController.text);
+    formArguments?.formData.setDoktor(_doktorController.text);
+
+   //other
+    formArguments?.formData.setTarih();
+    formArguments?.formData.setStatus('waiting');
+  }
+
+  void setFormDataState() {
+    //typeahead
+    _formData.setStajTuru(_stajTuruController.text);
+    _formData.setDoktor(_doktorController.text);
+  //dropdown
+    _formData.setEtkilesimTuru(_valueEtkilesim);
+    _formData.setKapsam(_valueKapsam);
+    _formData.setCinsiyet(_valueCinsiyet);
+    _formData.setOrtam(_valueOrtam);
+
+    //other
+    _formData.setTarih();
+    _formData.setStatus('waiting');
+  }
+
+/*  Future<List<FormContent>> readJsonData() async {
     final jsonData =
         await root_bundle.rootBundle.loadString('assets/json/formdata.json');
     return [
       for (final e in json.decode(jsonData)) FormContent.fromJson(e),
     ];
+  }*/
+/*  void onChangedStajTuru(String? newVal) {
+    if (formArguments != null) {
+      formArguments?.formData.setStajTuru(newVal!);
+    } else {
+      setState(() {
+        _selectedStajTuru = newVal!;
+        _formData.setStajTuru(newVal);
+      });
+    }
+  }*/
+
+/*void handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (formArguments != null) {
+        formArguments?.formData.setKayitNo(_kayit.text);
+        formArguments?.formData.setYas(_yas.text);
+        formArguments?.formData.setSikayet(_sikayet.text);
+        formArguments?.formData.setAyiriciTani(_ayirici.text);
+        formArguments?.formData.setKesinTani(_kesin.text);
+        formArguments?.formData.setTedaviYontemi(_tedavi.text);
+        onChangedCinsiyet(_valueCinsiyet);
+        onChangedStajTuru(_selectedStajTuru);
+        // onChangedDoktor(_valueDoktor);
+        onChangedEtkilesim(_valueEtkilesim);
+        onChangedKapsam(_valueKapsam);
+        onChangedOrtam(_valueOrtam);
+        formArguments?.formData.setTarih();
+        formArguments?.formData.setStatus('waiting');
+        bool res =
+            await _mySqlHelper.insertData(formArguments!.formData).then((val) {
+          //  _helper.update(formArguments!.formData);
+          return val;
+        });
+        if (res) {
+          customSnackBar(context, 'Başarıyla gönderildi');
+        } else {
+          errorAlert(context);
+        }
+      } else {
+        */ /*  onChangedCinsiyet(_valueCinsiyet);
+        onChangedStajTuru(_valueStajTuru);
+        onChangedDoktor(_valueDoktor);
+        onChangedEtkilesim(_valueEtkilesim);
+        onChangedKapsam(_valueKapsam);
+        onChangedOrtam(_valueOrtam);*/ /*
+        _formData.setTarih();
+        _formData.setStatus('waiting');
+        isLoading = true;
+        bool res = await _mySqlHelper.insertData(_formData).then((val) {
+          setState(() {
+            isLoading = false;
+            _formKey.currentState?.dispose();
+          });
+          return val;
+        });
+        if (res) {
+          customSnackBar(context, 'Başarıyla gönderildi');
+        } else {
+          errorAlert(context);
+        }
+      }
+    }
   }
+*/
+/*
+  void handleSave() {
+    setState(() {
+      if (formArguments != null) {
+        formArguments?.formData.setKayitNo(_kayit.text);
+        formArguments?.formData.setYas(_yas.text);
+        formArguments?.formData.setSikayet(_sikayet.text);
+        formArguments?.formData.setAyiriciTani(_ayirici.text);
+        formArguments?.formData.setKesinTani(_kesin.text);
+        formArguments?.formData.setTedaviYontemi(_tedavi.text);
+        formArguments?.formData.setTarih();
+        _helper.update(formArguments!.formData);
+        Navigator.pop(context);
+        customSnackBar(context, 'Başarıyla taslağa kaydedildi');
+      } else {
+        _formData.setTarih();
+        _helper.insert(_formData);
+        customSnackBar(context, 'Başarıyla taslağa kaydedildi');
+      }
+    });
+  }*/
 }

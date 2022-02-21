@@ -69,7 +69,7 @@ class _DraftsState extends State<Drafts> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index, isFormView: false,);
+                          formData: snapshot.data![index], index: index, routeTo: 1,);
                     },
                   ),
                 ),

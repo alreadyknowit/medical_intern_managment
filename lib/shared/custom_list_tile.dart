@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/attending_physician/screens/form_decision.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
@@ -8,12 +9,12 @@ import 'package:internship_managing_system/student/screens/form_page.dart';
 class CustomListTile extends StatelessWidget {
   final FormData formData;
   final int index;
-  final bool isFormView;
+  final int routeTo;
   const CustomListTile(
       {Key? key,
       required this.formData,
       required this.index,
-      required this.isFormView})
+      required this.routeTo})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -41,11 +42,24 @@ class CustomListTile extends StatelessWidget {
       );
     }
 
+    void pushToDesicionPage() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FormDecision(formData: formData),
+            settings: RouteSettings(
+              arguments: arguments,
+            )),
+      );
+    }
+
     void whichPage() {
-      if (isFormView) {
-        pushToFormView(formData);
-      } else {
+      if (routeTo == 1) {
         pushToFormPage();
+      } else if (routeTo == 2) {
+        pushToFormView(formData);
+      } else if (routeTo == 3) {
+        pushToDesicionPage();
       }
     }
 

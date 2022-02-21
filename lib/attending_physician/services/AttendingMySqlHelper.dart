@@ -1,8 +1,8 @@
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:mysql1/mysql1.dart';
 
-class MySqlHelper{
-  final String _host = 'sql5.freemysqlhosting.net';//'10.0.2.2';
+class AttendingMySqlHelper{
+  final String _host = 'sql5.freemysqlhosting.net';//'10.0.2.2'; //
   final String _user = "sql5473107"; //'root';//
   final String _password = "GLbqwsiid6"; //'1234';//
   final int _portNo = 3306;
@@ -42,11 +42,11 @@ class MySqlHelper{
   }
 
   //get waiting forms
-  Future<List<FormData>> fetchWaitingForms() async {
+  Future<List<FormData>> fetchForms(String status) async {
     List<FormData> formList = [];
     try {
       MySqlConnection conn = await connectDB().then((value) => value);
-      var list = await conn.query('select * from $_tableName where $columnStatus=?  order by id ASC',['waiting']);
+      var list = await conn.query('select * from $_tableName where $columnStatus=?  order by id ASC',[status]);
       for (var form in list) {
         list.isNotEmpty
             ? formList.add(

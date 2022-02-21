@@ -1,8 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
-import 'package:internship_managing_system/attending_physician/services/MySqlHelper.dart';
+import 'package:internship_managing_system/attending_physician/screens/history.dart';
+import 'package:internship_managing_system/attending_physician/services/AttendingMySqlHelper.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -15,23 +15,21 @@ class AttendingPhysician extends StatefulWidget {
 }
 
 class _AttendingPhysicianState extends State<AttendingPhysician> {
-  final MySqlHelper _mySqlHelper = MySqlHelper();
+  final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
   List<FormData> formList = [];
   bool isLoading = false;
   getForms() async {
     setState(() {
-      isLoading=true;
+      isLoading = true;
     });
-    formList = await _mySqlHelper.fetchWaitingForms().then((value) {
+    formList = await _mySqlHelper.fetchForms('waiting').then((value) {
       setState(() {
         isLoading = false;
       });
 
       return value;
     });
-    print(formList.length);
   }
-
 
   @override
   void initState() {
@@ -47,28 +45,29 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
           appBar: buildAppBar(),
           body: SafeArea(
             child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: isLoading
-                    ? spinkit
-                    :  Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            formList.isEmpty
-                                ? const Center(child:Text('Başka form kalmadı...') ,)
-                                : Stack(
-                                    children: formList.map(buildForm).toList()),
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            Expanded(
-                                child: Text(
-                              "Onaylamak için sağa doğru, reddetmek için sola doğru kaydırın.",
-                              textAlign: TextAlign.center,
-                              style: TEXT_STYLE.copyWith(fontSize: 14),
-                            )),
-                          ],
+              padding: const EdgeInsets.all(8),
+              child: isLoading
+                  ? spinkit
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        formList.isEmpty
+                            ? const Center(
+                                child: Text('Başka form kalmadı...'),
+                              )
+                            : Stack(children: formList.map(buildForm).toList()),
+                        const SizedBox(
+                          height: 40,
                         ),
-                        ),
+                        Expanded(
+                            child: Text(
+                          "Onaylamak için sağa doğru, reddetmek için sola doğru kaydırın.",
+                          textAlign: TextAlign.center,
+                          style: TEXT_STYLE.copyWith(fontSize: 14),
+                        )),
+                      ],
+                    ),
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: getForms,
@@ -130,7 +129,14 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          Icon(Icons.notifications, color: BACKGROUND_COLOR.withOpacity(0.8)),
+          InkWell(
+            child:
+                Icon(Icons.history, color: BACKGROUND_COLOR.withOpacity(0.8)),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (builder) => const HistoryForms()));
+            },
+          ),
           const SizedBox(width: 16),
         ],
         leading: Icon(Icons.person, color: BACKGROUND_COLOR.withOpacity(0.8)),

@@ -1,19 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/student/widgets/widgets.dart';
 
 class FormView extends StatelessWidget {
   final FormData formData;
   const FormView({Key? key, required this.formData}) : super(key: key);
+  void handleSubmit() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: formViewBody(),
+      body: formViewBody(formData),
+    );
+  }
+}
+
+Widget formViewBody(FormData formData) {
+  Row studentFormPageRowInstance(String label, String content) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('${label.toUpperCase()}:',
+              overflow: TextOverflow.ellipsis, maxLines: 10, style: TEXT_STYLE),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Expanded(
+          child: Text(content, style: TEXT_STYLE),
+        ),
+      ],
     );
   }
 
-  Center formViewBody() {
-    return Center(
+  return SafeArea(
+    child: Center(
       child: Container(
         decoration: BoxDecoration(
           color: BACKGROUND_COLOR,
@@ -31,8 +55,7 @@ class FormView extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              studentFormPageRowInstance(
-                  'Klinik Eğitici', formData.getDoktor()),
+              studentFormPageRowInstance('Klinik Eğitici', formData.getDoktor()),
               const SizedBox(
                 height: 10,
               ),
@@ -77,32 +100,11 @@ class FormView extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              studentFormPageRowInstance(
-                  'Tarih', formData.getTarih().toString()),
+              studentFormPageRowInstance('Tarih', formData.getTarih().toString()),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Row studentFormPageRowInstance(String label, String content) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('${label.toUpperCase()}:',
-              overflow: TextOverflow.ellipsis, maxLines: 10, style: TEXT_STYLE),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Expanded(
-          child: Text(content, style: TEXT_STYLE),
-        ),
-      ],
-    );
-  }
+    ),
+  );
 }
