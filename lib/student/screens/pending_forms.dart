@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_list.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:internship_managing_system/student/services/MySqlHelper.dart';
-import 'package:provider/provider.dart';
-
-import '../../shared/form_view.dart';
 
 class PendingForms extends StatefulWidget {
   const PendingForms({Key? key}) : super(key: key);
@@ -79,7 +75,7 @@ class _PendingFormsState extends State<PendingForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index,routeTo: 2,);
+                          formData: snapshot.data![index], index: index,routeTo: 1, isDeletable: false,);
                     },
                   ),
                 ),

@@ -81,6 +81,7 @@ class _HistoryFormsState extends State<HistoryForms> {
                         formData: snapshot.data![index],
                         index: index,
                         routeTo:3,
+                        isDeletable: false,
                       );
                     },
                   ),

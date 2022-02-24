@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/attending_physician/screens/history.dart';
-import 'package:internship_managing_system/attending_physician/services/AttendingMySqlHelper.dart';
-import 'package:internship_managing_system/shared/constants.dart';
-import 'package:internship_managing_system/shared/custom_alert.dart';
-import 'package:internship_managing_system/shared/custom_snackbar.dart';
-import 'package:internship_managing_system/shared/form_view.dart';
-import 'package:internship_managing_system/student/services/MySqlHelper.dart';
-import 'package:internship_managing_system/student/widgets/widgets.dart';
+import '../services/AttendingMySqlHelper.dart';
+import '../../shared/custom_alert.dart';
+import '../../shared/custom_snackbar.dart';
+import '../../shared/form_view.dart';
 
 import '../../models/form_data.dart';
 
 class FormDecision extends StatelessWidget {
-  FormData formData;
+  final FormData formData;
   FormDecision({Key? key, required this.formData}) : super(key: key);
-
-
+  final AttendingMySqlHelper _helper =AttendingMySqlHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +35,13 @@ class FormDecision extends StatelessWidget {
             SizedBox(
                 height: MediaQuery.of(context).size.height*0.8,
                 child: formViewBody(formData)),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             SizedBox(
               height: MediaQuery.of(context).size.height*0.08,
-              width: 150,
+              width: 150  ,
               child: ElevatedButton(
                 onPressed: () =>handleSubmit(),
-                child: Text('Onayla'),
+                child: const Text('Onayla'),
               ),
             )
           ],
@@ -54,6 +49,6 @@ class FormDecision extends StatelessWidget {
       ),
     );
   }
- final AttendingMySqlHelper _helper =AttendingMySqlHelper();
+
 
 }

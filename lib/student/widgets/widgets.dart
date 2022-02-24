@@ -26,7 +26,6 @@ Widget customTypeAhead(List<String> listItems, TextEditingController controller,
         ),
         TypeAheadFormField<String?>(
           onSuggestionSelected: (String? val) =>controller.text = val!,
-          //onSaved: (_)=>onSave(stajTuru),
           itemBuilder: (context, String? suggestion) {
             return ListTile(
               title: Text(suggestion!),
@@ -34,15 +33,17 @@ Widget customTypeAhead(List<String> listItems, TextEditingController controller,
           },
           suggestionsCallback: getSuggestions,
           validator: (value) {
+            print("here we are");
             bool isInTheList=false;
             for(var item in listItems){
               if(item==value) {
                 isInTheList=true;
               }
             }
-            if (value == null || value.isEmpty || !isInTheList) {
+            if (value == null || value.isEmpty || isInTheList==false) {
               return 'Lütfen ${labelText.toLowerCase()} seçiniz';
             } else {
+              print("null returned");
               return null;
             }
           },

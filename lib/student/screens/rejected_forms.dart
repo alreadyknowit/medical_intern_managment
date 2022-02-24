@@ -75,7 +75,7 @@ class _RejectedFormsState extends State<RejectedForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index,routeTo: 2,);
+                          formData: snapshot.data![index], index: index,routeTo: 2);
                     },
                   ),
                 ),

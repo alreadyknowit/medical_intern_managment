@@ -3,12 +3,12 @@ import 'package:mysql1/mysql1.dart';
 
 //TODO: close connections
 class MySqlHelper {
-  final String _host = 'sql5.freemysqlhosting.net';//'10.0.2.2'; //
-  final String _user = "sql5473107";//'root'; //
-  final String _password = "GLbqwsiid6";//'1234'; //
+  final String _host ='10.0.2.2';
+  final String _user ='root';
+  final String _password = '1234';
   final int _portNo = 3306;
   final String _formTableName = 'form_table';
-  final String _db = "sql5473107"; //'forms'; //
+  final String _db = 'forms';
   final String doktorTableName = 'attending_table';
   final String stajTuruTableName = 'staj_turu_table';
 
@@ -55,8 +55,10 @@ class MySqlHelper {
     List<String> resultList = [];
     late MySqlConnection conn;
     try {
+
       conn = await connectDB();
       var list = await conn.query('select $columnName from $tableName');
+
       for (var item in list) {
         resultList.add(item[columnName]);
       }
@@ -143,4 +145,5 @@ class MySqlHelper {
       await conn.close();
     }
   }
+
 }

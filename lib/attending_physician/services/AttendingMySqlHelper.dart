@@ -2,12 +2,12 @@ import 'package:internship_managing_system/models/form_data.dart';
 import 'package:mysql1/mysql1.dart';
 
 class AttendingMySqlHelper{
-  final String _host = 'sql5.freemysqlhosting.net';//'10.0.2.2'; //
-  final String _user = "sql5473107"; //'root';//
-  final String _password = "GLbqwsiid6"; //'1234';//
+  final String _host = '10.0.2.2'; //
+  final String _user = 'root';//
+  final String _password = '1234';//
   final int _portNo = 3306;
   final String _tableName = 'form_table';
-  final String _db = "sql5473107";//'forms';//
+  final String _db = 'forms';//
 
   final columnId = 'id';
   final columnKayitNo = 'kayit_no';

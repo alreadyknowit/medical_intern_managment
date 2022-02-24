@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
-import 'package:internship_managing_system/shared/form_view.dart';
 import '../../models/form_data.dart';
 import '../../shared/constants.dart';
 import '../../shared/custom_list_tile.dart';
@@ -16,7 +15,7 @@ class AcceptedForms extends StatefulWidget {
 class _AcceptedFormsState extends State<AcceptedForms> {
   final MySqlHelper _mySqlHelper = MySqlHelper();
   final _status = 'accept';
-  int _limit=20;
+  final int _limit=20;
   Future<void> _refresh() async {
     await _mySqlHelper.fetchForms(_status,_limit).then((value) {
       setState(() {});
@@ -39,7 +38,6 @@ class _AcceptedFormsState extends State<AcceptedForms> {
               ));
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(
                 child: RichText(
                   text: const TextSpan(
@@ -75,7 +73,7 @@ class _AcceptedFormsState extends State<AcceptedForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index, routeTo: 2,);
+                          formData: snapshot.data![index], index: index, routeTo: 2);
                     },
                   ),
                 ),

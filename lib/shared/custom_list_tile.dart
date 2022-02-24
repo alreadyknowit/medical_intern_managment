@@ -10,15 +10,17 @@ class CustomListTile extends StatelessWidget {
   final FormData formData;
   final int index;
   final int routeTo;
+  final bool? isDeletable;
   const CustomListTile(
       {Key? key,
       required this.formData,
       required this.index,
-      required this.routeTo})
+      required this.routeTo,
+       this.isDeletable})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    FormArguments arguments = FormArguments(formData: formData, index: index);
+    FormArguments arguments = FormArguments(formData: formData, index: index, isDeletable: isDeletable);
 
     void pushToFormView(FormData formData) {
       Navigator.push(
