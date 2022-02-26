@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 import '../../models/form_data.dart';
 import '../../shared/constants.dart';
 import '../../shared/custom_list_tile.dart';
-import '../services/MySqlHelper.dart';
 
 class AcceptedForms extends StatefulWidget {
   const AcceptedForms({Key? key}) : super(key: key);
@@ -13,11 +13,9 @@ class AcceptedForms extends StatefulWidget {
 }
 
 class _AcceptedFormsState extends State<AcceptedForms> {
-  final MySqlHelper _mySqlHelper = MySqlHelper();
-  final _status = 'accept';
-  final int _limit=20;
+  final StudentDatabaseHelper _dbHelper =StudentDatabaseHelper();
   Future<void> _refresh() async {
-    await _mySqlHelper.fetchForms(_status,_limit).then((value) {
+    await _dbHelper.fetchFormsFromDatabase('/accepted').then((value) {
       setState(() {});
     });
   }
@@ -26,13 +24,13 @@ class _AcceptedFormsState extends State<AcceptedForms> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<FormData>?>(
-          future: _mySqlHelper.fetchForms(_status,_limit),
+          future:_dbHelper.fetchFormsFromDatabase('/accepted'),
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                "Henüz reddedilen formunuz bulunmamaktadır.",
+                "Henüz kabul edilen formunuz bulunmamaktadır.",
                 textAlign: TextAlign.center,
                 style: TEXT_STYLE,
               ));
@@ -48,7 +46,7 @@ class _AcceptedFormsState extends State<AcceptedForms> {
                       ),
                       //TODO:Emoji eklenecek
                       TextSpan(
-                        text: '🧭 🏳️\u200d🌈', // emoji characters
+                        text: ' 🧭', // emoji characters
                         style: TextStyle(
                           fontFamily: 'EmojiOne',
                         ),

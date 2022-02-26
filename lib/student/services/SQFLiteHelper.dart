@@ -3,22 +3,24 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SQFLiteHelper {
-  final _databaseName = 'myDrafts.db';
+  final _databaseName = 'newDrafts.db';
   final _databaseVersion = 1;
-  final _tableName = 'drafts_table';
+  final _tableName = 'table_drafts';
   static const columnId = 'id';
-  static const columnKayitNo = 'kayitNo';
+  static const columnKayitNo = 'kayit_no';
   static const columnSikayet = 'sikayet';
-  static const columnStajTuru = 'stajTuru';
-  static const columnKlinikEgitici = 'klinikEgitici';
+  static const columnStajTuru = 'staj_turu';
+  static const columnKlinikEgitici = 'klinik_egitici';
   static const columnCinsiyet = 'cinsiyet';
-  static const columnEtkilesimTuru = 'etkilesimTuru';
+  static const columnEtkilesimTuru = 'etkilesim_turu';
   static const columnKapsam = 'kapsam';
   static const columnOrtam = 'ortam';
   static const columnYas = 'yas';
-  static const columnAyiriciTani = 'ayiriciTani';
-  static const columnKesinTani = 'kesinTani';
-  static const columnTedaviYontemi = 'tedaviYontemi';
+  static const columnAyiriciTani = 'ayirici_tani';
+  static const columnKesinTani = 'kesin_tani';
+  static const columnTedaviYontemi = 'tedavi_yontemi';
+  static const columnTarih='tarih';
+  static const columnStatus='form_status';
 
   SQFLiteHelper._privateConstructor();
   static final SQFLiteHelper instance = SQFLiteHelper._privateConstructor();
@@ -49,13 +51,15 @@ class SQFLiteHelper {
     $columnYas TEXT,
     $columnAyiriciTani TEXT,
     $columnKesinTani TEXT,
-    $columnTedaviYontemi TEXT
+    $columnTedaviYontemi TEXT,
+    $columnTarih TEXT,
+    $columnStatus TEXT
     )
     ''');
   }
 
   Future<int> insert(FormData form) async {
-    Database db = await instance.getDatabase; //The error occuring here
+    Database db = await instance.getDatabase;
 
     return await db.insert(_tableName, form.toMap());
   }
@@ -64,7 +68,7 @@ class SQFLiteHelper {
     Database db = await instance.getDatabase;
     var forms = await db.query(_tableName, orderBy: 'id DESC');
     List<FormData> formList =
-        forms.isNotEmpty ? forms.map((e) => FormData.fromMap(e)).toList() : [];
+        forms.isNotEmpty ? forms.map((e) => FormData.fromJson(e)).toList() : [];
 
     return formList;
   }

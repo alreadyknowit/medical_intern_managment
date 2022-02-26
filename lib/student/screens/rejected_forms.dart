@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
-import '../../shared/form_view.dart';
-import '../services/MySqlHelper.dart';
-
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 import '../../models/form_data.dart';
 import '../../shared/constants.dart';
 import '../../shared/custom_list_tile.dart';
@@ -15,11 +13,9 @@ class RejectedForms extends StatefulWidget {
 }
 
 class _RejectedFormsState extends State<RejectedForms> {
-  final MySqlHelper _mySqlHelper = MySqlHelper();
-  final _status ='reject';
-  final _limit=20;
+  final StudentDatabaseHelper _dbHelper =StudentDatabaseHelper();
   Future<void> _refresh() async {
-    await _mySqlHelper.fetchForms(_status,_limit).then((value) {
+    await _dbHelper.fetchFormsFromDatabase('/rejected').then((value) {
       setState(() {});
     });
   }
@@ -28,7 +24,7 @@ class _RejectedFormsState extends State<RejectedForms> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<FormData>?>(
-          future: _mySqlHelper.fetchForms(_status,_limit),
+          future: _dbHelper.fetchFormsFromDatabase('/rejected'),
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -50,7 +46,7 @@ class _RejectedFormsState extends State<RejectedForms> {
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
                       TextSpan(
-                        text: '🧭 🏳️\u200d🌈', // emoji characters
+                        text: ' 🧭', // emoji characters
                         style: TextStyle(
                           fontFamily: 'EmojiOne',
                         ),

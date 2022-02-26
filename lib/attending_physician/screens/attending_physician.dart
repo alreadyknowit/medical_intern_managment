@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
 import 'package:internship_managing_system/attending_physician/screens/history.dart';
-import 'package:internship_managing_system/attending_physician/services/AttendingMySqlHelper.dart';
+import 'package:internship_managing_system/attending_physician/services/AttendingDatabaseHelper.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -15,27 +15,27 @@ class AttendingPhysician extends StatefulWidget {
 }
 
 class _AttendingPhysicianState extends State<AttendingPhysician> {
-  final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
+  final AttendingDatabaseHelper _dbHelper= AttendingDatabaseHelper();
   List<FormData> formList = [];
   bool isLoading = false;
   getForms() async {
     setState(() {
       isLoading = true;
     });
-    formList = await _mySqlHelper.fetchForms('waiting').then((value) {
+    formList= await _dbHelper.fetchFormsFromDatabase('/waiting').then((value) {
       setState(() {
-        isLoading = false;
+        isLoading=false;
       });
-
       return value;
     });
+
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     getForms();
+    super.initState();
+
   }
 
   @override
@@ -113,11 +113,11 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
     const minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
       form.setStatus('accept');
-      _mySqlHelper.update(form);
+      _dbHelper.updateFromStatus(form);
       setState(() => formList.remove(form));
     } else if (details.offset.dx < -minimumDrag) {
       form.setStatus('reject');
-      _mySqlHelper.update(form);
+     _dbHelper.updateFromStatus(form);
       setState(() => formList.remove(form));
     }
     return details.offset.dx;

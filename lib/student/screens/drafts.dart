@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
-import 'package:internship_managing_system/student/screens/form_page.dart';
-
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
-
 import '../../shared/custom_spinkit.dart';
 
 class Drafts extends StatefulWidget {

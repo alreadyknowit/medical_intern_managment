@@ -20,7 +20,7 @@ class InternshipManagingSystem extends StatelessWidget {
       builder: (context, _) => MaterialApp(
         theme: ThemeData.dark(),
         themeMode: ThemeMode.dark,
-        home:SideBar(),//AttendingPhysician()//
+        home:SideBar(),//  AttendingPhysician()//
       ),
     );
   }

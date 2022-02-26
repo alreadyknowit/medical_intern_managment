@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/models/attending.dart';
+import 'package:internship_managing_system/models/staj_turu_model.dart';
 import 'package:internship_managing_system/shared/custom_alert.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/custom_snackbar.dart';
-import 'package:internship_managing_system/student/services/MySqlHelper.dart';
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import '../widgets/widgets.dart';
-
 
 class FormPage extends StatefulWidget {
   const FormPage({Key? key}) : super(key: key);
@@ -23,16 +24,16 @@ class _HomePageState extends State<FormPage> {
   }
 
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
-  final MySqlHelper _mySqlHelper = MySqlHelper();
+  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   late bool isDeletable;
   @override
   Widget build(BuildContext context) {
     formArguments =
         ModalRoute.of(context)?.settings.arguments as FormArguments?;
     if (formArguments != null) {
-      isDeletable=formArguments!.isDeletable ?? true;
+      isDeletable = formArguments!.isDeletable ?? true;
       args = formArguments?.formData;
-    //  index = formArguments?.index;
+      //  index = formArguments?.index;
       //textField
       _kayit.text = args!.getKayitNo();
       _yas.text = args!.getYas().toString();
@@ -56,7 +57,8 @@ class _HomePageState extends State<FormPage> {
               future: fetchFormContent(), //readJsonData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(child:  Text("Oops! Something went wrong."));
+                  return const Center(
+                      child: Text("Oops! Something went wrong."));
                 } else if (snapshot.hasData) {
                   var listOfContent = snapshot.data as List<List<String>>;
                   var listOfStajTuru = listOfContent[1];
@@ -119,7 +121,7 @@ class _HomePageState extends State<FormPage> {
       key: _formKey,
       child: SingleChildScrollView(
         child: Column(
-        //  shrinkWrap: true,
+          //  shrinkWrap: true,
           children: [
             customTypeAhead(map['stajTuru'], _stajTuruController,
                 _selectedStajTuru, 'Staj Türü'),
@@ -144,10 +146,10 @@ class _HomePageState extends State<FormPage> {
                 1, "Şikayet", 10, _formData.setSikayet, isEmpty, _sikayet, 80),
             customTextField(1, "Ayırıcı Tanı", 10, _formData.setAyiriciTani,
                 isEmpty, _ayirici, 80),
-            customTextField(5, "Kesin Tanı", 50, _formData.setKesinTani, isEmpty,
-                _kesin, 130),
-            customTextField(5, "Tedavi Yöntemi", 200, _formData.setTedaviYontemi,
-                isEmpty, _tedavi, 130),
+            customTextField(5, "Kesin Tanı", 50, _formData.setKesinTani,
+                isEmpty, _kesin, 130),
+            customTextField(5, "Tedavi Yöntemi", 200,
+                _formData.setTedaviYontemi, isEmpty, _tedavi, 130),
           ],
         ),
       ),
@@ -255,8 +257,11 @@ class _HomePageState extends State<FormPage> {
   void formIlet() async {
     if (formArguments != null) {
       if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
         setFormArgumentState();
-        bool res = await _mySqlHelper.insertData(formArguments!.formData);
+        bool res =
+            await _dbHelper.insertFormToDatabase(formArguments!.formData);
+        //    bool res = await _mySqlHelper.insertData(formArguments!.formData);
         if (res) {
           _helper.update(formArguments!.formData);
           customSnackBar(context, 'Başarıyla gönderildi');
@@ -269,12 +274,13 @@ class _HomePageState extends State<FormPage> {
         _formKey.currentState!.save();
         setFormDataState();
         isLoading = true;
-        bool res = await _mySqlHelper.insertData(_formData).then((val) {
+        bool res = await _dbHelper.insertFormToDatabase(_formData).then((val) {
           setState(() {
             isLoading = false;
           });
-          return val;
+          return val != null ? true : false;
         });
+        print(_formData.kayitNo);
         if (res) {
           customSnackBar(context, 'Başarıyla gönderildi');
         } else {
@@ -304,13 +310,21 @@ class _HomePageState extends State<FormPage> {
 
   Future<List<List<String>>> fetchFormContent() async {
     List<List<String>> res = [];
-
-    var listDoktor = await _mySqlHelper.fetchFormContent(
-        _mySqlHelper.columnDoktorName, _mySqlHelper.doktorTableName);
-    var listStajTuru = await _mySqlHelper.fetchFormContent(
-        _mySqlHelper.columnStajTuruName, _mySqlHelper.stajTuruTableName);
-    res.add(listDoktor);
-    res.add(listStajTuru);
+    //fetch attending physician
+    List<AttendingPhysicianModel> attendingList =
+        await _dbHelper.fetchAttendingPhysicians();
+    List<String> attendingNames = [];
+    for (AttendingPhysicianModel item in attendingList) {
+      attendingNames.add(item.name);
+    }
+    //fetch stajTuru
+    List<StajTuru> stajTuruList = await _dbHelper.fetchStajTuruTable();
+    List<String> stajTurleri = [];
+    for (StajTuru s in stajTuruList) {
+      stajTurleri.add(s.stajTuru);
+    }
+    res.add(attendingNames);
+    res.add(stajTurleri);
     return res;
   }
 

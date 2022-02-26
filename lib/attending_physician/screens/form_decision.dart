@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/AttendingMySqlHelper.dart';
+import '../services/AttendingDatabaseHelper.dart';
 import '../../shared/custom_alert.dart';
 import '../../shared/custom_snackbar.dart';
 import '../../shared/form_view.dart';
@@ -9,14 +9,14 @@ import '../../models/form_data.dart';
 class FormDecision extends StatelessWidget {
   final FormData formData;
   FormDecision({Key? key, required this.formData}) : super(key: key);
-  final AttendingMySqlHelper _helper =AttendingMySqlHelper();
+  final AttendingDatabaseHelper _dbHelper= AttendingDatabaseHelper();
 
   @override
   Widget build(BuildContext context) {
 
     handleSubmit()async {
       formData.setStatus('accept');
-      bool res= await _helper.update(formData);
+      bool res= await _dbHelper.updateFromStatus(formData);
       if(res){
         Navigator.pop(context);
         customSnackBar(context,'Form başarıyla onaylandı' );

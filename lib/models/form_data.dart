@@ -20,7 +20,11 @@ class FormData with ChangeNotifier {
 
   String? tarih;
   String? status;
-  String getTarih() => tarih ?? formatDate(DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, ' ', HH, ':', nn]);
+  int? getID()=>id;
+  String getTarih() =>
+      tarih ??
+      formatDate(
+          DateTime.now().toLocal(), [dd, ' ', M, ' ', yyyy, ' ', HH, ':', nn]);
   String getKayitNo() => kayitNo ?? "";
   String getStajTuru() => stajTuru ?? "Diğer";
   String getDoktor() => doktor ?? "Diğer";
@@ -50,22 +54,40 @@ class FormData with ChangeNotifier {
       this.etkilesimTuru,
       this.kapsam,
       this.gerceklestigiOrtam});
-  factory FormData.fromJson(Map<String, dynamic> json) {
-    return FormData(kayitNo: json['kayit_no']);
+  factory FormData.fromJson(Map<String, dynamic> myMap) {
+    return FormData(
+      id: checkID(myMap['id']),
+      kayitNo: myMap['kayit_no'],
+      stajTuru: myMap['staj_turu'],
+      yas: myMap['yas'],
+      doktor: myMap['klinik_egitici'],
+      cinsiyet: myMap['cinsiyet'],
+      sikayet: myMap['sikayet'],
+      ayiriciTani: myMap['ayirici_tani'],
+      kesinTani: myMap['kesin_tani'],
+      tedaviYontemi: myMap['tedavi_yontemi'],
+      etkilesimTuru: myMap['etkilesim_turu'],
+      kapsam: myMap['kapsam'],
+      gerceklestigiOrtam: myMap['ortam'],
+    );
+  }
+
+  static checkID(var id) {
+    return id is int ? id : int.parse(id);
   }
 
   factory FormData.fromMap(Map<String, dynamic> myMap) => FormData(
         id: myMap['id'],
-        kayitNo: myMap['kayitNo'],
-        stajTuru: myMap['stajTuru'],
+        kayitNo: myMap['kayit_no'],
+        stajTuru: myMap['staj_turu'],
         yas: myMap['yas'],
-        doktor: myMap['klinikEgitici'],
+        doktor: myMap['klinik_egitici'],
         cinsiyet: myMap['cinsiyet'],
         sikayet: myMap['sikayet'],
-        ayiriciTani: myMap['ayiriciTani'],
-        kesinTani: myMap['kesinTani'],
-        tedaviYontemi: myMap['tedaviYontemi'],
-        etkilesimTuru: myMap['etkilesimTuru'],
+        ayiriciTani: myMap['ayirici_tani'],
+        kesinTani: myMap['kesin_tani'],
+        tedaviYontemi: myMap['tedavi_yontemi'],
+        etkilesimTuru: myMap['etkilesim_turu'],
         kapsam: myMap['kapsam'],
         gerceklestigiOrtam: myMap['ortam'],
       );
@@ -85,6 +107,8 @@ class FormData with ChangeNotifier {
       SQFLiteHelper.columnEtkilesimTuru: etkilesimTuru,
       SQFLiteHelper.columnOrtam: gerceklestigiOrtam,
       SQFLiteHelper.columnKapsam: kapsam,
+      SQFLiteHelper.columnTarih: tarih,
+      SQFLiteHelper.columnStatus: status
     };
   }
 

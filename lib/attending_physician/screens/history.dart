@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/attending_physician/services/AttendingMySqlHelper.dart';
-
+import '../services/AttendingDatabaseHelper.dart';
 import '../../models/form_data.dart';
 import '../../shared/constants.dart';
 import '../../shared/custom_list_tile.dart';
@@ -14,13 +13,15 @@ class HistoryForms extends StatefulWidget {
 }
 
 class _HistoryFormsState extends State<HistoryForms> {
-  final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
-  final _status = 'reject';
-
+ // final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
+  final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
   Future<void> _refresh() async {
-    await _mySqlHelper.fetchForms(_status).then((value) {
-      setState(() {});
+    await _dbHelper.fetchFormsFromDatabase('/reject').then((value) {
+      setState(() {
+
+      });
     });
+
   }
 
   @override
@@ -31,7 +32,7 @@ class _HistoryFormsState extends State<HistoryForms> {
         title: const Text('Reddedilen Formlar'),
       ),
       body: FutureBuilder<List<FormData>?>(
-          future: _mySqlHelper.fetchForms('reject'),
+          future:_dbHelper.fetchFormsFromDatabase('/reject'),
           builder:
               (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
-import 'package:internship_managing_system/student/services/MySqlHelper.dart';
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
 class PendingForms extends StatefulWidget {
   const PendingForms({Key? key}) : super(key: key);
@@ -13,23 +12,23 @@ class PendingForms extends StatefulWidget {
 }
 
 class _PendingFormsState extends State<PendingForms> {
-  final MySqlHelper _mySqlHelper = MySqlHelper();
-  final String _status='waiting';
+  final StudentDatabaseHelper _dbHelper= StudentDatabaseHelper();
   int limit=50;
   Future<void> _refresh() async {
 
-    await _mySqlHelper.fetchForms(_status,limit).then((value) {
+    await _dbHelper.fetchFormsFromDatabase("/waiting").then((value) {
       setState(() {});
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<FormData>?>(
-          future: _mySqlHelper.fetchForms(_status,limit),
+      body: FutureBuilder<List<dynamic>>(
+          future: _dbHelper.fetchFormsFromDatabase("/waiting"),
           builder:
-              (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
+              (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -50,7 +49,7 @@ class _PendingFormsState extends State<PendingForms> {
                       ),
                       //TODO: emoji
                       TextSpan(
-                        text: '🧭 🏳️\u200d🌈', // emoji characters
+                        text: ' 🧭', // emoji characters
                         style: TextStyle(
                           fontFamily: 'EmojiOne',
                         ),
@@ -61,6 +60,8 @@ class _PendingFormsState extends State<PendingForms> {
               );
             }
             if (snapshot.connectionState == ConnectionState.done) {
+              List<dynamic> list = snapshot.data;
+
               return RefreshIndicator(
                 backgroundColor: Colors.grey[700],
                 color: LIGHT_BUTTON_COLOR,
@@ -72,10 +73,10 @@ class _PendingFormsState extends State<PendingForms> {
                     physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
                     ),
-                    itemCount: snapshot.data!.length,
+                    itemCount: list.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index,routeTo: 1, isDeletable: false,);
+                          formData: list[index], index: index,routeTo: 1, isDeletable: false,);
                     },
                   ),
                 ),

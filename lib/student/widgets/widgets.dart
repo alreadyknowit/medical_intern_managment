@@ -33,7 +33,6 @@ Widget customTypeAhead(List<String> listItems, TextEditingController controller,
           },
           suggestionsCallback: getSuggestions,
           validator: (value) {
-            print("here we are");
             bool isInTheList=false;
             for(var item in listItems){
               if(item==value) {
@@ -43,7 +42,7 @@ Widget customTypeAhead(List<String> listItems, TextEditingController controller,
             if (value == null || value.isEmpty || isInTheList==false) {
               return 'Lütfen ${labelText.toLowerCase()} seçiniz';
             } else {
-              print("null returned");
+
               return null;
             }
           },

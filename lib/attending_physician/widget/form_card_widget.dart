@@ -7,7 +7,6 @@ import 'package:internship_managing_system/attending_physician/provider/feedback
 class FormCardWidget extends StatelessWidget {
   final FormData form;
   final bool isFormInFocus;
-
     const FormCardWidget({
     required this.form,
     required this.isFormInFocus,
