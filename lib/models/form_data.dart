@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../student/services/SQFLiteHelper.dart';
 
@@ -20,7 +20,7 @@ class FormData with ChangeNotifier {
 
   String? tarih;
   String? status;
-  int? getID()=>id;
+  int? getID() => id;
   String getTarih() =>
       tarih ??
       formatDate(
@@ -156,6 +156,8 @@ class FormData with ChangeNotifier {
     notifyListeners();
   }
 
+//TODO: Eklenen yeni özelliklerin fonksiyonları yazılacak
+  //TODO: Variabler Değiştirilecek
   void setSikayet(String? sikayet) {
     this.sikayet = sikayet;
     notifyListeners();

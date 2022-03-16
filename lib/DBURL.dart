@@ -1,3 +1,4 @@
-class DBURL{
-  static const String url="http://10.0.2.2/flutter";
+class DBURL {
+  static const String url =
+      "https://medinternshipapp.000webhostapp.com/flutter";
 }
