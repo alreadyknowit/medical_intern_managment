@@ -9,15 +9,15 @@ import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../widgets/widgets.dart';
+import '../../widgets/widgets.dart';
 
-class TibbiUygulama extends StatefulWidget {
-  const TibbiUygulama({Key? key}) : super(key: key);
+class FormPage extends StatefulWidget {
+  const FormPage({Key? key}) : super(key: key);
   @override
-  State<TibbiUygulama> createState() => _TibbiUyglamaState();
+  State<FormPage> createState() => _HomePageState();
 }
 
-class _TibbiUyglamaState extends State<TibbiUygulama> {
+class _HomePageState extends State<FormPage> {
   @override
   initState() {
     fetchFormContent();
@@ -44,9 +44,10 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
       _tedavi.text = args!.getTedaviYontemi();
 
       //dropdown
+      _valueCinsiyet = args!.getCinsiyet();
       _doktorController.text = args!.getDoktor();
       _valueEtkilesim = args!.getEtkilesimTuru();
-
+      _valueKapsam = args!.getKapsam();
       _valueOrtam = args!.getOrtam();
       _stajTuruController.text = args!.getStajTuru();
     }
@@ -63,12 +64,16 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
                   var listOfContent = snapshot.data as List<List<String>>;
                   var listOfStajTuru = listOfContent[1];
                   var listOfDoktor = listOfContent[0];
-
+                  var listOfKapsam = [
+                    "Öykü",
+                    "Fizik Bakı",
+                    "Tanısal akıl Yürütme",
+                    "Teropötik akıl yürütme"
+                  ];
                   var listOfOrtam = [
                     "Poliklinik",
                     "Servis",
                     "Acil",
-                    "Yoğun Bakım",
                     "Ameliyathane",
                     "Dış Kurum"
                   ];
@@ -78,12 +83,15 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
                     "Yardımsız yapma",
                     "Sanal olgu"
                   ];
+                  var listOfCinsiyet = ['Erkek', 'Kadın', 'Diğer'];
 
                   Map<String, dynamic> map = {
                     'doktor': listOfDoktor,
                     'etkilesim': listOfEtkilesimTuru,
+                    'kapsam': listOfKapsam,
                     'ortam': listOfOrtam,
                     'stajTuru': listOfStajTuru,
+                    'cinsiyet': listOfCinsiyet,
                   };
                   return isLoading ? spinkit : formWidget(map);
                 } else {
@@ -120,18 +128,28 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
                 _selectedStajTuru, 'Staj Türü'),
             customTypeAhead(
                 map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),
-            customDropDown(_valueEtkilesim, map['etkilesim'], hintTextEtkilesim,
-                onChangedEtkilesim),
             customDropDown(
                 _valueOrtam, map['ortam'], hintTextOrtam, onChangedOrtam),
-            customTextField(1, "Lütfen Dış Kurumu Yazınız", 10,
-                _formData.setSikayet, isEmpty, _sikayet, 80),
+            customDropDown(
+                _valueKapsam, map['kapsam'], hintTextKapsam, onChangedKapsam),
+            customDropDown(_valueEtkilesim, map['etkilesim'], hintTextEtkilesim,
+                onChangedEtkilesim),
+            customDropDown(_valueCinsiyet, map['cinsiyet'], hintTextCinsiyet,
+                onChangedCinsiyet),
             const SizedBox(
               height: 20,
             ),
             customTextField(
                 1, "Kayıt No ", 10, _formData.setKayitNo, isEmpty, _kayit, 80),
-            customTextField(5, "Tıbbi İşlem Uygulama", 200,
+            customTextField(
+                1, "Hastanın Yaşı", 3, _formData.setYas, isNumeric, _yas, 80),
+            customTextField(
+                1, "Şikayet", 10, _formData.setSikayet, isEmpty, _sikayet, 80),
+            customTextField(1, "Ayırıcı Tanı", 10, _formData.setAyiriciTani,
+                isEmpty, _ayirici, 80),
+            customTextField(5, "Kesin Tanı", 50, _formData.setKesinTani,
+                isEmpty, _kesin, 130),
+            customTextField(5, "Tedavi Yöntemi", 200,
                 _formData.setTedaviYontemi, isEmpty, _tedavi, 130),
           ],
         ),
@@ -145,12 +163,16 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
   FormArguments? formArguments;
   final _formKey = GlobalKey<FormState>();
   String _valueEtkilesim = 'Gözlem';
+  String _valueKapsam = 'Öykü';
   String _valueOrtam = 'Poliklinik';
 
   String? _selectedStajTuru;
   String? _selectedDoktor;
+  String _valueCinsiyet = 'Erkek'; // initial value
+  final String hintTextCinsiyet = "Cinsiyet:";
   final String hintTextStajTuru = "Staj Türü:";
   final String hintTextEtkilesim = "Etkileşim Türü:";
+  final String hintTextKapsam = "Kapsam:";
   final String hintTextOrtam = "Gerçekleştiği Ortam:";
   final String hintTextDoktor = "Klinik Eğitici:";
   final TextEditingController _kayit = TextEditingController();
@@ -163,6 +185,18 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
   final TextEditingController _doktorController = TextEditingController();
   bool isLoading = false;
 
+  void onChangedCinsiyet(String? newVal) {
+    if (formArguments != null) {
+      formArguments?.formData.setCinsiyet(newVal!);
+    } else {
+      setState(() {
+        _valueCinsiyet = newVal!;
+
+        _formData.setCinsiyet(_valueCinsiyet);
+      });
+    }
+  }
+
   void onChangedEtkilesim(String newVal) {
     if (formArguments != null) {
       formArguments?.formData.setEtkilesimTuru(newVal);
@@ -170,6 +204,17 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
       setState(() {
         _valueEtkilesim = newVal;
         _formData.setEtkilesimTuru(newVal);
+      });
+    }
+  }
+
+  void onChangedKapsam(String newVal) {
+    if (formArguments != null) {
+      formArguments?.formData.setKapsam(newVal);
+    } else {
+      setState(() {
+        _valueKapsam = newVal;
+        _formData.setKapsam(newVal);
       });
     }
   }
@@ -308,7 +353,8 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
     _formData.setDoktor(_doktorController.text);
     //dropdown
     _formData.setEtkilesimTuru(_valueEtkilesim);
-
+    _formData.setKapsam(_valueKapsam);
+    _formData.setCinsiyet(_valueCinsiyet);
     _formData.setOrtam(_valueOrtam);
 
     //other

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/models/attending.dart';
 import 'package:internship_managing_system/models/staj_turu_model.dart';
-import 'package:internship_managing_system/shared/custom_alert.dart';
+import 'package:internship_managing_system/shared/custom_snackbar.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/shared/custom_snackbar.dart';
-import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
-import '../widgets/widgets.dart';
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-class FormPage extends StatefulWidget {
-  const FormPage({Key? key}) : super(key: key);
+import '../../../models/tibbi_form_data.dart';
+import '../../../shared/custom_alert.dart';
+import '../../widgets/widgets.dart';
+
+class TibbiUygulama extends StatefulWidget {
+  const TibbiUygulama({Key? key}) : super(key: key);
   @override
-  State<FormPage> createState() => _HomePageState();
+  State<TibbiUygulama> createState() => _TibbiUyglamaState();
 }
 
-class _HomePageState extends State<FormPage> {
+class _TibbiUyglamaState extends State<TibbiUygulama> {
   @override
   initState() {
     fetchFormContent();
@@ -28,26 +29,21 @@ class _HomePageState extends State<FormPage> {
   late bool isDeletable;
   @override
   Widget build(BuildContext context) {
-    formArguments =
-        ModalRoute.of(context)?.settings.arguments as FormArguments?;
-    if (formArguments != null) {
-      isDeletable = formArguments!.isDeletable ?? true;
-      args = formArguments?.formData;
-      //  index = formArguments?.index;
-      //textField
+    tibbiFormArguments =
+        ModalRoute.of(context)?.settings.arguments as TibbiFormArguments?;
+    if (tibbiFormArguments != null) {
+      isDeletable = tibbiFormArguments!.isDeletable ?? true;
+      args = tibbiFormArguments?.tibbiFormData;
       _kayit.text = args!.getKayitNo();
-      _yas.text = args!.getYas().toString();
-      _sikayet.text = args!.getSikayet();
-      _ayirici.text = args!.getAyiriciTani();
-      _kesin.text = args!.getKesinTani();
-      _tedavi.text = args!.getTedaviYontemi();
 
       //dropdown
-      _valueCinsiyet = args!.getCinsiyet();
+      _valueTibbiOrtam = args!.getTibbiOrtam();
+      _valueTibbiEtkilesimTuru = args!.getTibbiUygulama();
+      //
+
       _doktorController.text = args!.getDoktor();
-      _valueEtkilesim = args!.getEtkilesimTuru();
-      _valueKapsam = args!.getKapsam();
-      _valueOrtam = args!.getOrtam();
+      _disKurum.text = args!.getDisKurum();
+      _tibbiUygulama.text = args!.getTibbiUygulama();
       _stajTuruController.text = args!.getStajTuru();
     }
 
@@ -63,16 +59,12 @@ class _HomePageState extends State<FormPage> {
                   var listOfContent = snapshot.data as List<List<String>>;
                   var listOfStajTuru = listOfContent[1];
                   var listOfDoktor = listOfContent[0];
-                  var listOfKapsam = [
-                    "Öykü",
-                    "Fizik Bakı",
-                    "Tanısal akıl Yürütme",
-                    "Teropötik akıl yürütme"
-                  ];
+
                   var listOfOrtam = [
                     "Poliklinik",
                     "Servis",
                     "Acil",
+                    "Yoğun Bakım",
                     "Ameliyathane",
                     "Dış Kurum"
                   ];
@@ -80,17 +72,14 @@ class _HomePageState extends State<FormPage> {
                     "Gözlem",
                     "Yardımla yapma",
                     "Yardımsız yapma",
-                    "Sanal olgu"
+                    "Sanal olgu",
                   ];
-                  var listOfCinsiyet = ['Erkek', 'Kadın', 'Diğer'];
 
                   Map<String, dynamic> map = {
                     'doktor': listOfDoktor,
                     'etkilesim': listOfEtkilesimTuru,
-                    'kapsam': listOfKapsam,
                     'ortam': listOfOrtam,
                     'stajTuru': listOfStajTuru,
-                    'cinsiyet': listOfCinsiyet,
                   };
                   return isLoading ? spinkit : formWidget(map);
                 } else {
@@ -106,7 +95,7 @@ class _HomePageState extends State<FormPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             submitButton(Icons.send, context, "İLET", formIlet),
-            formArguments != null && isDeletable
+            tibbiFormArguments != null && isDeletable
                 ? submitButton(Icons.delete, context, "SİL", handleDelete)
                 : Container(),
             submitButton(Icons.drafts_sharp, context, "SAKLA", formSakla),
@@ -127,119 +116,79 @@ class _HomePageState extends State<FormPage> {
                 _selectedStajTuru, 'Staj Türü'),
             customTypeAhead(
                 map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),
+            customDropDown(_valueTibbiEtkilesimTuru, map['etkilesim'],
+                hintTextEtkilesim, onChangedEtkilesim),
             customDropDown(
-                _valueOrtam, map['ortam'], hintTextOrtam, onChangedOrtam),
-            customDropDown(
-                _valueKapsam, map['kapsam'], hintTextKapsam, onChangedKapsam),
-            customDropDown(_valueEtkilesim, map['etkilesim'], hintTextEtkilesim,
-                onChangedEtkilesim),
-            customDropDown(_valueCinsiyet, map['cinsiyet'], hintTextCinsiyet,
-                onChangedCinsiyet),
+                _valueTibbiOrtam, map['ortam'], hintTextOrtam, onChangedOrtam),
+            customTextField(1, "Lütfen Dış Kurumu Yazınız", 10,
+                _tibbiFormData.setDisKurum, isEmpty, _disKurum, 80),
             const SizedBox(
               height: 20,
             ),
-            customTextField(
-                1, "Kayıt No ", 10, _formData.setKayitNo, isEmpty, _kayit, 80),
-            customTextField(
-                1, "Hastanın Yaşı", 3, _formData.setYas, isNumeric, _yas, 80),
-            customTextField(
-                1, "Şikayet", 10, _formData.setSikayet, isEmpty, _sikayet, 80),
-            customTextField(1, "Ayırıcı Tanı", 10, _formData.setAyiriciTani,
-                isEmpty, _ayirici, 80),
-            customTextField(5, "Kesin Tanı", 50, _formData.setKesinTani,
-                isEmpty, _kesin, 130),
-            customTextField(5, "Tedavi Yöntemi", 200,
-                _formData.setTedaviYontemi, isEmpty, _tedavi, 130),
+            customTextField(1, "Kayıt No ", 10, _tibbiFormData.setKayitNo,
+                isEmpty, _kayit, 80),
+            customTextField(5, "Tıbbi İşlem Uygulama", 200,
+                _tibbiFormData.setTibbiUygulama, isEmpty, _tibbiUygulama, 130),
           ],
         ),
       ),
     );
   }
 
-  final FormData _formData = FormData();
-  late FormData? args;
+  final TibbiFormData _tibbiFormData = TibbiFormData();
+  late TibbiFormData? args;
   //late int? index;
-  FormArguments? formArguments;
+  TibbiFormArguments? tibbiFormArguments;
   final _formKey = GlobalKey<FormState>();
-  String _valueEtkilesim = 'Gözlem';
-  String _valueKapsam = 'Öykü';
-  String _valueOrtam = 'Poliklinik';
+  String _valueTibbiEtkilesimTuru = 'Gözlem';
+  String _valueTibbiOrtam = 'Poliklinik';
 
   String? _selectedStajTuru;
   String? _selectedDoktor;
-  String _valueCinsiyet = 'Erkek'; // initial value
-  final String hintTextCinsiyet = "Cinsiyet:";
   final String hintTextStajTuru = "Staj Türü:";
   final String hintTextEtkilesim = "Etkileşim Türü:";
-  final String hintTextKapsam = "Kapsam:";
   final String hintTextOrtam = "Gerçekleştiği Ortam:";
   final String hintTextDoktor = "Klinik Eğitici:";
   final TextEditingController _kayit = TextEditingController();
-  final TextEditingController _yas = TextEditingController();
-  final TextEditingController _sikayet = TextEditingController();
-  final TextEditingController _ayirici = TextEditingController();
-  final TextEditingController _kesin = TextEditingController();
-  final TextEditingController _tedavi = TextEditingController();
+  final TextEditingController _tibbiUygulama = TextEditingController();
+  final TextEditingController _disKurum = TextEditingController();
   final TextEditingController _stajTuruController = TextEditingController();
   final TextEditingController _doktorController = TextEditingController();
   bool isLoading = false;
 
-  void onChangedCinsiyet(String? newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setCinsiyet(newVal!);
-    } else {
-      setState(() {
-        _valueCinsiyet = newVal!;
-
-        _formData.setCinsiyet(_valueCinsiyet);
-      });
-    }
-  }
-
   void onChangedEtkilesim(String newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setEtkilesimTuru(newVal);
+    if (tibbiFormArguments != null) {
+      tibbiFormArguments?.tibbiFormData.setTibbiEtkilesimTuru(newVal);
     } else {
       setState(() {
-        _valueEtkilesim = newVal;
-        _formData.setEtkilesimTuru(newVal);
-      });
-    }
-  }
-
-  void onChangedKapsam(String newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setKapsam(newVal);
-    } else {
-      setState(() {
-        _valueKapsam = newVal;
-        _formData.setKapsam(newVal);
+        _valueTibbiEtkilesimTuru = newVal;
+        _tibbiFormData.setTibbiEtkilesimTuru(newVal);
       });
     }
   }
 
   void onChangedOrtam(String newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setOrtam(newVal);
+    if (tibbiFormArguments != null) {
+      tibbiFormArguments?.tibbiFormData.setTibbiOrtam(newVal);
     } else {
       setState(() {
-        _valueOrtam = newVal;
-        _formData.setOrtam(newVal);
+        _valueTibbiOrtam = newVal;
+        _tibbiFormData.setTibbiOrtam(newVal);
       });
     }
   }
 
   void formSakla() async {
-    if (formArguments != null) {
+    if (tibbiFormArguments != null) {
       setFormArgumentState();
-      await _helper.update(formArguments!.formData);
+      await _helper.updateTibbi(tibbiFormArguments!.tibbiFormData);
       Navigator.pop(context);
       customSnackBar(context, 'Başarıyla güncellendi.');
 
       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>Drafts()));
     } else {
       setFormDataState();
-      await _helper.insert(_formData).then((value) {
+      await _helper.insertTibbi(_tibbiFormData).then((value) {
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       });
     }
@@ -247,7 +196,7 @@ class _HomePageState extends State<FormPage> {
 
   void handleDelete() {
     setState(() {
-      _helper.remove(formArguments!.formData.id);
+      _helper.remove(tibbiFormArguments!.tibbiFormData.id);
       Navigator.pop(context);
       customSnackBar(context, 'Başarıyla silindi');
       //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
@@ -255,15 +204,15 @@ class _HomePageState extends State<FormPage> {
   }
 
   void formIlet() async {
-    if (formArguments != null) {
+    if (tibbiFormArguments != null) {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         setFormArgumentState();
-        bool res =
-            await _dbHelper.insertFormToDatabase(formArguments!.formData);
+        bool res = await _dbHelper
+            .insertTibbiFormToDatabase(tibbiFormArguments!.tibbiFormData);
         //    bool res = await _mySqlHelper.insertData(formArguments!.formData);
         if (res) {
-          _helper.update(formArguments!.formData);
+          _helper.updateTibbi(tibbiFormArguments!.tibbiFormData);
           customSnackBar(context, 'Başarıyla gönderildi');
         } else {
           errorAlert(context);
@@ -274,13 +223,15 @@ class _HomePageState extends State<FormPage> {
         _formKey.currentState!.save();
         setFormDataState();
         isLoading = true;
-        bool res = await _dbHelper.insertFormToDatabase(_formData).then((val) {
+        bool res = await _dbHelper
+            .insertTibbiFormToDatabase(_tibbiFormData)
+            .then((val) {
           setState(() {
             isLoading = false;
           });
           return val != null ? true : false;
         });
-        print(_formData.kayitNo);
+        print(_tibbiFormData.kayitNo);
         if (res) {
           customSnackBar(context, 'Başarıyla gönderildi');
         } else {
@@ -330,34 +281,28 @@ class _HomePageState extends State<FormPage> {
 
   void setFormArgumentState() {
     //textfield
-    formArguments?.formData.setKayitNo(_kayit.text);
-    formArguments?.formData.setYas(_yas.text);
-    formArguments?.formData.setSikayet(_sikayet.text);
-    formArguments?.formData.setAyiriciTani(_ayirici.text);
-    formArguments?.formData.setKesinTani(_kesin.text);
-    formArguments?.formData.setTedaviYontemi(_tedavi.text);
-
+    tibbiFormArguments?.tibbiFormData.setKayitNo(_kayit.text);
+    tibbiFormArguments?.tibbiFormData.setDisKurum(_disKurum.text);
+    tibbiFormArguments?.tibbiFormData.setTibbiUygulama(_tibbiUygulama.text);
     //typeahead
-    formArguments?.formData.setStajTuru(_stajTuruController.text);
-    formArguments?.formData.setDoktor(_doktorController.text);
+    tibbiFormArguments?.tibbiFormData.setStajTuru(_stajTuruController.text);
+    tibbiFormArguments?.tibbiFormData.setDoktor(_doktorController.text);
 
     //other
-    formArguments?.formData.setTarih();
-    formArguments?.formData.setStatus('waiting');
+    tibbiFormArguments?.tibbiFormData.setTarih();
+    tibbiFormArguments?.tibbiFormData.setStatus('waiting');
   }
 
   void setFormDataState() {
     //typeahead
-    _formData.setStajTuru(_stajTuruController.text);
-    _formData.setDoktor(_doktorController.text);
+    _tibbiFormData.setStajTuru(_stajTuruController.text);
+    _tibbiFormData.setDoktor(_doktorController.text);
     //dropdown
-    _formData.setEtkilesimTuru(_valueEtkilesim);
-    _formData.setKapsam(_valueKapsam);
-    _formData.setCinsiyet(_valueCinsiyet);
-    _formData.setOrtam(_valueOrtam);
+    _tibbiFormData.setTibbiEtkilesimTuru(_valueTibbiEtkilesimTuru);
+    _tibbiFormData.setTibbiOrtam(_valueTibbiOrtam);
 
     //other
-    _formData.setTarih();
-    _formData.setStatus('waiting');
+    _tibbiFormData.setTarih();
+    _tibbiFormData.setStatus('waiting');
   }
 }

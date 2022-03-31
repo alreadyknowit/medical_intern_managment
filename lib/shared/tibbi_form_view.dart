@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/models/tibbi_form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 
 import 'constants.dart';
 
-class FormView extends StatelessWidget {
-  final FormData formData;
+class TibbiFormView extends StatelessWidget {
+  final TibbiFormData tibbiFormData;
 
-  const FormView({Key? key, required this.formData}) : super(key: key);
+  const TibbiFormView({Key? key, required this.tibbiFormData})
+      : super(key: key);
   void handleSubmit() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: formViewBody(formData),
+      body: TibbiformViewBody(tibbiFormData),
     );
   }
 }
 
-Widget formViewBody(FormData form) {
+Widget TibbiformViewBody(TibbiFormData form) {
   Row studentFormPageRowInstance(String label, String content) {
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -55,7 +56,7 @@ Widget formViewBody(FormData form) {
 
 Column columnForm(
     Row Function(String label, String content) studentFormPageRowInstance,
-    FormData form) {
+    TibbiFormData form) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -71,41 +72,24 @@ Column columnForm(
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Hastanın Yaşı', form.getYas().toString()),
+      studentFormPageRowInstance('Ortam', form.getTibbiOrtam()),
       const SizedBox(
         height: 10,
       ),
-      form.getCinsiyet().isNotEmpty
-          ? studentFormPageRowInstance('Cinsiyet', form.getCinsiyet())
-          : Container(),
+      Container(),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Şikayet', form.getSikayet()),
+      studentFormPageRowInstance('Dış Kurum', form.getDisKurum()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Ayırıcı Tanı', form.getAyiriciTani()),
+      studentFormPageRowInstance(
+          'Etkileşim Türü', form.getTibbiEtkilesimTuru()),
       const SizedBox(
         height: 5,
       ),
-      studentFormPageRowInstance('Kesin Tanı', form.getKesinTani()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Tedavi YÖNTEMİ', form.getTedaviYontemi()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Kapsamı', form.getKapsam()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Etkileşim Türü', form.getEtkilesimTuru()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Gerçekleştiği Ortam', form.getOrtam()),
+      studentFormPageRowInstance('Tibbi Uygulama', form.getTibbiUygulama()),
       const SizedBox(
         height: 10,
       ),

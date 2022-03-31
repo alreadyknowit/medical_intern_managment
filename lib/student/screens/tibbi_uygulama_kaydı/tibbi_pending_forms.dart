@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
-import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-class PendingForms extends StatefulWidget {
-  const PendingForms({Key? key}) : super(key: key);
+import '../../../shared/tibbi_list_tile.dart';
+
+class TibbiPendingForms extends StatefulWidget {
+  const TibbiPendingForms({Key? key}) : super(key: key);
 
   @override
-  State<PendingForms> createState() => _PendingFormsState();
+  State<TibbiPendingForms> createState() => _TibbiPendingFormsState();
 }
 
-class _PendingFormsState extends State<PendingForms> {
-  final StudentDatabaseHelper _dbHelper= StudentDatabaseHelper();
-  int limit=50;
+class _TibbiPendingFormsState extends State<TibbiPendingForms> {
+  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
+  int limit = 50;
   Future<void> _refresh() async {
-
-    await _dbHelper.fetchFormsFromDatabase("/waiting").then((value) {
+    await _dbHelper.fetchTibbiFormsFromDatabase("/waiting").then((value) {
       setState(() {});
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<dynamic>>(
-          future: _dbHelper.fetchFormsFromDatabase("/waiting"),
-          builder:
-              (BuildContext context, AsyncSnapshot snapshot) {
+          future: _dbHelper.fetchTibbiFormsFromDatabase("/tibbi/waiting"),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -75,14 +73,16 @@ class _PendingFormsState extends State<PendingForms> {
                     ),
                     itemCount: list.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return CustomListTile(
-                          formData: list[index], index: index,routeTo: 1, isDeletable: false,);
+                      return TibbiCustomListTile(
+                          tibbiFormData: snapshot.data![index],
+                          index: index,
+                          routeTo: 2);
                     },
                   ),
                 ),
               );
             }
-            return  Center(
+            return Center(
               child: spinkit,
             );
           }),

@@ -1,9 +1,9 @@
 import 'package:date_format/date_format.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:internship_managing_system/models/MainForm.dart';
 
 import '../student/services/SQFLiteHelper.dart';
 
-class FormData with ChangeNotifier {
+class FormData extends MainForm {
   int? id;
   String? kayitNo;
   String? stajTuru;
@@ -38,22 +38,23 @@ class FormData with ChangeNotifier {
   String getKapsam() => kapsam ?? "Öykü";
   String getOrtam() => gerceklestigiOrtam ?? "Poliklinik";
   String getStatus() => status ?? 'not implemented';
-  FormData(
-      {this.status,
-      this.tarih,
-      this.id,
-      this.kayitNo,
-      this.stajTuru,
-      this.doktor,
-      this.yas,
-      this.cinsiyet,
-      this.sikayet,
-      this.ayiriciTani,
-      this.kesinTani,
-      this.tedaviYontemi,
-      this.etkilesimTuru,
-      this.kapsam,
-      this.gerceklestigiOrtam});
+  FormData({
+    this.status,
+    this.tarih,
+    this.id,
+    this.kayitNo,
+    this.stajTuru,
+    this.doktor,
+    this.yas,
+    this.cinsiyet,
+    this.sikayet,
+    this.ayiriciTani,
+    this.kesinTani,
+    this.tedaviYontemi,
+    this.etkilesimTuru,
+    this.kapsam,
+    this.gerceklestigiOrtam,
+  });
   factory FormData.fromJson(Map<String, dynamic> myMap) {
     return FormData(
       id: checkID(myMap['id']),
@@ -156,8 +157,6 @@ class FormData with ChangeNotifier {
     notifyListeners();
   }
 
-//TODO: Eklenen yeni özelliklerin fonksiyonları yazılacak
-  //TODO: Variabler Değiştirilecek
   void setSikayet(String? sikayet) {
     this.sikayet = sikayet;
     notifyListeners();

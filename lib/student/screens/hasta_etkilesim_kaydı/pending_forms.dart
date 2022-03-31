@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/shared/constants.dart';
+import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
-import '../../models/form_data.dart';
-import '../../shared/constants.dart';
-import '../../shared/custom_list_tile.dart';
 
-class AcceptedForms extends StatefulWidget {
-  const AcceptedForms({Key? key}) : super(key: key);
+class PendingForms extends StatefulWidget {
+  const PendingForms({Key? key}) : super(key: key);
 
   @override
-  _AcceptedFormsState createState() => _AcceptedFormsState();
+  State<PendingForms> createState() => _PendingFormsState();
 }
 
-class _AcceptedFormsState extends State<AcceptedForms> {
-  final StudentDatabaseHelper _dbHelper =StudentDatabaseHelper();
+class _PendingFormsState extends State<PendingForms> {
+  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
+  int limit = 50;
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase('/accepted').then((value) {
+    await _dbHelper.fetchFormsFromDatabase("/waiting").then((value) {
       setState(() {});
     });
   }
@@ -23,19 +23,19 @@ class _AcceptedFormsState extends State<AcceptedForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<FormData>?>(
-          future:_dbHelper.fetchFormsFromDatabase('/accepted'),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
+      body: FutureBuilder<List<dynamic>>(
+          future: _dbHelper.fetchFormsFromDatabase("/waiting"),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                "Henüz kabul edilen formunuz bulunmamaktadır.",
+                "Henüz gönderilmiş formunuz bulunmamaktadır.",
                 textAlign: TextAlign.center,
                 style: TEXT_STYLE,
               ));
             }
             if (snapshot.hasError) {
+              print(snapshot.error);
               return Center(
                 child: RichText(
                   text: const TextSpan(
@@ -44,7 +44,7 @@ class _AcceptedFormsState extends State<AcceptedForms> {
                         text:
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
-                      //TODO:Emoji eklenecek
+                      //TODO: emoji
                       TextSpan(
                         text: ' 🧭', // emoji characters
                         style: TextStyle(
@@ -57,6 +57,8 @@ class _AcceptedFormsState extends State<AcceptedForms> {
               );
             }
             if (snapshot.connectionState == ConnectionState.done) {
+              List<dynamic> list = snapshot.data;
+
               return RefreshIndicator(
                 backgroundColor: Colors.grey[700],
                 color: LIGHT_BUTTON_COLOR,
@@ -68,16 +70,22 @@ class _AcceptedFormsState extends State<AcceptedForms> {
                     physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
                     ),
-                    itemCount: snapshot.data!.length,
+                    itemCount: list.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index, routeTo: 2);
+                        formData: list[index],
+                        index: index,
+                        routeTo: 2,
+                        isDeletable: false,
+                      );
                     },
                   ),
                 ),
               );
             }
-            return spinkit;
+            return Center(
+              child: spinkit,
+            );
           }),
     );
   }

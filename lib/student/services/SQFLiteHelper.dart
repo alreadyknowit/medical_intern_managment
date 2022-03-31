@@ -2,6 +2,8 @@ import 'package:internship_managing_system/models/form_data.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../models/tibbi_form_data.dart';
+
 class SQFLiteHelper {
   final _databaseName = 'newDrafts.db';
   final _databaseVersion = 1;
@@ -19,8 +21,12 @@ class SQFLiteHelper {
   static const columnAyiriciTani = 'ayirici_tani';
   static const columnKesinTani = 'kesin_tani';
   static const columnTedaviYontemi = 'tedavi_yontemi';
-  static const columnTarih='tarih';
-  static const columnStatus='form_status';
+  static const columnTarih = 'tarih';
+  static const columnTibbiEtkilesimTuru = 'etkilesim_turu';
+  static const columnStatus = 'form_status';
+  static const columntibbiOrtam = 'tibbi_ortam';
+  static const columndisKurum = 'dıs_kurum';
+  static const columntibbiUygulama = 'tibbi_uygulama';
 
   SQFLiteHelper._privateConstructor();
   static final SQFLiteHelper instance = SQFLiteHelper._privateConstructor();
@@ -53,7 +59,10 @@ class SQFLiteHelper {
     $columnKesinTani TEXT,
     $columnTedaviYontemi TEXT,
     $columnTarih TEXT,
-    $columnStatus TEXT
+    $columnStatus TEXT,
+    $columntibbiUygulama TEXT,
+    $columndisKurum TEXT,
+   
     )
     ''');
   }
@@ -81,6 +90,34 @@ class SQFLiteHelper {
   }
 
   Future<int> remove(int? id) async {
+    Database db = await instance.getDatabase;
+    return await db.delete(_tableName, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  Future<int> insertTibbi(TibbiFormData form) async {
+    Database db = await instance.getDatabase;
+
+    return await db.insert(_tableName, form.toMap());
+  }
+
+  Future<List<TibbiFormData>> getTibbiForms() async {
+    Database db = await instance.getDatabase;
+    var forms = await db.query(_tableName, orderBy: 'id DESC');
+    List<TibbiFormData> formList = forms.isNotEmpty
+        ? forms.map((e) => TibbiFormData.fromJson(e)).toList()
+        : [];
+
+    return formList;
+  }
+
+  Future<int> updateTibbi(TibbiFormData form) async {
+    Database db = await instance.getDatabase;
+    int id = form.toMap()['id'];
+    return await db.update(_tableName, form.toMap(),
+        where: '$columnId =?', whereArgs: [id]);
+  }
+
+  Future<int> removeTibbi(int? id) async {
     Database db = await instance.getDatabase;
     return await db.delete(_tableName, where: '$columnId = ?', whereArgs: [id]);
   }
