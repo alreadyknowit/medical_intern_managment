@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:internship_managing_system/student/screens/tibbi_uygulama_kayd%C4%B1/t%C4%B1bbi_etkilesim_kayd%C4%B1.dart';
-import 'package:internship_managing_system/student/screens/tibbi_uygulama_kayd%C4%B1/tibbi_pending_forms.dart';
+import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/t%C4%B1bbi_etkilesim_kayd%C4%B1.dart';
+import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_pending_forms.dart';
 
 import '../../shared/constants.dart';
 import '../not_managed/notifications.dart';
@@ -9,10 +9,10 @@ import '../not_managed/settings.dart';
 import '../services/SQFLiteHelper.dart';
 import 'dashboard.dart';
 import 'drafts.dart';
-import 'hasta_etkilesim_kaydı/accepted_forms.dart';
-import 'hasta_etkilesim_kaydı/form_page.dart';
-import 'hasta_etkilesim_kaydı/pending_forms.dart';
-import 'hasta_etkilesim_kaydı/rejected_forms.dart';
+import 'hasta_etkilesim_kaydi/accepted_forms.dart';
+import 'hasta_etkilesim_kaydi/form_page.dart';
+import 'hasta_etkilesim_kaydi/pending_forms.dart';
+import 'hasta_etkilesim_kaydi/rejected_forms.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({
@@ -88,8 +88,6 @@ class _SideBarState extends State<SideBar> {
   }
 
   Widget myDrawerList(Future<dynamic> res) {
-    int counter = 0;
-
     return Container(
       padding: const EdgeInsets.only(
         top: 15,

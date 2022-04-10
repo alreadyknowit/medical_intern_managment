@@ -4,7 +4,7 @@ import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
-import 'package:internship_managing_system/student/screens/hasta_etkilesim_kayd%C4%B1/form_page.dart';
+import 'package:internship_managing_system/student/screens/hasta_etkilesim_kaydi/form_page.dart';
 
 class CustomListTile extends StatelessWidget {
   final FormData formData;
