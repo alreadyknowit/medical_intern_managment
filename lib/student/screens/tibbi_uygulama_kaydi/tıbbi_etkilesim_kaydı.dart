@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/attending.dart';
+import 'package:internship_managing_system/model/AttendingPhysician.dart';
 import 'package:internship_managing_system/models/staj_turu_model.dart';
 import 'package:internship_managing_system/shared/custom_snackbar.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
@@ -262,11 +262,11 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
   Future<List<List<String>>> fetchFormContent() async {
     List<List<String>> res = [];
     //fetch attending physician
-    List<AttendingPhysicianModel> attendingList =
+    List<AttendingPhysician> attendingList =
         await _dbHelper.fetchAttendingPhysicians();
     List<String> attendingNames = [];
-    for (AttendingPhysicianModel item in attendingList) {
-      attendingNames.add(item.name);
+    for (AttendingPhysician item in attendingList) {
+      attendingNames.add(item.attendingName);
     }
     //fetch stajTuru
     List<StajTuru> stajTuruList = await _dbHelper.fetchStajTuruTable();

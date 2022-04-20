@@ -10,12 +10,12 @@ import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
 
-class AttendingPhysician extends StatefulWidget {
+class AttendingPhysicianMain extends StatefulWidget {
   @override
-  _AttendingPhysicianState createState() => _AttendingPhysicianState();
+  _AttendingPhysicianMainState createState() => _AttendingPhysicianMainState();
 }
 
-class _AttendingPhysicianState extends State<AttendingPhysician> {
+class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
   final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
   List<FormData> formList = [];
   List<TibbiFormData> tibbiFormList = [];

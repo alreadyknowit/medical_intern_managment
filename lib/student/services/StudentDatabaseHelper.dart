@@ -1,11 +1,15 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:internship_managing_system/models/attending.dart';
+import 'package:internship_managing_system/model/AttendingPhysician.dart';
+import 'package:internship_managing_system/model/Course.dart';
+import 'package:internship_managing_system/model/Institute.dart';
+import 'package:internship_managing_system/model/PatientLog.dart';
 import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/models/staj_turu_model.dart';
 
 import '../../DBURL.dart';
+import '../../model/Speciality.dart';
 import '../../models/tibbi_form_data.dart';
 
 class StudentDatabaseHelper {
@@ -50,18 +54,72 @@ class StudentDatabaseHelper {
     }
   }
 
-  //get attending physician table
-  Future<List<AttendingPhysicianModel>> fetchAttendingPhysicians() async {
-    var url = Uri.parse("${DBURL.url}/attending_list.php");
-    var response = await http.post(url);
+  /*
+
+  await Hazırlık 5 dk
+
+    Yürüyüş 10dk
+
+    Kimlik okutma 10sn
+
+    Ders 40dk
+
+
+   */
+
+  Future<List<Course>> fetchCourses() async {
+    var url = Uri.parse("${DBURL.url}/courses");
+    var response = await http.get(url);
+
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<AttendingPhysicianModel> listAttendings =
-          data.map((e) => AttendingPhysicianModel.fromJSON(e)).toList();
+      List<Course> courses = data.map((e) => Course.fromJSON(e)).toList();
+      return courses;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<List<Speciality>> fetchSpeciality() async {
+    var url = Uri.parse("${DBURL.url}/specialities?courseId=1");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<Speciality> speciality =
+          data.map((e) => Speciality.fromJSON(e)).toList();
+      return speciality;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  Future<List<Institute>> fetchInstitute() async {
+    var url = Uri.parse("${DBURL.url}/institutes");
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<Institute> institute =
+          data.map((e) => Institute.fromJSON(e)).toList();
+      return institute;
+    } else {
+      throw Exception('Failed to load ');
+    }
+  }
+
+  //get attending physician table
+  Future<List<AttendingPhysician>> fetchAttendingPhysicians() async {
+    var url = Uri.parse("${DBURL.url}/attending-physicians?specialityId=2");
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      List<AttendingPhysician> listAttendings =
+          data.map((e) => AttendingPhysician.fromJSON(e)).toList();
 
       return listAttendings;
     } else {
-      throw Exception('Failed to load data313131');
+      throw Exception('Failed to load data');
     }
   }
 
@@ -72,6 +130,44 @@ class StudentDatabaseHelper {
   }*/
 
   //add data to sql
+  Future insertFormToDatabase1(PatientLog patientLog) async {
+    var url = Uri.parse("${DBURL.url}/patient-logs");
+
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var request = http.Request('POST', url);
+
+    print(patientLog.kayitNo);
+    request.bodyFields = {
+      "studentId": "2",
+      "kayitNo": patientLog.kayitNo.toString(),
+      "yas": patientLog.yas.toString(),
+      "specialityId": patientLog.speciality.toString(),
+      "coordinatorId": "1",
+      "attendingId": patientLog.attendingPhysician.toString(),
+      "cinsiyet": patientLog.cinsiyet.toString(),
+      "sikayet": patientLog.sikayet.toString(),
+      "ayiriciTani": patientLog.ayiriciTani.toString(),
+      "kesinTani": patientLog.kesinTani.toString(),
+      "tedaviYontemi": patientLog.tedaviYontemi.toString(),
+      "etkilesimTuru": patientLog.etkilesimTuru.toString(),
+      "kapsam": patientLog.kapsam.toString(),
+      "ortam": patientLog.gerceklestigiOrtam.toString(),
+      "status": patientLog.status.toString(),
+      "tarih": patientLog.createdAt.toString(),
+      "courseId": "1",
+      "instituteId": "1",
+    };
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future insertFormToDatabase(FormData formData) async {
     var url = Uri.parse("${DBURL.url}/insert.php");
 

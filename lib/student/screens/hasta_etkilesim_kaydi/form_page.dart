@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/attending.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/models/staj_turu_model.dart';
-import 'package:internship_managing_system/shared/custom_alert.dart';
-import 'package:internship_managing_system/shared/custom_snackbar.dart';
-import 'package:internship_managing_system/shared/custom_spinkit.dart';
-import 'package:internship_managing_system/student/arguments/form_args.dart';
-import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
-import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
+import 'package:internship_managing_system/model/AttendingPhysician.dart';
+import 'package:internship_managing_system/model/PatientLog.dart';
+import 'package:internship_managing_system/model/Speciality.dart';
 
+import '/../models/form_data.dart';
+import '/../shared/custom_spinkit.dart';
+import '../../../model/Course.dart';
+import '../../../model/Institute.dart';
+import '../../../shared/custom_alert.dart';
+import '../../../shared/custom_snackbar.dart';
+import '../../arguments/form_args.dart';
+import '../../services/SQFLiteHelper.dart';
+import '../../services/StudentDatabaseHelper.dart';
+import '../../widgets/CustomDropDown.dart';
+import '../../widgets/CustomTextField.dart';
 import '../../widgets/widgets.dart';
 
 class FormPage extends StatefulWidget {
@@ -20,17 +25,22 @@ class FormPage extends StatefulWidget {
 class _HomePageState extends State<FormPage> {
   @override
   initState() {
-    fetchFormContent();
     super.initState();
+    fetchFormContent();
   }
 
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
   final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   late bool isDeletable;
+  var choosenInstute = {};
+
   @override
   Widget build(BuildContext context) {
-    formArguments =
-        ModalRoute.of(context)?.settings.arguments as FormArguments?;
+/*    formArguments =
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as FormArguments?;
     if (formArguments != null) {
       isDeletable = formArguments!.isDeletable ?? true;
       args = formArguments?.formData;
@@ -50,7 +60,7 @@ class _HomePageState extends State<FormPage> {
       _valueKapsam = args!.getKapsam();
       _valueOrtam = args!.getOrtam();
       _stajTuruController.text = args!.getStajTuru();
-    }
+    }*/
 
     return Scaffold(
       body: SafeArea(
@@ -61,9 +71,12 @@ class _HomePageState extends State<FormPage> {
                   return const Center(
                       child: Text("Oops! Something went wrong."));
                 } else if (snapshot.hasData) {
-                  var listOfContent = snapshot.data as List<List<String>>;
-                  var listOfStajTuru = listOfContent[1];
-                  var listOfDoktor = listOfContent[0];
+                  var listOfContent = snapshot.data as dynamic;
+                  var courses = listOfContent[0];
+                  var specialities = listOfContent[1];
+                  var institutes = listOfContent[2];
+                  var attendings = listOfContent[3];
+
                   var listOfKapsam = [
                     "Öykü",
                     "Fizik Bakı",
@@ -86,11 +99,13 @@ class _HomePageState extends State<FormPage> {
                   var listOfCinsiyet = ['Erkek', 'Kadın', 'Diğer'];
 
                   Map<String, dynamic> map = {
-                    'doktor': listOfDoktor,
+                    'course': courses,
                     'etkilesim': listOfEtkilesimTuru,
                     'kapsam': listOfKapsam,
                     'ortam': listOfOrtam,
-                    'stajTuru': listOfStajTuru,
+                    'specialities': specialities,
+                    'institutes': institutes,
+                    'attendings': attendings,
                     'cinsiyet': listOfCinsiyet,
                   };
                   return isLoading ? spinkit : formWidget(map);
@@ -124,111 +139,88 @@ class _HomePageState extends State<FormPage> {
         child: Column(
           //  shrinkWrap: true,
           children: [
-            customTypeAhead(map['stajTuru'], _stajTuruController,
+            /*  customTypeAhead(map['speciality'], _stajTuruController,
                 _selectedStajTuru, 'Staj Türü'),
             customTypeAhead(
-                map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),
-            customDropDown(
-                _valueOrtam, map['ortam'], hintTextOrtam, onChangedOrtam),
-            customDropDown(
-                _valueKapsam, map['kapsam'], hintTextKapsam, onChangedKapsam),
-            customDropDown(_valueEtkilesim, map['etkilesim'], hintTextEtkilesim,
-                onChangedEtkilesim),
-            customDropDown(_valueCinsiyet, map['cinsiyet'], hintTextCinsiyet,
-                onChangedCinsiyet),
-            const SizedBox(
-              height: 20,
-            ),
-            customTextField(
-                1, "Kayıt No ", 10, _formData.setKayitNo, isEmpty, _kayit, 80),
-            customTextField(
-                1, "Hastanın Yaşı", 3, _formData.setYas, isNumeric, _yas, 80),
-            customTextField(
-                1, "Şikayet", 10, _formData.setSikayet, isEmpty, _sikayet, 80),
-            customTextField(1, "Ayırıcı Tanı", 10, _formData.setAyiriciTani,
-                isEmpty, _ayirici, 80),
-            customTextField(5, "Kesin Tanı", 50, _formData.setKesinTani,
-                isEmpty, _kesin, 130),
-            customTextField(5, "Tedavi Yöntemi", 200,
-                _formData.setTedaviYontemi, isEmpty, _tedavi, 130),
+                map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),*/
+            CustomDropDown(
+                map['institutes'], "Institutes", _patientLog.setInstute),
+            CustomDropDown(map['course'], "Courses", _patientLog.setCourse),
+            CustomDropDown(
+                map['specialities'], "Speciality", _patientLog.setSpeciality),
+            CustomDropDown(map['attendings'], "Attending Physicians",
+                _patientLog.setAttendingPhysician),
+            CustomDropDown(
+                map['ortam'], hintTextOrtam, _patientLog.setGerceklestigiOrtam),
+            CustomDropDown(
+                map['kapsam'], hintTextKapsam, _patientLog.setKapsam),
+            CustomDropDown(
+                map['etkilesim'], hintTextOrtam, _patientLog.setEtkilesimTuru),
+            CustomDropDown(
+                map['cinsiyet'], hintTextOrtam, _patientLog.setCinsiyet),
+            CustomTextField(1, "Kayıt No ", 10, _patientLog.setKayitNo, 80),
+            CustomTextField(1, "Hastanın Yaşı", 3, _patientLog.setYas, 80),
+            CustomTextField(1, "Şikayet", 10, _patientLog.setSikayet, 80),
+            CustomTextField(
+                1, "Ayırıcı Tanı", 10, _patientLog.setAyiriciTani, 80),
+            CustomTextField(5, "Kesin Tanı", 50, _patientLog.setKesinTani, 130),
+            CustomTextField(
+                5, "Tedavi Yöntemi", 200, _patientLog.setTedaviYontemi, 130),
           ],
         ),
       ),
     );
   }
 
-  final FormData _formData = FormData();
+  final PatientLog _patientLog = PatientLog();
   late FormData? args;
-  //late int? index;
+
   FormArguments? formArguments;
   final _formKey = GlobalKey<FormState>();
-  String _valueEtkilesim = 'Gözlem';
-  String _valueKapsam = 'Öykü';
-  String _valueOrtam = 'Poliklinik';
 
-  String? _selectedStajTuru;
-  String? _selectedDoktor;
-  String _valueCinsiyet = 'Erkek'; // initial value
-  final String hintTextCinsiyet = "Cinsiyet:";
-  final String hintTextStajTuru = "Staj Türü:";
-  final String hintTextEtkilesim = "Etkileşim Türü:";
-  final String hintTextKapsam = "Kapsam:";
-  final String hintTextOrtam = "Gerçekleştiği Ortam:";
-  final String hintTextDoktor = "Klinik Eğitici:";
-  final TextEditingController _kayit = TextEditingController();
-  final TextEditingController _yas = TextEditingController();
-  final TextEditingController _sikayet = TextEditingController();
-  final TextEditingController _ayirici = TextEditingController();
-  final TextEditingController _kesin = TextEditingController();
-  final TextEditingController _tedavi = TextEditingController();
-  final TextEditingController _stajTuruController = TextEditingController();
-  final TextEditingController _doktorController = TextEditingController();
+  final String hintTextCinsiyet = "Cinsiyet";
+  final String hintTextStajTuru = "Staj Türü";
+  final String hintTextEtkilesim = "Etkileşim Türü";
+  final String hintTextKapsam = "Kapsam";
+  final String hintTextOrtam = "Gerçekleştiği Ortam";
+  final String hintTextDoktor = "Klinik Eğitici";
   bool isLoading = false;
 
-  void onChangedCinsiyet(String? newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setCinsiyet(newVal!);
-    } else {
-      setState(() {
-        _valueCinsiyet = newVal!;
+  Future<List<List<dynamic>>> fetchFormContent() async {
+    List<List<dynamic>> res = [];
+    List<AttendingPhysician> attendings =
+        await _dbHelper.fetchAttendingPhysicians();
+    List<Course> courses = await _dbHelper.fetchCourses();
+    List<Speciality> speciality = await _dbHelper.fetchSpeciality();
+    List<Institute> institute = await _dbHelper.fetchInstitute();
 
-        _formData.setCinsiyet(_valueCinsiyet);
-      });
+    res.add(courses);
+    res.add(speciality);
+    res.add(institute);
+    res.add(attendings);
+
+    return res;
+  }
+
+  //TODO: methodları doldur
+  formIlet() async {
+    await _dbHelper.insertFormToDatabase1(_patientLog);
+    bool res = await _dbHelper.insertFormToDatabase1(_patientLog);
+    if (res) {
+      _helper.update(formArguments!.formData);
+      customSnackBar(context, 'Başarıyla gönderildi');
+    } else {
+      errorAlert(context);
     }
   }
 
-  void onChangedEtkilesim(String newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setEtkilesimTuru(newVal);
-    } else {
-      setState(() {
-        _valueEtkilesim = newVal;
-        _formData.setEtkilesimTuru(newVal);
-      });
-    }
-  }
+  handleDelete() {}
+  formSakla() {}
 
-  void onChangedKapsam(String newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setKapsam(newVal);
-    } else {
-      setState(() {
-        _valueKapsam = newVal;
-        _formData.setKapsam(newVal);
-      });
-    }
-  }
+  /*
 
-  void onChangedOrtam(String newVal) {
-    if (formArguments != null) {
-      formArguments?.formData.setOrtam(newVal);
-    } else {
-      setState(() {
-        _valueOrtam = newVal;
-        _formData.setOrtam(newVal);
-      });
-    }
-  }
+
+
 
   void formSakla() async {
     if (formArguments != null) {
@@ -246,22 +238,13 @@ class _HomePageState extends State<FormPage> {
     }
   }
 
-  void handleDelete() {
-    setState(() {
-      _helper.remove(formArguments!.formData.id);
-      Navigator.pop(context);
-      customSnackBar(context, 'Başarıyla silindi');
-      //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
-    });
-  }
-
   void formIlet() async {
     if (formArguments != null) {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         setFormArgumentState();
         bool res =
-            await _dbHelper.insertFormToDatabase(formArguments!.formData);
+        await _dbHelper.insertFormToDatabase(formArguments!.formData);
         //    bool res = await _mySqlHelper.insertData(formArguments!.formData);
         if (res) {
           _helper.update(formArguments!.formData);
@@ -291,6 +274,16 @@ class _HomePageState extends State<FormPage> {
     }
   }
 
+  void handleDelete() {
+    setState(() {
+      _helper.remove(formArguments!.formData.id);
+      Navigator.pop(context);
+      customSnackBar(context, 'Başarıyla silindi');
+      //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
+    });
+  }
+
+
   String? isNumeric(String? num) {
     if (num == null) {
       return 'Boş bırakılamaz';
@@ -308,28 +301,8 @@ class _HomePageState extends State<FormPage> {
     });
     return text;
   }
-
-  Future<List<List<String>>> fetchFormContent() async {
-    List<List<String>> res = [];
-    //fetch attending physician
-    List<AttendingPhysicianModel> attendingList =
-        await _dbHelper.fetchAttendingPhysicians();
-    List<String> attendingNames = [];
-    for (AttendingPhysicianModel item in attendingList) {
-      attendingNames.add(item.name);
-    }
-    //fetch stajTuru
-    List<StajTuru> stajTuruList = await _dbHelper.fetchStajTuruTable();
-    List<String> stajTurleri = [];
-    for (StajTuru s in stajTuruList) {
-      stajTurleri.add(s.stajTuru);
-    }
-    res.add(attendingNames);
-    res.add(stajTurleri);
-    return res;
-  }
-
-  void setFormArgumentState() {
+*/
+/*  void setFormArgumentState() {
     //textfield
     formArguments?.formData.setKayitNo(_kayit.text);
     formArguments?.formData.setYas(_yas.text);
@@ -361,4 +334,5 @@ class _HomePageState extends State<FormPage> {
     _formData.setTarih();
     _formData.setStatus('waiting');
   }
+}*/
 }

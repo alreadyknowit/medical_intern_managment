@@ -70,7 +70,7 @@ class _SideBarState extends State<SideBar> {
       container = const Notifications();
     } else if (currentPage == DrawerSections.dashboard) {
       title = const Text(" Dashboard");
-      container = const Dashboard();
+      container = Dashboard();
     }
 
     return Scaffold(
