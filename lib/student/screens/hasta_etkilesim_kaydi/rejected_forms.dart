@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../../model/PatientLog.dart ';
-import '../../shared/constants.dart';
-import '../../shared/custom_list_tile.dart';
-import '../../shared/custom_spinkit.dart';
-import '../services/AttendingDatabaseHelper.dart';
+import '../../../model/PatientLog.dart ';
+import '../../../shared/constants.dart';
+import '../../../shared/custom_list_tile.dart';
 
-class HistoryForms extends StatefulWidget {
-  const HistoryForms({Key? key}) : super(key: key);
+class RejectedForms extends StatefulWidget {
+  const RejectedForms({Key? key}) : super(key: key);
 
   @override
-  _HistoryFormsState createState() => _HistoryFormsState();
+  _RejectedFormsState createState() => _RejectedFormsState();
 }
 
-class _HistoryFormsState extends State<HistoryForms> {
-  // final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
-  final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
+class _RejectedFormsState extends State<RejectedForms> {
+  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
+  Future<List<PatientLog>>? fromDatabase;
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase('/reject').then((value) {
-      setState(() {});
+    await _dbHelper.fetchFormsFromDatabase('/rejected').then((value) {
+      setState(() {
+        fromDatabase = (_dbHelper.fetchFormsFromDatabase('/accepted')
+            as Future<List<PatientLog>>?)!;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Reddedilen Formlar'),
-      ),
       body: FutureBuilder<List<PatientLog>?>(
-          future: _dbHelper.fetchFormsFromDatabase('/reject'),
+          future: fromDatabase,
           builder: (BuildContext context,
               AsyncSnapshot<List<PatientLog>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -52,7 +51,7 @@ class _HistoryFormsState extends State<HistoryForms> {
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
                       TextSpan(
-                        text: '🧭 🏳️\u200d🌈', // emoji characters
+                        text: ' 🧭', // emoji characters
                         style: TextStyle(
                           fontFamily: 'EmojiOne',
                         ),
@@ -77,11 +76,9 @@ class _HistoryFormsState extends State<HistoryForms> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                        formData: snapshot.data![index],
-                        index: index,
-                        routeTo: 3,
-                        isDeletable: false,
-                      );
+                          formData: snapshot.data![index],
+                          index: index,
+                          routeTo: 2);
                     },
                   ),
                 ),

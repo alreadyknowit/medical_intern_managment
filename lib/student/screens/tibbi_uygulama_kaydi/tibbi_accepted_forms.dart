@@ -1,21 +1,24 @@
+/*
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/models/tibbi_form_data.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
-import '../../models/form_data.dart';
-import '../../shared/constants.dart';
-import '../../shared/custom_list_tile.dart';
 
-class RejectedForms extends StatefulWidget {
-  const RejectedForms({Key? key}) : super(key: key);
+import '../../../models/tibbi_form_data.dart';
+import '../../../shared/constants.dart';
+import '../../../shared/tibbi_list_tile.dart';
+
+class TibbiAcceptedForms extends StatefulWidget {
+  const TibbiAcceptedForms({Key? key}) : super(key: key);
 
   @override
-  _RejectedFormsState createState() => _RejectedFormsState();
+  _TibbiAcceptedFormsState createState() => _TibbiAcceptedFormsState();
 }
 
-class _RejectedFormsState extends State<RejectedForms> {
-  final StudentDatabaseHelper _dbHelper =StudentDatabaseHelper();
+class _TibbiAcceptedFormsState extends State<TibbiAcceptedForms> {
+  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase('/rejected').then((value) {
+    await _dbHelper.fetchTibbiFormsFromDatabase('/accepted').then((value) {
       setState(() {});
     });
   }
@@ -23,20 +26,19 @@ class _RejectedFormsState extends State<RejectedForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<FormData>?>(
-          future: _dbHelper.fetchFormsFromDatabase('/rejected'),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
+      body: FutureBuilder<List<TibbiFormData>?>(
+          future: _dbHelper.fetchTibbiFormsFromDatabase('/accepted'),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<TibbiFormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                "Henüz reddedilen formunuz bulunmamaktadır.",
+                "Henüz kabul edilen formunuz bulunmamaktadır.",
                 textAlign: TextAlign.center,
                 style: TEXT_STYLE,
               ));
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(
                 child: RichText(
                   text: const TextSpan(
@@ -45,6 +47,7 @@ class _RejectedFormsState extends State<RejectedForms> {
                         text:
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
+                      //TODO:Emoji eklenecek
                       TextSpan(
                         text: ' 🧭', // emoji characters
                         style: TextStyle(
@@ -70,8 +73,10 @@ class _RejectedFormsState extends State<RejectedForms> {
                     ),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return CustomListTile(
-                          formData: snapshot.data![index], index: index,routeTo: 2);
+                      return TibbiCustomListTile(
+                          tibbiFormData: snapshot.data![index],
+                          index: index,
+                          routeTo: 2);
                     },
                   ),
                 ),
@@ -82,3 +87,4 @@ class _RejectedFormsState extends State<RejectedForms> {
     );
   }
 }
+*/

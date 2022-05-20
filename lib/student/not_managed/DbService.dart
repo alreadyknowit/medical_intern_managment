@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/model/PatientLog.dart' as prefix;
 
 class DbService {
-  Future<FormData> createForm(
+  Future<prefix.PatientLog> createForm(
       String kayitNo,
       String stajTuru,
       String doktor,
@@ -40,7 +41,7 @@ class DbService {
     if (response.statusCode == 201) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
-      return FormData.fromJson(jsonDecode(response.body));
+      return prefix.PatientLog.fromJson(jsonDecode(response.body));
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/t%C4%B1bbi_etkilesim_kayd%C4%B1.dart';
+import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_pending_forms.dart';
+
 import '../../shared/constants.dart';
-import 'accepted_forms.dart';
-import 'drafts.dart';
 import '../not_managed/notifications.dart';
-import 'rejected_forms.dart';
-import 'pending_forms.dart';
 import '../not_managed/settings.dart';
 import '../services/SQFLiteHelper.dart';
-import 'form_page.dart';
+import 'dashboard.dart';
+import 'drafts.dart';
+import 'hasta_etkilesim_kaydi/accepted_forms.dart';
+import 'hasta_etkilesim_kaydi/form_page.dart';
+import 'hasta_etkilesim_kaydi/pending_forms.dart';
+import 'hasta_etkilesim_kaydi/rejected_forms.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({
@@ -43,6 +47,9 @@ class _SideBarState extends State<SideBar> {
     } else if (currentPage == DrawerSections.taslaklar) {
       title = const Text("Taslaklar");
       container = Drafts();
+    } else if (currentPage == DrawerSections.tibbiUygulama) {
+      title = const Text("Tıbbi Uygulama Kaydı");
+      container = TibbiUygulama();
     } else if (currentPage == DrawerSections.gonderilenFormlar) {
       title = const Text("Onay Bekleyen Fromlar");
       container = const PendingForms();
@@ -55,9 +62,15 @@ class _SideBarState extends State<SideBar> {
     } else if (currentPage == DrawerSections.settings) {
       title = const Text("Ayarlar");
       container = const Settings();
+    } else if (currentPage == DrawerSections.tibbiGonderilenFormlar) {
+      title = const Text("Tibbi Onay Bekleyenler");
+      container = const TibbiPendingForms();
     } else if (currentPage == DrawerSections.notifications) {
       title = const Text("Bildirimler");
       container = const Notifications();
+    } else if (currentPage == DrawerSections.dashboard) {
+      title = const Text(" Dashboard");
+      container = Dashboard();
     }
 
     return Scaffold(
@@ -75,8 +88,6 @@ class _SideBarState extends State<SideBar> {
   }
 
   Widget myDrawerList(Future<dynamic> res) {
-    int counter = 0;
-
     return Container(
       padding: const EdgeInsets.only(
         top: 15,
@@ -87,29 +98,42 @@ class _SideBarState extends State<SideBar> {
           menuItem(
               0, "Internship Application", FontAwesomeIcons.bookMedical, false),
           const Divider(),
+          menuItem(11, "Dashboard", FontAwesomeIcons.chartPie,
+              currentPage == DrawerSections.dashboard ? true : false),
+          const Divider(),
           menuItem(1, "Hasta Etkileşim Kaydı", FontAwesomeIcons.map,
               currentPage == DrawerSections.hastaEtkilesim ? true : false),
-          const Divider(),
-          menuItem(2, "Onay Bekleyen Formlar", FontAwesomeIcons.ellipsisH,
+          menuItem(3, "Onay Bekleyen Formlar", FontAwesomeIcons.ellipsisH,
               currentPage == DrawerSections.gonderilenFormlar ? true : false),
-          menuItem(3, "Onaylanan Formlar", FontAwesomeIcons.heart,
+          menuItem(4, "Onaylanan Formlar", FontAwesomeIcons.heart,
               currentPage == DrawerSections.onaylananFormlar ? true : false),
           menuItem(
-              4,
+              5,
               "Reddedilen Formlar",
               FontAwesomeIcons.exclamationTriangle,
               currentPage == DrawerSections.reddedilenFormlar ? true : false),
-          menuItem(5, "Taslaklar(0})", FontAwesomeIcons.database,
+          const Divider(),
+          menuItem(2, "Tıbbi Uygulama Kaydı", FontAwesomeIcons.stethoscope,
+              currentPage == DrawerSections.tibbiUygulama ? true : false),
+          menuItem(
+              12,
+              "Onay Bekleyen Formlar",
+              FontAwesomeIcons.ellipsisH,
+              currentPage == DrawerSections.tibbiGonderilenFormlar
+                  ? true
+                  : false),
+          const Divider(),
+          menuItem(6, "Taslaklar(0))", FontAwesomeIcons.database,
               currentPage == DrawerSections.taslaklar ? true : false),
           const Divider(),
-          menuItem(6, "Ayarlar", FontAwesomeIcons.wrench,
+          menuItem(7, "Ayarlar", FontAwesomeIcons.wrench,
               currentPage == DrawerSections.settings ? true : false),
-          menuItem(7, "Bildirimler", FontAwesomeIcons.bell,
+          menuItem(8, "Bildirimler", FontAwesomeIcons.bell,
               currentPage == DrawerSections.notifications ? true : false),
           const Divider(),
-          menuItem(8, "Gizlilik Politikası", Icons.privacy_tip_outlined,
+          menuItem(9, "Gizlilik Politikası", Icons.privacy_tip_outlined,
               currentPage == DrawerSections.privacy_policy ? true : false),
-          menuItem(9, "Geri Bildirim", FontAwesomeIcons.comment,
+          menuItem(10, "Geri Bildirim", FontAwesomeIcons.comment,
               currentPage == DrawerSections.send_feedback ? true : false),
         ],
       ),
@@ -126,21 +150,27 @@ class _SideBarState extends State<SideBar> {
             if (id == 1) {
               currentPage = DrawerSections.hastaEtkilesim;
             } else if (id == 2) {
-              currentPage = DrawerSections.gonderilenFormlar;
+              currentPage = DrawerSections.tibbiUygulama;
             } else if (id == 3) {
-              currentPage = DrawerSections.onaylananFormlar;
+              currentPage = DrawerSections.gonderilenFormlar;
             } else if (id == 4) {
-              currentPage = DrawerSections.reddedilenFormlar;
+              currentPage = DrawerSections.onaylananFormlar;
             } else if (id == 5) {
-              currentPage = DrawerSections.taslaklar;
+              currentPage = DrawerSections.reddedilenFormlar;
             } else if (id == 6) {
-              currentPage = DrawerSections.settings;
+              currentPage = DrawerSections.taslaklar;
             } else if (id == 7) {
-              currentPage = DrawerSections.notifications;
+              currentPage = DrawerSections.settings;
             } else if (id == 8) {
-              currentPage = DrawerSections.privacy_policy;
+              currentPage = DrawerSections.notifications;
             } else if (id == 9) {
+              currentPage = DrawerSections.privacy_policy;
+            } else if (id == 10) {
               currentPage = DrawerSections.send_feedback;
+            } else if (id == 11) {
+              currentPage = DrawerSections.dashboard;
+            } else if (id == 12) {
+              currentPage = DrawerSections.tibbiGonderilenFormlar;
             }
           });
         },
@@ -168,6 +198,7 @@ class _SideBarState extends State<SideBar> {
 
 enum DrawerSections {
   hastaEtkilesim,
+  tibbiUygulama,
   gonderilenFormlar,
   onaylananFormlar,
   reddedilenFormlar,
@@ -176,4 +207,6 @@ enum DrawerSections {
   notifications,
   privacy_policy,
   send_feedback,
+  dashboard,
+  tibbiGonderilenFormlar,
 }

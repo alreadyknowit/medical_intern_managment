@@ -3,11 +3,12 @@ import 'package:internship_managing_system/attending_physician/screens/form_deci
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/student/screens/form_page.dart';
+import 'package:internship_managing_system/student/screens/hasta_etkilesim_kaydi/form_page.dart';
+
+import '../model/PatientLog.dart ';
 
 class CustomListTile extends StatelessWidget {
-  final FormData formData;
+  final PatientLog formData;
   final int index;
   final int routeTo;
   final bool? isDeletable;
@@ -16,13 +17,14 @@ class CustomListTile extends StatelessWidget {
       required this.formData,
       required this.index,
       required this.routeTo,
-       this.isDeletable})
+      this.isDeletable})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    FormArguments arguments = FormArguments(formData: formData, index: index, isDeletable: isDeletable);
+    FormArguments arguments = FormArguments(
+        formData: formData, index: index, isDeletable: isDeletable);
 
-    void pushToFormView(FormData formData) {
+    void pushToFormView(PatientLog formData) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -83,10 +85,10 @@ class CustomListTile extends StatelessWidget {
           onTap: () => whichPage(),
           leading: SizedBox(
             width: 80,
-            child: Text(formData.getTarih()),
+            child: Text(formData.createdAt.toString()),
           ),
-          title: Text(formData.getStajTuru()),
-          subtitle: Text(formData.getDoktor()),
+          title: Text(formData.speciality.toString()),
+          subtitle: Text(formData.attendingPhysician.toString()),
           isThreeLine: true,
         ),
       ),

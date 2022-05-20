@@ -1,3 +1,4 @@
-class DBURL{
-  static const String url="http://10.0.2.2/flutter";
+class DBURL {
+  static const String url =
+      "http://medicalinternbackend-env.eba-d7ipqppw.eu-south-1.elasticbeanstalk.com/api/v1";
 }

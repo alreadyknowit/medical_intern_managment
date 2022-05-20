@@ -1,41 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internship_managing_system/attending_physician//widget/form_card_widget.dart';
 import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
 import 'package:internship_managing_system/attending_physician/screens/history.dart';
 import 'package:internship_managing_system/attending_physician/services/AttendingDatabaseHelper.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/attending_physician//widget/form_card_widget.dart';
 
-class AttendingPhysician extends StatefulWidget {
+import '../../model/PatientLog.dart ';
+import '../../model/ProcedureLog.dart';
+
+class AttendingPhysicianMain extends StatefulWidget {
   @override
-  _AttendingPhysicianState createState() => _AttendingPhysicianState();
+  _AttendingPhysicianMainState createState() => _AttendingPhysicianMainState();
 }
 
-class _AttendingPhysicianState extends State<AttendingPhysician> {
-  final AttendingDatabaseHelper _dbHelper= AttendingDatabaseHelper();
-  List<FormData> formList = [];
+class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
+  final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
+  List<PatientLog> formList = [];
+  List<ProcedureLog> tibbiFormList = [];
+  var lists;
+  CombineList() {
+    lists = List.from(formList)..add(tibbiFormList);
+  }
+
+// TODO: linkler değişecek
   bool isLoading = false;
   getForms() async {
     setState(() {
       isLoading = true;
     });
-    formList= await _dbHelper.fetchFormsFromDatabase('/waiting').then((value) {
+    formList = await _dbHelper.fetchFormsFromDatabase('/waiting').then((value) {
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
       return value;
     });
-
+    tibbiFormList = await _dbHelper
+        .fetchTibbiFormsFromDatabase('/tibbi/waiting')
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+      return value;
+    });
   }
 
   @override
   void initState() {
     getForms();
     super.initState();
-
   }
 
   @override
@@ -55,7 +70,9 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
                             ? const Center(
                                 child: Text('Başka form kalmadı...'),
                               )
-                            : Stack(children: formList.map(buildForm).toList()),
+                            : Stack(
+                                children: formList.map(buildForm).toList(),
+                              ),
                         const SizedBox(
                           height: 40,
                         ),
@@ -77,8 +94,9 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
         );
       });
 
-  Widget buildForm(FormData form) {
+  Widget buildForm(PatientLog form) {
     final formIndex = formList.indexOf(form);
+
     bool isFormInFocus = formIndex == formList.length - 1;
 
     return Listener(
@@ -109,7 +127,7 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
     );
   }
 
-  double onDragEnd(DraggableDetails details, FormData form) {
+  double onDragEnd(DraggableDetails details, PatientLog form) {
     const minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
       form.setStatus('accept');
@@ -117,7 +135,7 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
       setState(() => formList.remove(form));
     } else if (details.offset.dx < -minimumDrag) {
       form.setStatus('reject');
-     _dbHelper.updateFromStatus(form);
+      _dbHelper.updateFromStatus(form);
       setState(() => formList.remove(form));
     }
     return details.offset.dx;
@@ -133,8 +151,10 @@ class _AttendingPhysicianState extends State<AttendingPhysician> {
             child:
                 Icon(Icons.history, color: BACKGROUND_COLOR.withOpacity(0.8)),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (builder) => const HistoryForms()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (builder) => const HistoryForms()));
             },
           ),
           const SizedBox(width: 16),

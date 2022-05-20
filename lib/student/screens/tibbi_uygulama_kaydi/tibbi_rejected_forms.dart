@@ -1,23 +1,23 @@
+/*
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/models/tibbi_form_data.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../../model/PatientLog.dart ';
-import '../../shared/constants.dart';
-import '../../shared/custom_list_tile.dart';
-import '../../shared/custom_spinkit.dart';
-import '../services/AttendingDatabaseHelper.dart';
+import '../../../shared/constants.dart';
+import '../../../shared/tibbi_list_tile.dart';
 
-class HistoryForms extends StatefulWidget {
-  const HistoryForms({Key? key}) : super(key: key);
+class TibbiRejectedForms extends StatefulWidget {
+  const TibbiRejectedForms({Key? key}) : super(key: key);
 
   @override
-  _HistoryFormsState createState() => _HistoryFormsState();
+  _TibbiRejectedFormsState createState() => _TibbiRejectedFormsState();
 }
 
-class _HistoryFormsState extends State<HistoryForms> {
-  // final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
-  final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
+class _TibbiRejectedFormsState extends State<TibbiRejectedForms> {
+  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase('/reject').then((value) {
+    await _dbHelper.fetchTibbiFormsFromDatabase('/rejected').then((value) {
       setState(() {});
     });
   }
@@ -25,14 +25,10 @@ class _HistoryFormsState extends State<HistoryForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Reddedilen Formlar'),
-      ),
-      body: FutureBuilder<List<PatientLog>?>(
-          future: _dbHelper.fetchFormsFromDatabase('/reject'),
+      body: FutureBuilder<List<TibbiFormData>?>(
+          future: _dbHelper.fetchTibbiFormsFromDatabase('/rejected'),
           builder: (BuildContext context,
-              AsyncSnapshot<List<PatientLog>?> snapshot) {
+              AsyncSnapshot<List<TibbiFormData>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -52,7 +48,7 @@ class _HistoryFormsState extends State<HistoryForms> {
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
                       TextSpan(
-                        text: '🧭 🏳️\u200d🌈', // emoji characters
+                        text: ' 🧭', // emoji characters
                         style: TextStyle(
                           fontFamily: 'EmojiOne',
                         ),
@@ -76,12 +72,10 @@ class _HistoryFormsState extends State<HistoryForms> {
                     ),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return CustomListTile(
-                        formData: snapshot.data![index],
-                        index: index,
-                        routeTo: 3,
-                        isDeletable: false,
-                      );
+                      return TibbiCustomListTile(
+                          tibbiFormData: snapshot.data![index],
+                          index: index,
+                          routeTo: 2);
                     },
                   ),
                 ),
@@ -92,3 +86,4 @@ class _HistoryFormsState extends State<HistoryForms> {
     );
   }
 }
+*/

@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 
-import '../model/PatientLog.dart ';
 import 'constants.dart';
 
-class FormView extends StatelessWidget {
-  final PatientLog formData;
+class TibbiFormView extends StatelessWidget {
+  final ProcedureLog tibbiFormData;
 
-  const FormView({Key? key, required this.formData}) : super(key: key);
+  const TibbiFormView({Key? key, required this.tibbiFormData})
+      : super(key: key);
   void handleSubmit() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: formViewBody(formData),
+      body: TibbiformViewBody(tibbiFormData),
     );
   }
 }
 
-Widget formViewBody(PatientLog form) {
+Widget TibbiformViewBody(ProcedureLog form) {
   Row studentFormPageRowInstance(String label, String content) {
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -55,7 +56,7 @@ Widget formViewBody(PatientLog form) {
 
 Column columnForm(
     Row Function(String label, String content) studentFormPageRowInstance,
-    PatientLog form) {
+    ProcedureLog form) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -63,15 +64,7 @@ Column columnForm(
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Institute', form.instute.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Course', form.course.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Speciality', form.speciality.toString()),
+      studentFormPageRowInstance('Staj Türü', form.speciality.toString()),
       const SizedBox(
         height: 10,
       ),
@@ -80,42 +73,25 @@ Column columnForm(
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Hastanın Yaşı', form.yas.toString()),
+      studentFormPageRowInstance('Ortam', form.gerceklestigiOrtam.toString()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Cinsiyet', form.cinsiyet.toString()),
+      Container(),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Şikayet', form.sikayet.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Ayırıcı Tanı', form.ayiriciTani.toString()),
-      const SizedBox(
-        height: 5,
-      ),
-      studentFormPageRowInstance('Kesin Tanı', form.kesinTani.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance(
-          'Tedavi YÖNTEMİ', form.tedaviYontemi.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Kapsamı', form.kapsam.toString()),
+      studentFormPageRowInstance('Dış Kurum', form.disKurum.toString()),
       const SizedBox(
         height: 10,
       ),
       studentFormPageRowInstance(
           'Etkileşim Türü', form.etkilesimTuru.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance(
-          'Gerçekleştiği Ortam', form.gerceklestigiOrtam.toString()),
+          'Tibbi Uygulama', form.tibbiUygulama.toString()),
       const SizedBox(
         height: 10,
       ),

@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/shared/constants.dart';
+import 'package:internship_managing_system/shared/custom_spinkit.dart';
+import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../../model/PatientLog.dart ';
-import '../../shared/constants.dart';
-import '../../shared/custom_list_tile.dart';
-import '../../shared/custom_spinkit.dart';
-import '../services/AttendingDatabaseHelper.dart';
+import '../../../shared/tibbi_list_tile.dart';
 
-class HistoryForms extends StatefulWidget {
-  const HistoryForms({Key? key}) : super(key: key);
+class TibbiPendingForms extends StatefulWidget {
+  const TibbiPendingForms({Key? key}) : super(key: key);
 
   @override
-  _HistoryFormsState createState() => _HistoryFormsState();
+  State<TibbiPendingForms> createState() => _TibbiPendingFormsState();
 }
 
-class _HistoryFormsState extends State<HistoryForms> {
-  // final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
-  final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
+class _TibbiPendingFormsState extends State<TibbiPendingForms> {
+  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
+  int limit = 50;
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase('/reject').then((value) {
+    await _dbHelper.fetchTibbiFormsFromDatabase("/waiting").then((value) {
       setState(() {});
     });
   }
@@ -25,18 +24,13 @@ class _HistoryFormsState extends State<HistoryForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Reddedilen Formlar'),
-      ),
-      body: FutureBuilder<List<PatientLog>?>(
-          future: _dbHelper.fetchFormsFromDatabase('/reject'),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<PatientLog>?> snapshot) {
+      body: FutureBuilder<List<dynamic>>(
+          future: _dbHelper.fetchTibbiFormsFromDatabase("/tibbi/waiting"),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                "Henüz reddedilen formunuz bulunmamaktadır.",
+                "Henüz gönderilmiş formunuz bulunmamaktadır.",
                 textAlign: TextAlign.center,
                 style: TEXT_STYLE,
               ));
@@ -51,8 +45,9 @@ class _HistoryFormsState extends State<HistoryForms> {
                         text:
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
+                      //TODO: emoji
                       TextSpan(
-                        text: '🧭 🏳️\u200d🌈', // emoji characters
+                        text: ' 🧭', // emoji characters
                         style: TextStyle(
                           fontFamily: 'EmojiOne',
                         ),
@@ -63,6 +58,8 @@ class _HistoryFormsState extends State<HistoryForms> {
               );
             }
             if (snapshot.connectionState == ConnectionState.done) {
+              List<dynamic> list = snapshot.data;
+
               return RefreshIndicator(
                 backgroundColor: Colors.grey[700],
                 color: LIGHT_BUTTON_COLOR,
@@ -74,20 +71,20 @@ class _HistoryFormsState extends State<HistoryForms> {
                     physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
                     ),
-                    itemCount: snapshot.data!.length,
+                    itemCount: list.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return CustomListTile(
-                        formData: snapshot.data![index],
-                        index: index,
-                        routeTo: 3,
-                        isDeletable: false,
-                      );
+                      return TibbiCustomListTile(
+                          tibbiFormData: snapshot.data![index],
+                          index: index,
+                          routeTo: 2);
                     },
                   ),
                 ),
               );
             }
-            return spinkit;
+            return Center(
+              child: spinkit,
+            );
           }),
     );
   }
