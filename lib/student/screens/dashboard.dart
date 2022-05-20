@@ -1,10 +1,15 @@
-import 'dart:convert';
+import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:internship_managing_system/DBURL.dart';
 import 'package:internship_managing_system/model/Course.dart';
+import 'package:internship_managing_system/model/Speciality.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+
+import '../../model/PatientLog.dart ';
+import '../../shared/constants.dart';
+import '../services/StudentDatabaseHelper.dart';
+import '../widgets/widgets.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -17,45 +22,106 @@ class _DashboardState extends State<Dashboard> {
   late String selectedValue;
   List<dynamic> courseID = [];
 
-  Future getCourseNames() async {
-    var response = await http.get(Uri.parse("${DBURL.url}/staj_kodu.php"));
-    if (response.statusCode == 200) {
-      var jsonData = json.decode(response.body);
+  Future _getCourses() async {
+    await StudentDatabaseHelper().fetchCourses().then((response) {
+//      print(data);
       setState(() {
-        courseID = jsonData;
+        courses = response;
+        _selectedCourse = courses[0].courseName;
       });
-    }
-    print(courseID);
+    });
   }
 
   Map<String, dynamic> map = {};
-  late int? _gerekliFormSayisi = 18;
-  late int? _onaylananFormSayisi = 3;
-  late List<GDPData> _chartData;
+
   late List<Course> courseList;
-  late List<ExpenseData> _specialityData;
+
   late TooltipBehavior _tooltipBehaviour;
 
   @override
   void initState() {
-    _specialityData = getCourseData();
-    _chartData = getChartData(_gerekliFormSayisi!, _onaylananFormSayisi!);
+    _getCourses();
+    getCourseData();
     _tooltipBehaviour = TooltipBehavior(enable: true);
-    getCourseNames();
+
     super.initState();
   }
 
-  List<Course> courses = [
-    Course(id: 1, courseName: "Course1"),
-    Course(id: 2, courseName: "Course2"),
-    Course(id: 3, courseName: "Course3")
-  ];
+  List<Course> courses = [];
+  List<Speciality> specialities = [];
+  late int idCourse;
+  late int idSpecialities;
+  String? _selectedCourse = "Course1";
+  String? _selectedSpeciality = "";
+
   Widget build(BuildContext context) {
     return SafeArea(
         child: SingleChildScrollView(
       child: Column(
         children: [
+          Container(
+            margin: const EdgeInsets.all(4),
+            child: Column(
+              children: [
+                Text(
+                  "Courses",
+                  style: TEXT_STYLE,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(PADDING_VALUE),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[700],
+                        borderRadius: BorderRadius.circular(5)),
+                    child: DropdownButtonFormField(
+                        key: PageStorageKey<BuildContext>(context),
+                        decoration:
+                            const InputDecoration(border: InputBorder.none),
+                        isExpanded: true,
+                        validator: (val) => val == null ? 'Course Name' : null,
+                        value: _selectedCourse,
+                        icon: const Icon(
+                          Icons.arrow_downward,
+                          color: ICON_COLOR,
+                        ),
+                        iconSize: 24,
+                        elevation: 16,
+                        dropdownColor: Colors.grey[800],
+                        style: TEXT_STYLE,
+                        onChanged: (newValue) {
+                          setState(() {
+                            getCourseData();
+                            _selectedCourse = newValue.toString();
+                            for (int i = 0; i < courses.length; i++) {
+                              if (courses[i].courseName == _selectedCourse) {
+                                idCourse = courses[i].id;
+                              }
+                            }
+                            _getSpecialities(idCourse);
+                            if (newValue is Course) {
+                              Provider.of<PatientLog>(context, listen: false)
+                                  .setCourse(newValue);
+                            }
+                            _selectedCourse != newValue;
+                          });
+
+                          print(newValue);
+                          print(specialityData);
+                        },
+                        items: courses.map((item) {
+                          return DropdownMenuItem(
+                            child: Text(item.courseName),
+                            value: item.courseName,
+                          );
+                        }).toList()),
+                  ),
+                ),
+              ],
+            ),
+          ),
           // CustomDropDown(courses, "Course"),
+          // TODO : Bir önce ki seçilen menünün itemlerini gösteriyor düzeltilmesi lazım.
           const SizedBox(height: 20),
           /*ChartWidget(
               tooltipBehaviour: _tooltipBehaviour,
@@ -68,13 +134,13 @@ class _DashboardState extends State<Dashboard> {
             series: <ChartSeries>[
               StackedBar100Series<ExpenseData, String>(
                   color: Colors.red,
-                  dataSource: _specialityData,
+                  dataSource: specialityData,
                   xValueMapper: (ExpenseData exp, _) => exp.specialityName,
                   yValueMapper: (ExpenseData exp, _) => exp.gerekliForm,
                   name: 'Gerekli Form'),
               StackedBar100Series<ExpenseData, String>(
                   color: Colors.blue,
-                  dataSource: _specialityData,
+                  dataSource: specialityData,
                   xValueMapper: (ExpenseData exp, _) => exp.specialityName,
                   yValueMapper: (ExpenseData exp, _) => exp.onaylananForm,
                   name: 'Onaylanan Form'),
@@ -87,24 +153,37 @@ class _DashboardState extends State<Dashboard> {
   }
 
 //Onaylanan raporlar gösterilecek, kalan rapor sayısı kaç rapor gönderilmesi gerekiyorsa o sayıdan çıkarılıp eklenecek
-  List<GDPData> getChartData(int gerekliFormSayisi, int _onaylananFormSayisi) {
-    this._onaylananFormSayisi = _onaylananFormSayisi;
-    _gerekliFormSayisi = _gerekliFormSayisi;
-    final List<GDPData> chartData = [
-      GDPData('Onaylanan Rapor Sayısı', _onaylananFormSayisi),
-      GDPData('Kalan Rapor Sayısı', _gerekliFormSayisi! - _onaylananFormSayisi),
-    ];
-    return chartData;
+
+  Speciality speciality = Speciality(id: 1, name: "name", courseId: 1);
+  List<ExpenseData> specialityData = [];
+
+  Future _getSpecialities(int id) async {
+    List<Speciality> newList = [];
+    await StudentDatabaseHelper().fetchSpeciality().then((response) {
+      setState(() {
+        for (int i = 0; i < response.length; i++) {
+          if (response[i].courseId == id) {
+            newList.add(response[i]);
+            specialities = newList;
+          }
+        }
+
+        _selectedSpeciality = specialities[0].name;
+      });
+    });
+
+    return specialities;
   }
 
   List<ExpenseData> getCourseData() {
-    List<ExpenseData> specialityData = [
-      ExpenseData("Kardiyoloji", 25, 13),
-      ExpenseData("Üroloji", 25, 11),
-      ExpenseData("Genel Cerrah", 33, 13),
-      ExpenseData("Acil", 45, 13),
-      ExpenseData("Başhekimlik", 25, 11),
-    ];
+    List<ExpenseData> newSpecialityData = [];
+    setState(() {
+      for (int i = 0; i < specialities.length; i++) {
+        newSpecialityData.add(ExpenseData(specialities[i].name, 25, 13));
+
+        specialityData = newSpecialityData;
+      }
+    });
     return specialityData;
   }
 }
@@ -114,89 +193,4 @@ class ExpenseData {
   late String specialityName;
   late int gerekliForm;
   late int onaylananForm;
-}
-
-class ChartWidget extends StatelessWidget {
-  const ChartWidget({
-    Key? key,
-    required TooltipBehavior tooltipBehaviour,
-    required List<GDPData> chartData,
-    required int? gerekliFormSayisi,
-  })  : _tooltipBehaviour = tooltipBehaviour,
-        _chartData = chartData,
-        _gerekliFormSayisi = gerekliFormSayisi,
-        super(key: key);
-
-  final TooltipBehavior _tooltipBehaviour;
-  final List<GDPData> _chartData;
-  final int? _gerekliFormSayisi;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        Container(
-          height: 300,
-          child: SfCircularChart(
-            palette: const [Colors.greenAccent, Colors.blueGrey],
-            title: ChartTitle(
-              text: 'Hasta Etkileşim Kaydı',
-            ),
-            legend: Legend(
-              isVisible: true,
-            ),
-            tooltipBehavior: _tooltipBehaviour,
-            series: <CircularSeries>[
-              DoughnutSeries<GDPData, String>(
-                  dataSource: _chartData,
-                  xValueMapper: (GDPData data, _) => data.continent,
-                  yValueMapper: (GDPData data, _) => data.gdp,
-                  dataLabelSettings: DataLabelSettings(isVisible: true),
-                  enableTooltip: true)
-            ],
-          ),
-        ),
-        Text(
-          "Gönderilmesi Gereken Toplam Rapor sayısı: $_gerekliFormSayisi",
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: 35),
-        const Divider(
-            color: Colors.white10, thickness: 2, indent: 10, endIndent: 10),
-        Container(
-          height: 600,
-          child: SfCircularChart(
-            palette: <Color>[Colors.brown, Colors.cyan],
-            title: ChartTitle(
-              text: 'Tıbbi Uygulama Kaydı',
-            ),
-            legend: Legend(
-              isVisible: true,
-            ),
-            tooltipBehavior: _tooltipBehaviour,
-            series: <CircularSeries>[
-              DoughnutSeries<GDPData, String>(
-                  dataSource: _chartData,
-                  xValueMapper: (GDPData data, _) => data.continent,
-                  yValueMapper: (GDPData data, _) => data.gdp,
-                  dataLabelSettings: DataLabelSettings(isVisible: true),
-                  enableTooltip: true)
-            ],
-          ),
-        ),
-        Text(
-          "Gönderilmesi Gereken Toplam Rapor sayısı: $_gerekliFormSayisi",
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: 50),
-      ],
-    );
-  }
-}
-
-class GDPData {
-  String continent = "ssadas";
-  int gdp = 1213;
-  GDPData(this.continent, this.gdp);
 }

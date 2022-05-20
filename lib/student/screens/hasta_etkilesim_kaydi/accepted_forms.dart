@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../../../models/form_data.dart';
+import '../../../model/PatientLog.dart ';
 import '../../../shared/constants.dart';
 import '../../../shared/custom_list_tile.dart';
 
@@ -14,20 +14,24 @@ class AcceptedForms extends StatefulWidget {
 }
 
 class _AcceptedFormsState extends State<AcceptedForms> {
-  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
+  final StudentDatabaseHelper dbHelper = StudentDatabaseHelper();
+  Future<List<PatientLog>>? fromDatabase;
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase('/accepted').then((value) {
-      setState(() {});
+    await dbHelper.fetchFormsFromDatabase('/accepted').then((value) {
+      setState(() {
+        fromDatabase = (dbHelper.fetchFormsFromDatabase('/accepted')
+            as Future<List<PatientLog>>?)!;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<FormData>?>(
-          future: _dbHelper.fetchFormsFromDatabase('/accepted'),
+      body: FutureBuilder<List<PatientLog>>(
+          future: fromDatabase,
           builder:
-              (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
+              (BuildContext context, AsyncSnapshot<List<PatientLog>> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(

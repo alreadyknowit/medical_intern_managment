@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/tibbi_form_data.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 
 import 'constants.dart';
 
 class TibbiFormView extends StatelessWidget {
-  final TibbiFormData tibbiFormData;
+  final ProcedureLog tibbiFormData;
 
   const TibbiFormView({Key? key, required this.tibbiFormData})
       : super(key: key);
@@ -18,7 +18,7 @@ class TibbiFormView extends StatelessWidget {
   }
 }
 
-Widget TibbiformViewBody(TibbiFormData form) {
+Widget TibbiformViewBody(ProcedureLog form) {
   Row studentFormPageRowInstance(String label, String content) {
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -56,23 +56,24 @@ Widget TibbiformViewBody(TibbiFormData form) {
 
 Column columnForm(
     Row Function(String label, String content) studentFormPageRowInstance,
-    TibbiFormData form) {
+    ProcedureLog form) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      studentFormPageRowInstance('Kayit No', form.getKayitNo()),
+      studentFormPageRowInstance('Kayit No', form.kayitNo.toString()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Staj Türü', form.getStajTuru()),
+      studentFormPageRowInstance('Staj Türü', form.speciality.toString()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Klinik Eğitici', form.getDoktor()),
+      studentFormPageRowInstance(
+          'Klinik Eğitici', form.attendingPhysician.toString()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Ortam', form.getTibbiOrtam()),
+      studentFormPageRowInstance('Ortam', form.gerceklestigiOrtam.toString()),
       const SizedBox(
         height: 10,
       ),
@@ -80,20 +81,21 @@ Column columnForm(
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Dış Kurum', form.getDisKurum()),
+      studentFormPageRowInstance('Dış Kurum', form.disKurum.toString()),
       const SizedBox(
         height: 10,
       ),
       studentFormPageRowInstance(
-          'Etkileşim Türü', form.getTibbiEtkilesimTuru()),
+          'Etkileşim Türü', form.etkilesimTuru.toString()),
       const SizedBox(
         height: 5,
       ),
-      studentFormPageRowInstance('Tibbi Uygulama', form.getTibbiUygulama()),
+      studentFormPageRowInstance(
+          'Tibbi Uygulama', form.tibbiUygulama.toString()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Tarih', form.getTarih().toString()),
+      studentFormPageRowInstance('Tarih', form.createdAt.toString()),
     ],
   );
 }

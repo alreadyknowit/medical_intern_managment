@@ -4,11 +4,12 @@ import 'package:internship_managing_system/attending_physician//widget/form_card
 import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
 import 'package:internship_managing_system/attending_physician/screens/history.dart';
 import 'package:internship_managing_system/attending_physician/services/AttendingDatabaseHelper.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/models/tibbi_form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
+
+import '../../model/PatientLog.dart ';
+import '../../model/ProcedureLog.dart';
 
 class AttendingPhysicianMain extends StatefulWidget {
   @override
@@ -17,13 +18,14 @@ class AttendingPhysicianMain extends StatefulWidget {
 
 class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
   final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
-  List<FormData> formList = [];
-  List<TibbiFormData> tibbiFormList = [];
+  List<PatientLog> formList = [];
+  List<ProcedureLog> tibbiFormList = [];
   var lists;
   CombineList() {
     lists = List.from(formList)..add(tibbiFormList);
   }
 
+// TODO: linkler değişecek
   bool isLoading = false;
   getForms() async {
     setState(() {
@@ -37,11 +39,11 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
     });
     tibbiFormList = await _dbHelper
         .fetchTibbiFormsFromDatabase('/tibbi/waiting')
-        .then((valueq) {
+        .then((value) {
       setState(() {
         isLoading = false;
       });
-      return valueq;
+      return value;
     });
   }
 
@@ -92,7 +94,7 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
         );
       });
 
-  Widget buildForm(FormData form) {
+  Widget buildForm(PatientLog form) {
     final formIndex = formList.indexOf(form);
 
     bool isFormInFocus = formIndex == formList.length - 1;
@@ -125,7 +127,7 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
     );
   }
 
-  double onDragEnd(DraggableDetails details, FormData form) {
+  double onDragEnd(DraggableDetails details, PatientLog form) {
     const minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
       form.setStatus('accept');

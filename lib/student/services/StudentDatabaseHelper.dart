@@ -1,39 +1,39 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:internship_managing_system/model/AttendingPhysician.dart';
 import 'package:internship_managing_system/model/Course.dart';
 import 'package:internship_managing_system/model/Institute.dart';
 import 'package:internship_managing_system/model/PatientLog.dart';
-import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/models/staj_turu_model.dart';
 
 import '../../DBURL.dart';
+import '../../model/AttendingPhysician.dart';
+import '../../model/ProcedureLog.dart';
 import '../../model/Speciality.dart';
-import '../../models/tibbi_form_data.dart';
 
+// TODO: linkler değişecek
 class StudentDatabaseHelper {
   //get data from sql
-  Future<List<FormData>> fetchFormsFromDatabase(String status) async {
-    var url = Uri.parse("${DBURL.url}$status.php");
+  Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
+    var url = Uri.parse("${DBURL.url}$status");
     var response = await http.post(url);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<FormData> forms = data.map((e) => FormData.fromJson(e)).toList();
+      List<PatientLog> forms = data.map((e) => PatientLog.fromJson(e)).toList();
       return forms;
     } else {
       throw Exception('Failed to load data');
     }
   }
 
-  Future<List<TibbiFormData>> fetchTibbiFormsFromDatabase(String status) async {
+  Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
     //TODO: change url
     var url = Uri.parse("${DBURL.url}$status.php");
     var response = await http.post(url);
     if (response.statusCode == 200) {
       List<dynamic> tibbidata = jsonDecode(response.body);
-      List<TibbiFormData> tibbiforms =
-          tibbidata.map((e) => TibbiFormData.fromJson(e)).toList();
+      List<ProcedureLog> tibbiforms =
+          tibbidata.map((e) => ProcedureLog.fromJson(e)).toList();
       return tibbiforms;
     } else {
       throw Exception('Failed to load data');
@@ -53,19 +53,6 @@ class StudentDatabaseHelper {
       throw Exception('Failed to load data');
     }
   }
-
-  /*
-
-  await Hazırlık 5 dk
-
-    Yürüyüş 10dk
-
-    Kimlik okutma 10sn
-
-    Ders 40dk
-
-
-   */
 
   Future<List<Course>> fetchCourses() async {
     var url = Uri.parse("${DBURL.url}/courses");
@@ -102,6 +89,7 @@ class StudentDatabaseHelper {
       List<dynamic> data = jsonDecode(response.body);
       List<Institute> institute =
           data.map((e) => Institute.fromJSON(e)).toList();
+
       return institute;
     } else {
       throw Exception('Failed to load ');
@@ -133,12 +121,12 @@ class StudentDatabaseHelper {
   Future insertFormToDatabase1(PatientLog patientLog) async {
     var url = Uri.parse("${DBURL.url}/patient-logs");
 
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var headers = {'Content-Type': 'application/json'};
     var request = http.Request('POST', url);
 
     print(patientLog.kayitNo);
     request.bodyFields = {
-      "studentId": "2",
+      "studentId": "1",
       "kayitNo": patientLog.kayitNo.toString(),
       "yas": patientLog.yas.toString(),
       "specialityId": patientLog.speciality.toString(),
@@ -168,30 +156,30 @@ class StudentDatabaseHelper {
     }
   }
 
-  Future insertFormToDatabase(FormData formData) async {
+/*
+  Future insertFormToDatabase(PatientLog formData) async {
     var url = Uri.parse("${DBURL.url}/insert.php");
 
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('POST', url);
 
-    print(formData.getKayitNo());
+    print(formData.kayitNo);
     request.bodyFields = {
-      "kayit_no": formData.getKayitNo(),
-      "staj_turu": formData.getStajTuru(),
-      "yas": formData.getYas(),
-      "klinik_egitici": formData.getDoktor(),
-      "cinsiyet": formData.getCinsiyet(),
-      "sikayet": formData.getSikayet(),
-      "ayirici_tani": formData.getAyiriciTani(),
-      "kesin_tani": formData.getKesinTani(),
-      "tedavi_yontemi": formData.getTedaviYontemi(),
-      "etkilesim_turu": formData.getEtkilesimTuru(),
-      "kapsam": formData.getKapsam(),
-      "ortam": formData.getOrtam(),
-      "form_status": formData.getStatus(),
-      "tarih": formData.getTarih(),
+      "kayit_no": formData.kayitNo.toString(),
+      "staj_turu": formData.course.toString(),
+      "yas": formData.yas.toString(),
+      "klinik_egitici": formData.attendingPhysician.toString(),
+      "cinsiyet": formData.cinsiyet.toString(),
+      "sikayet": formData.sikayet.toString(),
+      "ayirici_tani": formData.ayiriciTani.toString(),
+      "kesin_tani": formData.kesinTani.toString(),
+      "tedavi_yontemi": formData.tedaviYontemi.toString(),
+      "etkilesim_turu": formData.etkilesimTuru.toString(),
+      "kapsam": formData.kapsam.toString(),
+      "ortam": formData.gerceklestigiOrtam.toString(),
+      "form_status": formData.status.toString(),
+      "tarih": formData.createdAt.toString(),
       "staj_kodu": "asdasd",
-      "afdsdas": "fsafasfasf"
     };
     request.headers.addAll(headers);
 
@@ -203,10 +191,11 @@ class StudentDatabaseHelper {
       return false;
     }
   }
+*/
 
 // adding tibbi data to sql
 
-  Future insertTibbiFormToDatabase(TibbiFormData tibbiFormData) async {
+  Future insertTibbiFormToDatabase(ProcedureLog tibbiFormData) async {
     var res = await http.post(
       Uri.parse(
           'https://medinternshipapp.000webhostapp.com/flutter/tibbi/insert.php'),
@@ -214,14 +203,17 @@ class StudentDatabaseHelper {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        "kayit_no": tibbiFormData.getKayitNo(),
-        "klinik_egitici": tibbiFormData.getDoktor(),
-        "etkilesim_turu": tibbiFormData.getTibbiEtkilesimTuru(),
-        "tibbi_uygulama": tibbiFormData.getTibbiUygulama(),
-        "dis_kurum": tibbiFormData.getDisKurum(),
-        "gerceklestigi_ortam": tibbiFormData.getTibbiOrtam(),
-        "form_status": tibbiFormData.getStatus(),
-        "tarih": tibbiFormData.getTarih()
+        "studentId": "1",
+        "specialityId": tibbiFormData.speciality.toString(),
+        "coordinatorId": "1",
+        "kayit_no": tibbiFormData.kayitNo.toString(),
+        "attendingId": tibbiFormData.attendingPhysician.toString(),
+        "etkilesim_turu": tibbiFormData.etkilesimTuru.toString(),
+        "tibbi_uygulama": tibbiFormData.tibbiUygulama.toString(),
+        "dis_kurum": tibbiFormData.disKurum.toString(),
+        "gerceklestigi_ortam": tibbiFormData.gerceklestigiOrtam.toString(),
+        "form_status": tibbiFormData.status.toString(),
+        "tarih": tibbiFormData.createdAt.toString()
       }),
     );
     return (res.statusCode == 200) ? true : false;

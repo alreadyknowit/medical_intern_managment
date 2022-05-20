@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../models/form_data.dart';
+import '../../model/PatientLog.dart ';
 import '../../shared/custom_alert.dart';
 import '../../shared/custom_snackbar.dart';
 import '../../shared/form_view.dart';
 import '../services/AttendingDatabaseHelper.dart';
 
 class FormDecision extends StatelessWidget {
-  final FormData formData;
+  final PatientLog formData;
 
   FormDecision({Key? key, required this.formData}) : super(key: key);
   final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();

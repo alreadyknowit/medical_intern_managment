@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/model/AttendingPhysician.dart';
-import 'package:internship_managing_system/models/staj_turu_model.dart';
-import 'package:internship_managing_system/shared/custom_snackbar.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
+import 'package:internship_managing_system/student/widgets/CustomDropDown.dart';
+import 'package:internship_managing_system/student/widgets/FilteringDropDown.dart';
 
-import '../../../models/tibbi_form_data.dart';
+import '../../../model/Course.dart';
+import '../../../model/Institute.dart';
+import '../../../model/Speciality.dart';
 import '../../../shared/custom_alert.dart';
+import '../../../shared/custom_snackbar.dart';
+import '../../widgets/CustomTextField.dart';
 import '../../widgets/widgets.dart';
 
 class TibbiUygulama extends StatefulWidget {
@@ -34,17 +39,19 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
     if (tibbiFormArguments != null) {
       isDeletable = tibbiFormArguments!.isDeletable ?? true;
       args = tibbiFormArguments?.tibbiFormData;
-      _kayit.text = args!.getKayitNo();
+      _kayit.text = args!.kayitNo.toString();
 
       //dropdown
-      _valueTibbiOrtam = args!.getTibbiOrtam();
-      _valueTibbiEtkilesimTuru = args!.getTibbiUygulama();
+      _valueTibbiOrtam = args!.gerceklestigiOrtam.toString();
+      _valueTibbiEtkilesimTuru = args!.etkilesimTuru.toString();
       //
 
-      _doktorController.text = args!.getDoktor();
-      _disKurum.text = args!.getDisKurum();
-      _tibbiUygulama.text = args!.getTibbiUygulama();
-      _stajTuruController.text = args!.getStajTuru();
+      _doktorController.text = args!.attendingPhysician.toString();
+      _disKurum.text = args!.disKurum.toString();
+      _tibbiUygulama.text = args!.tibbiUygulama.toString();
+      _stajTuruController.text = args!.speciality.toString();
+      _instituteController.text = args!.instute.toString();
+      _courseController.text = args!.course.toString();
     }
 
     return Scaffold(
@@ -56,9 +63,11 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
                   return const Center(
                       child: Text("Oops! Something went wrong."));
                 } else if (snapshot.hasData) {
-                  var listOfContent = snapshot.data as List<List<String>>;
-                  var listOfStajTuru = listOfContent[1];
-                  var listOfDoktor = listOfContent[0];
+                  var listOfContent = snapshot.data as dynamic;
+                  var courses = listOfContent[0];
+                  var specialities = listOfContent[1];
+                  var institutes = listOfContent[2];
+                  var attendings = listOfContent[3];
 
                   var listOfOrtam = [
                     "Poliklinik",
@@ -76,10 +85,12 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
                   ];
 
                   Map<String, dynamic> map = {
-                    'doktor': listOfDoktor,
+                    'course': courses,
                     'etkilesim': listOfEtkilesimTuru,
                     'ortam': listOfOrtam,
-                    'stajTuru': listOfStajTuru,
+                    'specialities': specialities,
+                    'institutes': institutes,
+                    'attendings': attendings,
                   };
                   return isLoading ? spinkit : formWidget(map);
                 } else {
@@ -112,71 +123,51 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
         child: Column(
           //  shrinkWrap: true,
           children: [
-            customTypeAhead(map['stajTuru'], _stajTuruController,
-                _selectedStajTuru, 'Staj Türü'),
-            customTypeAhead(
-                map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),
-            customDropDown(_valueTibbiEtkilesimTuru, map['etkilesim'],
-                hintTextEtkilesim, onChangedEtkilesim),
-            customDropDown(
-                _valueTibbiOrtam, map['ortam'], hintTextOrtam, onChangedOrtam),
-            customTextField(1, "Lütfen Dış Kurumu Yazınız", 10,
-                _tibbiFormData.setDisKurum, isEmpty, _disKurum, 80),
+            FilteringDropDown(
+                _procedureLog,
+                _procedureLog.setInstute,
+                _procedureLog.setCourse,
+                _procedureLog.setSpeciality,
+                _procedureLog.setAttendingPhysician),
+            CustomDropDown(map['etkilesim'], " Etkileşim Türü",
+                _procedureLog.setEtkilesimTuru),
+            CustomDropDown(map['ortam'], " Gerçekleştiği Ortam",
+                _procedureLog.setGerceklestigiOrtam),
+            CustomTextField(1, "Lütfen Dış Kurumu Yazınız", 10,
+                _procedureLog.setDisKurum, 80),
             const SizedBox(
               height: 20,
             ),
-            customTextField(1, "Kayıt No ", 10, _tibbiFormData.setKayitNo,
-                isEmpty, _kayit, 80),
-            customTextField(5, "Tıbbi İşlem Uygulama", 200,
-                _tibbiFormData.setTibbiUygulama, isEmpty, _tibbiUygulama, 130),
+            CustomTextField(1, "Kayıt No ", 10, _procedureLog.setKayitNo, 80),
+            CustomTextField(5, "Tıbbi İşlem Uygulama", 200,
+                _procedureLog.setTibbiUygulama, 130),
           ],
         ),
       ),
     );
   }
 
-  final TibbiFormData _tibbiFormData = TibbiFormData();
-  late TibbiFormData? args;
+  final ProcedureLog _procedureLog = ProcedureLog();
+  late ProcedureLog? args;
   //late int? index;
+
   TibbiFormArguments? tibbiFormArguments;
   final _formKey = GlobalKey<FormState>();
   String _valueTibbiEtkilesimTuru = 'Gözlem';
   String _valueTibbiOrtam = 'Poliklinik';
 
-  String? _selectedStajTuru;
-  String? _selectedDoktor;
-  final String hintTextStajTuru = "Staj Türü:";
-  final String hintTextEtkilesim = "Etkileşim Türü:";
-  final String hintTextOrtam = "Gerçekleştiği Ortam:";
-  final String hintTextDoktor = "Klinik Eğitici:";
   final TextEditingController _kayit = TextEditingController();
   final TextEditingController _tibbiUygulama = TextEditingController();
   final TextEditingController _disKurum = TextEditingController();
   final TextEditingController _stajTuruController = TextEditingController();
   final TextEditingController _doktorController = TextEditingController();
+  final TextEditingController _instituteController = TextEditingController();
+  final TextEditingController _courseController = TextEditingController();
+
   bool isLoading = false;
-
-  void onChangedEtkilesim(String newVal) {
-    if (tibbiFormArguments != null) {
-      tibbiFormArguments?.tibbiFormData.setTibbiEtkilesimTuru(newVal);
-    } else {
-      setState(() {
-        _valueTibbiEtkilesimTuru = newVal;
-        _tibbiFormData.setTibbiEtkilesimTuru(newVal);
-      });
-    }
-  }
-
-  void onChangedOrtam(String newVal) {
-    if (tibbiFormArguments != null) {
-      tibbiFormArguments?.tibbiFormData.setTibbiOrtam(newVal);
-    } else {
-      setState(() {
-        _valueTibbiOrtam = newVal;
-        _tibbiFormData.setTibbiOrtam(newVal);
-      });
-    }
-  }
+  /*formSakla() {}
+  formIlet() {}
+  handleDelete() {}*/
 
   void formSakla() async {
     if (tibbiFormArguments != null) {
@@ -188,7 +179,7 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>Drafts()));
     } else {
       setFormDataState();
-      await _helper.insertTibbi(_tibbiFormData).then((value) {
+      await _helper.insertTibbi(_procedureLog).then((value) {
         customSnackBar(context, 'Başarıyla taslağa kaydedildi');
       });
     }
@@ -224,14 +215,14 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
         setFormDataState();
         isLoading = true;
         bool res = await _dbHelper
-            .insertTibbiFormToDatabase(_tibbiFormData)
+            .insertTibbiFormToDatabase(_procedureLog)
             .then((val) {
           setState(() {
             isLoading = false;
           });
           return val != null ? true : false;
         });
-        print(_tibbiFormData.kayitNo);
+        print(_procedureLog.kayitNo);
         if (res) {
           customSnackBar(context, 'Başarıyla gönderildi');
         } else {
@@ -259,23 +250,19 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
     return text;
   }
 
-  Future<List<List<String>>> fetchFormContent() async {
-    List<List<String>> res = [];
-    //fetch attending physician
-    List<AttendingPhysician> attendingList =
+  Future<List<List<dynamic>>> fetchFormContent() async {
+    List<List<dynamic>> res = [];
+    List<AttendingPhysician> attendings =
         await _dbHelper.fetchAttendingPhysicians();
-    List<String> attendingNames = [];
-    for (AttendingPhysician item in attendingList) {
-      attendingNames.add(item.attendingName);
-    }
-    //fetch stajTuru
-    List<StajTuru> stajTuruList = await _dbHelper.fetchStajTuruTable();
-    List<String> stajTurleri = [];
-    for (StajTuru s in stajTuruList) {
-      stajTurleri.add(s.stajTuru);
-    }
-    res.add(attendingNames);
-    res.add(stajTurleri);
+    List<Course> courses = await _dbHelper.fetchCourses();
+    List<Speciality> speciality = await _dbHelper.fetchSpeciality();
+    List<Institute> institute = await _dbHelper.fetchInstitute();
+
+    res.add(courses);
+    res.add(speciality);
+    res.add(institute);
+    res.add(attendings);
+
     return res;
   }
 
@@ -285,24 +272,37 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
     tibbiFormArguments?.tibbiFormData.setDisKurum(_disKurum.text);
     tibbiFormArguments?.tibbiFormData.setTibbiUygulama(_tibbiUygulama.text);
     //typeahead
-    tibbiFormArguments?.tibbiFormData.setStajTuru(_stajTuruController.text);
-    tibbiFormArguments?.tibbiFormData.setDoktor(_doktorController.text);
+
+    tibbiFormArguments?.tibbiFormData
+        .setSpeciality(_stajTuruController.text as Speciality);
+    tibbiFormArguments?.tibbiFormData
+        .setAttendingPhysician(_doktorController.text as AttendingPhysician);
+    tibbiFormArguments?.tibbiFormData
+        .setCourse(_courseController.text as Course);
+    tibbiFormArguments?.tibbiFormData
+        .setInstute(_instituteController.text as Institute);
 
     //other
-    tibbiFormArguments?.tibbiFormData.setTarih();
+    tibbiFormArguments?.tibbiFormData.createdAt;
     tibbiFormArguments?.tibbiFormData.setStatus('waiting');
   }
 
+  final berlinWallFell =
+      DateTime.utc(1989, 11, 9); // TODO: Date time eklenecek..!
   void setFormDataState() {
     //typeahead
-    _tibbiFormData.setStajTuru(_stajTuruController.text);
-    _tibbiFormData.setDoktor(_doktorController.text);
+
+    _procedureLog
+        .setAttendingPhysician(_doktorController.text as AttendingPhysician);
+    _procedureLog.setSpeciality(_stajTuruController.text as Speciality);
+    _procedureLog.setCourse(_courseController.text as Course);
+    _procedureLog.setInstute(_instituteController.text as Institute);
     //dropdown
-    _tibbiFormData.setTibbiEtkilesimTuru(_valueTibbiEtkilesimTuru);
-    _tibbiFormData.setTibbiOrtam(_valueTibbiOrtam);
+    _procedureLog.setEtkilesimTuru(_valueTibbiEtkilesimTuru);
+    _procedureLog.setGerceklestigiOrtam(_valueTibbiOrtam);
 
     //other
-    _tibbiFormData.setTarih();
-    _tibbiFormData.setStatus('waiting');
+    _procedureLog.setCreatedAt(berlinWallFell);
+    _procedureLog.setStatus('waiting');
   }
 }

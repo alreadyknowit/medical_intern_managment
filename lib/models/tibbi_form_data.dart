@@ -1,3 +1,4 @@
+/*
 import 'dart:core';
 
 import 'package:date_format/date_format.dart';
@@ -5,7 +6,7 @@ import 'package:internship_managing_system/models/MainForm.dart';
 
 import '../student/services/SQFLiteHelper.dart';
 
-class TibbiFormData extends MainForm {
+class ProcedureLog extends MainForm {
   int? id;
   String? kayitNo;
   String? stajTuru;
@@ -29,7 +30,7 @@ class TibbiFormData extends MainForm {
   String getDisKurum() => disKurum ?? "";
   String getTibbiOrtam() => tibbiOrtam ?? "";
   String getStatus() => status ?? 'not implemented';
-  TibbiFormData(
+  ProcedureLog(
       {this.status,
       this.tarih,
       this.id,
@@ -40,8 +41,8 @@ class TibbiFormData extends MainForm {
       this.disKurum,
       this.tibbiOrtam,
       this.tibbiUygulama});
-  factory TibbiFormData.fromJson(Map<String, dynamic> myMap) {
-    return TibbiFormData(
+  factory ProcedureLog.fromJson(Map<String, dynamic> myMap) {
+    return ProcedureLog(
       id: checkID(myMap['id']),
       kayitNo: myMap['kayit_no'],
       stajTuru: myMap['staj_turu'],
@@ -57,7 +58,7 @@ class TibbiFormData extends MainForm {
     return id is int ? id : int.parse(id);
   }
 
-  factory TibbiFormData.fromMap(Map<String, dynamic> myMap) => TibbiFormData(
+  factory ProcedureLog.fromMap(Map<String, dynamic> myMap) => ProcedureLog(
         id: myMap['id'],
         kayitNo: myMap['kayit_no'],
         stajTuru: myMap['staj_turu'],
@@ -73,7 +74,7 @@ class TibbiFormData extends MainForm {
       SQFLiteHelper.columnKayitNo: kayitNo,
       SQFLiteHelper.columnId: id,
       SQFLiteHelper.columnStajTuru: stajTuru,
-      SQFLiteHelper.columnKlinikEgitici: doktor,
+      //SQFLiteHelper.columnKlinikEgitici: doktor,
       //SQFLiteHelper.columnTibbiEtkilesimTuru: tibbiEtkilesimTuru,
       SQFLiteHelper.columnOrtam: tibbiOrtam,
       SQFLiteHelper.columnTarih: tarih,
@@ -125,3 +126,4 @@ class TibbiFormData extends MainForm {
     notifyListeners();
   }
 }
+*/

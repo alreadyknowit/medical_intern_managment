@@ -2,18 +2,22 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/DBURL.dart';
-import 'package:internship_managing_system/models/tibbi_form_data.dart';
+import 'package:internship_managing_system/model/PatientLog.dart' as prefix;
 
-import '../../models/form_data.dart';
+import '../../model/PatientLog.dart ';
+import '../../model/ProcedureLog.dart';
 
 class AttendingDatabaseHelper {
-  Future<List<FormData>> fetchFormsFromDatabase(String status) async {
+  Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
     var url = Uri.parse("${DBURL.url}/attending$status.php");
     var response = await http.post(url);
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<FormData> forms = data.map((e) => FormData.fromJson(e)).toList();
+      List<PatientLog> forms = data
+          .map((e) => prefix.PatientLog.fromJson(e))
+          .cast<PatientLog>()
+          .toList();
 
       return forms;
     } else {
@@ -21,14 +25,15 @@ class AttendingDatabaseHelper {
     }
   }
 
-  Future<List<TibbiFormData>> fetchTibbiFormsFromDatabase(String status) async {
+// TODO: linkler değişecek
+  Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
     var url = Uri.parse("${DBURL.url}/attending$status.php");
     var response = await http.post(url);
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<TibbiFormData> forms =
-          data.map((e) => TibbiFormData.fromJson(e)).toList();
+      List<ProcedureLog> forms =
+          data.map((e) => ProcedureLog.fromJson(e)).toList();
 
       return forms;
     } else {
@@ -36,7 +41,7 @@ class AttendingDatabaseHelper {
     }
   }
 
-  Future<bool> updateFromStatus(FormData formData) async {
+  Future<bool> updateFromStatus(PatientLog formData) async {
     //if bool is true then accept
 
     var url = Uri.parse("${DBURL.url}/attending/update.php");
@@ -44,8 +49,8 @@ class AttendingDatabaseHelper {
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var request = http.Request('POST', url);
     request.bodyFields = {
-      "form_status": formData.getStatus(),
-      "id": formData.getID().toString(),
+      "form_status": formData.status.toString(),
+      "id": formData.id.toString(),
     };
     request.headers.addAll(headers);
 

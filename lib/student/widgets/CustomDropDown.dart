@@ -13,7 +13,6 @@ class CustomDropDown extends StatefulWidget {
   List itemList;
   String hintText;
   Function onChanged;
-
   CustomDropDown(this.itemList, this.hintText, this.onChanged);
 
   @override
@@ -93,6 +92,10 @@ class _CustomDropDownState extends State<CustomDropDown> {
                     } else if (val is Course) {
                       Provider.of<PatientLog>(context, listen: false)
                           .setCourse(val);
+                      widget.onChanged(val);
+                    } else if (val is Cinsiyet) {
+                      Provider.of<PatientLog>(context, listen: false)
+                          .setCinsiyet(val);
                       widget.onChanged(val);
                     }
                     dropdownValue != val;

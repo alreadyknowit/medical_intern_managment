@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../services/AttendingDatabaseHelper.dart';
-import '../../models/form_data.dart';
+
+import '../../model/PatientLog.dart ';
 import '../../shared/constants.dart';
 import '../../shared/custom_list_tile.dart';
 import '../../shared/custom_spinkit.dart';
+import '../services/AttendingDatabaseHelper.dart';
 
 class HistoryForms extends StatefulWidget {
   const HistoryForms({Key? key}) : super(key: key);
@@ -13,15 +14,12 @@ class HistoryForms extends StatefulWidget {
 }
 
 class _HistoryFormsState extends State<HistoryForms> {
- // final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
+  // final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
   final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
   Future<void> _refresh() async {
     await _dbHelper.fetchFormsFromDatabase('/reject').then((value) {
-      setState(() {
-
-      });
+      setState(() {});
     });
-
   }
 
   @override
@@ -31,10 +29,10 @@ class _HistoryFormsState extends State<HistoryForms> {
         centerTitle: true,
         title: const Text('Reddedilen Formlar'),
       ),
-      body: FutureBuilder<List<FormData>?>(
-          future:_dbHelper.fetchFormsFromDatabase('/reject'),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
+      body: FutureBuilder<List<PatientLog>?>(
+          future: _dbHelper.fetchFormsFromDatabase('/reject'),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<PatientLog>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -81,7 +79,7 @@ class _HistoryFormsState extends State<HistoryForms> {
                       return CustomListTile(
                         formData: snapshot.data![index],
                         index: index,
-                        routeTo:3,
+                        routeTo: 3,
                         isDeletable: false,
                       );
                     },

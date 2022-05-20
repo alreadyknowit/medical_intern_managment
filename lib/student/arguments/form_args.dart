@@ -1,9 +1,9 @@
-import 'package:internship_managing_system/models/form_data.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 
-import '../../models/tibbi_form_data.dart';
+import '../../model/PatientLog.dart ';
 
 class FormArguments {
-  FormData formData;
+  PatientLog formData;
   int index;
   bool? isDeletable;
   FormArguments(
@@ -11,7 +11,7 @@ class FormArguments {
 }
 
 class TibbiFormArguments {
-  TibbiFormData tibbiFormData;
+  ProcedureLog tibbiFormData;
   int index;
   bool? isDeletable;
   TibbiFormArguments(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/tibbi_form_data.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/tibbi_form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 
 import 'constants.dart';
 
 class TibbiCustomListTile extends StatelessWidget {
-  final TibbiFormData tibbiFormData;
+  final ProcedureLog tibbiFormData;
   final int index;
   final int routeTo;
   final bool? isDeletable;
@@ -24,7 +24,7 @@ class TibbiCustomListTile extends StatelessWidget {
     TibbiFormArguments tibbiFormArguments = TibbiFormArguments(
         tibbiFormData: tibbiFormData, index: index, isDeletable: isDeletable);
 
-    void pushToFormView(TibbiFormData tibbiFormData) {
+    void pushToFormView(ProcedureLog tibbiFormData) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -57,10 +57,10 @@ class TibbiCustomListTile extends StatelessWidget {
           onTap: () => whichPage(),
           leading: SizedBox(
             width: 80,
-            child: Text(tibbiFormData.getTarih()),
+            child: Text(tibbiFormData.createdAt.toString()),
           ),
-          title: Text(tibbiFormData.getStajTuru()),
-          subtitle: Text(tibbiFormData.getDoktor()),
+          title: Text(tibbiFormData.speciality.toString()),
+          subtitle: Text(tibbiFormData.attendingPhysician.toString()),
           isThreeLine: true,
         ),
       ),

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:provider/provider.dart';
-import 'package:internship_managing_system/models/form_data.dart';
-import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
+
+import '../../model/PatientLog.dart ';
 
 class FormCardWidget extends StatelessWidget {
-  final FormData form;
+  final PatientLog form;
   final bool isFormInFocus;
-    const FormCardWidget({
+  const FormCardWidget({
     required this.form,
     required this.isFormInFocus,
   });

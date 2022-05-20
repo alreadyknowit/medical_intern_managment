@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/form_data.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
+
+import '../../model/PatientLog.dart ' as prefix;
 import '../../shared/custom_spinkit.dart';
 
 class Drafts extends StatefulWidget {
@@ -21,9 +22,12 @@ class _DraftsState extends State<Drafts> {
     _helper.getForms();
   }
 
+  Future<List<prefix.PatientLog>>? fromDatabase;
   Future<void> _refresh() async {
     await _helper.getForms().then((value) {
-      setState(() {});
+      setState(() {
+        fromDatabase = (_helper.getForms() as Future<List<prefix.PatientLog>>?);
+      });
     });
   }
 
@@ -32,10 +36,10 @@ class _DraftsState extends State<Drafts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<FormData>?>(
-          future: _helper.getForms(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<FormData>?> snapshot) {
+      body: FutureBuilder<List<prefix.PatientLog>?>(
+          future: fromDatabase,
+          builder: (BuildContext context,
+              AsyncSnapshot<List<prefix.PatientLog>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -66,13 +70,17 @@ class _DraftsState extends State<Drafts> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CustomListTile(
-                          formData: snapshot.data![index], index: index, routeTo: 1, isDeletable: true,);
+                        formData: snapshot.data![index],
+                        index: index,
+                        routeTo: 1,
+                        isDeletable: true,
+                      );
                     },
                   ),
                 ),
               );
             }
-            return  Center(
+            return Center(
               child: spinkit,
             );
           }),
