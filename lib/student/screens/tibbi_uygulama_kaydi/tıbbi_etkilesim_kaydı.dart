@@ -124,7 +124,7 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
           //  shrinkWrap: true,
           children: [
             FilteringDropDown(
-                _procedureLog,
+                2,
                 _procedureLog.setInstute,
                 _procedureLog.setCourse,
                 _procedureLog.setSpeciality,

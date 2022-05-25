@@ -109,12 +109,8 @@ class _HomePageState extends State<FormViewForDraft> {
                 _selectedStajTuru, 'Staj Türü'),
             customTypeAhead(
                 map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),*/
-            FilteringDropDown(
-                _patientLog,
-                _patientLog.setInstute,
-                _patientLog.setCourse,
-                _patientLog.setSpeciality,
-                _patientLog.setAttendingPhysician),
+            FilteringDropDown(1, _patientLog.setInstute, _patientLog.setCourse,
+                _patientLog.setSpeciality, _patientLog.setAttendingPhysician),
             CustomDropDown(
                 map['ortam'], hintTextOrtam, _patientLog.setGerceklestigiOrtam),
             CustomDropDown(

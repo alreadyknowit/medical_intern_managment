@@ -12,7 +12,8 @@ import '../../shared/constants.dart';
 import '../services/StudentDatabaseHelper.dart';
 
 class FilteringDropDown extends StatefulWidget {
-  var logs;
+  late int logs;
+
   Function changeInstitute;
   Function changeCourse;
   Function changeSpecialities;
@@ -42,7 +43,7 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
 
   @override
   void initState() {
-    _getInstitues();
+    getInstitues();
     _getCourses();
 
     // TODO: implement initState
@@ -72,7 +73,6 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                     decoration: const InputDecoration(border: InputBorder.none),
                     isExpanded: true,
                     validator: (val) => val == null ? 'Institute Name' : null,
-                    value: _selectedInstitute,
                     icon: const Icon(
                       Icons.arrow_downward,
                       color: ICON_COLOR,
@@ -81,27 +81,27 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                     elevation: 16,
                     dropdownColor: Colors.grey[800],
                     style: TEXT_STYLE,
+                    value: _selectedInstitute,
                     onChanged: (newValue) {
+                      _selectedInstitute = newValue.toString();
                       setState(() {
-                        _selectedInstitute = newValue.toString();
                         for (int i = 0; i < institutes.length; i++) {
-                          if (institutes[i].instituteName == _selectedInstitute)
+                          if (institutes[i].instituteName ==
+                              _selectedInstitute) {
                             id = institutes[i].id;
-                        }
-                        if (newValue is Institute) {
-                          if (widget.logs == _patientLog) {
-                            Provider.of<PatientLog>(context, listen: false)
-                                .setInstute(newValue);
-                            widget.changeInstitute(newValue);
-                          } else if (widget.logs == _procedureLog) {
-                            Provider.of<ProcedureLog>(context, listen: false)
-                                .setInstute(newValue);
-                            widget.changeInstitute(newValue);
+                            if (widget.logs == 1) {
+                              Provider.of<PatientLog>(context, listen: false)
+                                  .setInstute(institutes[i]);
+                              widget.changeInstitute(institutes[i]);
+                              print("1.log babababab");
+                            } else if (widget.logs == 2) {
+                              Provider.of<ProcedureLog>(context, listen: false)
+                                  .setInstute(institutes[i]);
+                              widget.changeInstitute(institutes[i]);
+                              print("2.log babababab");
+                            }
                           }
                         }
-                        //_selectedInstitute != newValue;
-
-                        print(newValue);
                       });
                     },
                     items: institutes.map((item) {
@@ -145,29 +145,24 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                     dropdownColor: Colors.grey[800],
                     style: TEXT_STYLE,
                     onChanged: (newValue) {
+                      _selectedCourse = newValue.toString();
                       setState(() {
-                        _selectedCourse = newValue.toString();
                         for (int i = 0; i < courses.length; i++) {
                           if (courses[i].courseName == _selectedCourse) {
                             idCourse = courses[i].id;
+                            if (widget.logs == 1) {
+                              Provider.of<PatientLog>(context, listen: false)
+                                  .setCourse(courses[i]);
+                              widget.changeCourse(courses[i]);
+                            } else if (widget.logs == 2) {
+                              Provider.of<ProcedureLog>(context, listen: false)
+                                  .setCourse(courses[i]);
+                              widget.changeCourse(courses[i]);
+                            }
                           }
                         }
                         _getSpecialities(idCourse);
-                        if (newValue is Course) {
-                          if (widget.logs == _patientLog) {
-                            Provider.of<PatientLog>(context, listen: false)
-                                .setCourse(newValue);
-                            widget.changeCourse(newValue);
-                          } else if (widget.logs == _procedureLog) {
-                            Provider.of<ProcedureLog>(context, listen: false)
-                                .setCourse(newValue);
-                            // widget.changeCourse(newValue);
-                          }
-                        }
-                        _selectedCourse != newValue;
                       });
-
-                      print(newValue);
                     },
                     items: courses.map((item) {
                       return DropdownMenuItem(
@@ -216,21 +211,19 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                         for (int i = 0; i < specialities.length; i++) {
                           if (specialities[i].name == _selectedSpeciality) {
                             idSpecialities = specialities[i].id;
+                            if (widget.logs == 1) {
+                              Provider.of<PatientLog>(context, listen: false)
+                                  .setSpeciality(specialities[i]);
+                              widget.changeSpecialities(specialities[i]);
+                            } else if (widget.logs == 2) {
+                              Provider.of<ProcedureLog>(context, listen: false)
+                                  .setSpeciality(specialities[i]);
+                              widget.changeSpecialities(specialities[i]);
+                            }
                           }
+                          _getAttendings(id, idSpecialities);
                         }
-                        _getAttendings(id, idSpecialities);
-                        if (newValue is Speciality) {
-                          if (widget.logs == _patientLog) {
-                            Provider.of<PatientLog>(context, listen: false)
-                                .setSpeciality(newValue);
-                            widget.changeSpecialities(newValue);
-                          } else if (widget.logs == _procedureLog) {
-                            Provider.of<ProcedureLog>(context, listen: false)
-                                .setSpeciality(newValue);
-                            widget.changeSpecialities(newValue);
-                          }
-                        }
-                        //   _selectedSpeciality != newValue;
+
                         print(newValue);
                       });
                     },
@@ -279,18 +272,21 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                     onChanged: (newValue) {
                       setState(() {
                         _selectedAttending = newValue.toString();
-                        if (newValue is AttendingPhysician) {
-                          if (widget.logs == _patientLog) {
-                            Provider.of<PatientLog>(context, listen: false)
-                                .setAttendingPhysician(newValue);
-                            widget.changeCourse(newValue);
-                          } else if (widget.logs == _procedureLog) {
-                            Provider.of<ProcedureLog>(context, listen: false)
-                                .setAttendingPhysician(newValue);
-                            widget.changeAttendingPhysician(newValue);
+                        for (int i = 0; i < attendingList.length; i++) {
+                          if (attendingList[i].attendingName ==
+                              _selectedAttending) {
+                            if (widget.logs == 1) {
+                              Provider.of<PatientLog>(context, listen: false)
+                                  .setAttendingPhysician(attendingList[i]);
+                              widget.changeAttendingPhysician(attendingList[i]);
+                            } else if (widget.logs == 2) {
+                              Provider.of<ProcedureLog>(context, listen: false)
+                                  .setAttendingPhysician(attendingList[i]);
+                              widget.changeAttendingPhysician(specialities[i]);
+                            }
                           }
                         }
-                        //  _selectedAttending != newValue;
+                        _selectedAttending != newValue;
                       });
                     },
                     items: attendingList.map((item) {
@@ -307,7 +303,7 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
     ]);
   }
 
-  Future _getInstitues() async {
+  Future getInstitues() async {
     await StudentDatabaseHelper().fetchInstitute().then((response) {
 //      print(data);
       setState(() {

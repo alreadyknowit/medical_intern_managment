@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/model/AttendingPhysician.dart';
-import 'package:internship_managing_system/model/Course.dart';
-import 'package:internship_managing_system/model/Institute.dart';
-import 'package:internship_managing_system/model/PatientLog.dart';
-import 'package:internship_managing_system/model/Speciality.dart';
 import 'package:internship_managing_system/student/widgets/widgets.dart';
-import 'package:provider/provider.dart';
 
 import '../../shared/constants.dart';
 
@@ -24,17 +18,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
   late int selectedCourseId;
   @override
   void initState() {
-    if (widget.itemList is List<Course>) {
-      dropdownValue = widget.itemList[0].courseName;
-    } else if (widget.itemList is List<String>) {
-      dropdownValue = widget.itemList[0];
-    } else if (widget.itemList is List<Speciality>) {
-      dropdownValue = widget.itemList[0].name;
-    } else if (widget.itemList is List<Institute>) {
-      dropdownValue = widget.itemList[0].instituteName;
-    } else if (widget.itemList is List<AttendingPhysician>) {
-      dropdownValue = widget.itemList[0].attendingName;
-    }
+    dropdownValue = widget.itemList[0];
+
     // TODO: implement initState
     super.initState();
   }
@@ -73,31 +58,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 style: TEXT_STYLE,
                 onChanged: (val) {
                   setState(() {
-                    if (val is Course) {
-                      Provider.of<PatientLog>(context, listen: false)
-                          .setCourse(val);
-                      widget.onChanged(val);
-                    } else if (val is AttendingPhysician) {
-                      Provider.of<PatientLog>(context, listen: false)
-                          .setAttendingPhysician(val);
-                      widget.onChanged(val);
-                    } else if (val is Speciality) {
-                      Provider.of<PatientLog>(context, listen: false)
-                          .setSpeciality(val);
-                      widget.onChanged(val);
-                    } else if (val is Institute) {
-                      Provider.of<PatientLog>(context, listen: false)
-                          .setInstute(val);
-                      widget.onChanged(val);
-                    } else if (val is Course) {
-                      Provider.of<PatientLog>(context, listen: false)
-                          .setCourse(val);
-                      widget.onChanged(val);
-                    } else if (val is Cinsiyet) {
-                      Provider.of<PatientLog>(context, listen: false)
-                          .setCinsiyet(val);
-                      widget.onChanged(val);
-                    }
+                    widget.onChanged(val);
+
                     dropdownValue != val;
                   });
                   print(val);
@@ -105,17 +67,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
                 items: widget.itemList
                     .map<DropdownMenuItem<String>>((dynamic val) {
                   String text = "";
-                  if (val is Course) {
-                    text = val.courseName;
-                  } else if (val is AttendingPhysician) {
-                    text = val.attendingName;
-                  } else if (val is String) {
-                    text = val;
-                  } else if (val is Speciality) {
-                    text = val.name;
-                  } else if (val is Institute) {
-                    text = val.instituteName;
-                  }
+
+                  text = val;
+
                   return DropdownMenuItem<String>(
                     value: text,
                     child: Center(

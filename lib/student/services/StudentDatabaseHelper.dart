@@ -98,7 +98,7 @@ class StudentDatabaseHelper {
 
   //get attending physician table
   Future<List<AttendingPhysician>> fetchAttendingPhysicians() async {
-    var url = Uri.parse("${DBURL.url}/attending-physicians?specialityId=2");
+    var url = Uri.parse("${DBURL.url}/attending-physicians");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
@@ -118,7 +118,7 @@ class StudentDatabaseHelper {
   }*/
 
   //add data to sql
-  Future insertFormToDatabase1(PatientLog patientLog) async {
+  /*Future insertFormToDatabase1(PatientLog patientLog) async {
     var url = Uri.parse("${DBURL.url}/patient-logs");
 
     var headers = {'Content-Type': 'application/json'};
@@ -154,44 +154,70 @@ class StudentDatabaseHelper {
     } else {
       return false;
     }
-  }
+  }*/
 
-/*
-  Future insertFormToDatabase(PatientLog formData) async {
-    var url = Uri.parse("${DBURL.url}/insert.php");
+  Future insertFormToDatabase(PatientLog patientLog) async {
+    var url = Uri.parse("${DBURL.url}/patient-logs");
 
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request('POST', url);
+    print("attending");
+    print(patientLog.attendingPhysician?.attendingName.toString());
+    print("institute");
+    print(patientLog.instute?.instituteName.toString());
+    print("course");
+    print(patientLog.course?.id.toString());
+    print("spec");
+    print(patientLog.speciality?.id.toString());
+    print("ortam");
+    print(patientLog.gerceklestigiOrtam);
+    print("kapsam");
+    print(patientLog.kapsam);
+    print("etkileşim türü");
+    print(patientLog.etkilesimTuru);
+    print("cinsiyet");
+    print(patientLog.cinsiyet);
+    print("id");
+    print(patientLog.kayitNo);
+    print("hastanın yaşı");
+    print(patientLog.yas);
+    print("şikayet");
+    print(patientLog.sikayet);
+    print("ayırıcı tanı");
+    print(patientLog.ayiriciTani);
+    print("kesin tanı");
+    print(patientLog.kesinTani);
+    print("tedav, yöntemi");
+    print(patientLog.tedaviYontemi);
+    final response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          "studentId": "3",
+          "instituteId": patientLog.instute?.id.toString(),
+          "attendingId": patientLog.attendingPhysician?.id.toString(),
+          "coordinatorId": "1",
+          "specialityId": patientLog.speciality?.id.toString(),
+          "courseId": patientLog.course?.id.toString(),
+          "kayitNo": patientLog.kayitNo.toString(),
+          "yas": patientLog.yas.toString(),
+          "cinsiyet": patientLog.cinsiyet.toString(),
+          "sikayet": patientLog.sikayet.toString(),
+          "ayiriciTani": patientLog.ayiriciTani.toString(),
+          "kesinTani": patientLog.kesinTani.toString(),
+          "tedaviYontemi": patientLog.tedaviYontemi.toString(),
+          "etkilesimTuru": patientLog.etkilesimTuru.toString(),
+          "kapsam": patientLog.kapsam.toString(),
+          "gerceklestigiOrtam": patientLog.gerceklestigiOrtam.toString(),
+          "status": patientLog.status.toString()
+        }));
 
-    print(formData.kayitNo);
-    request.bodyFields = {
-      "kayit_no": formData.kayitNo.toString(),
-      "staj_turu": formData.course.toString(),
-      "yas": formData.yas.toString(),
-      "klinik_egitici": formData.attendingPhysician.toString(),
-      "cinsiyet": formData.cinsiyet.toString(),
-      "sikayet": formData.sikayet.toString(),
-      "ayirici_tani": formData.ayiriciTani.toString(),
-      "kesin_tani": formData.kesinTani.toString(),
-      "tedavi_yontemi": formData.tedaviYontemi.toString(),
-      "etkilesim_turu": formData.etkilesimTuru.toString(),
-      "kapsam": formData.kapsam.toString(),
-      "ortam": formData.gerceklestigiOrtam.toString(),
-      "form_status": formData.status.toString(),
-      "tarih": formData.createdAt.toString(),
-      "staj_kodu": "asdasd",
-    };
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
+    print(response.statusCode);
+    if (response.statusCode == 201) {
       return true;
     } else {
       return false;
     }
   }
-*/
 
 // adding tibbi data to sql
 

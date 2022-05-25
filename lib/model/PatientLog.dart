@@ -18,7 +18,7 @@ class PatientLog with ChangeNotifier {
   Institute? _institute;
   String? _kayitNo;
   String? _yas;
-  Cinsiyet? _cinsiyet;
+  String? _cinsiyet;
   String? _sikayet;
   String? _ayiriciTani;
   String? _kesinTani;
@@ -185,9 +185,9 @@ class PatientLog with ChangeNotifier {
     notifyListeners();
   }
 
-  Cinsiyet? get cinsiyet => _cinsiyet;
+  String? get cinsiyet => _cinsiyet;
 
-  void setCinsiyet(Cinsiyet value) {
+  void setCinsiyet(String value) {
     _cinsiyet = value;
     notifyListeners();
   }
@@ -240,6 +240,7 @@ class PatientLog with ChangeNotifier {
 
   void setCourse(Course value) {
     _course = value;
+    //_course?.courseName=value as String; denenebilir
     notifyListeners();
   }
 
