@@ -141,12 +141,9 @@ class _HomePageState extends State<FormPage> {
                 _selectedStajTuru, 'Staj Türü'),
             customTypeAhead(
                 map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),*/
-            FilteringDropDown(
-                _patientLog,
-                _patientLog.setInstute,
-                _patientLog.setCourse,
-                _patientLog.setSpeciality,
-                _patientLog.setAttendingPhysician),
+
+            FilteringDropDown(1, _patientLog.setInstute, _patientLog.setCourse,
+                _patientLog.setSpeciality, _patientLog.setAttendingPhysician),
             CustomDropDown(
                 map['ortam'], "Ortam", _patientLog.setGerceklestigiOrtam),
             CustomDropDown(map['kapsam'], "Kapsam", _patientLog.setKapsam),
@@ -209,10 +206,9 @@ class _HomePageState extends State<FormPage> {
 
   //TODO: methodları doldur
   formIlet() async {
-    await _dbHelper.insertFormToDatabase1(_patientLog);
-    bool res = await _dbHelper.insertFormToDatabase1(_patientLog);
+    bool res = await _dbHelper.insertFormToDatabase(_patientLog);
     if (res) {
-      _helper.update(formArguments!.formData);
+      //_helper.update(formArguments!.formData);
       customSnackBar(context, 'Başarıyla gönderildi');
     } else {
       errorAlert(context);

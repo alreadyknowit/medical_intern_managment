@@ -30,13 +30,9 @@ class _SideBarState extends State<SideBar> {
   @override
   void initState() {
     super.initState();
-    getCounter();
   }
 
   //int counter = 0;
-  getCounter() async {
-    return await _helper.getForms().then((value) => value.length);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +77,7 @@ class _SideBarState extends State<SideBar> {
       body: container,
       drawer: Drawer(
         child: ListView(
-          children: [myDrawerList(getCounter())],
+          children: const [Text("sadfşa")],
         ),
       ),
     );

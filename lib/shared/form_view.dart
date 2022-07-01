@@ -63,20 +63,22 @@ Column columnForm(
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Institute', form.instute.toString()),
+      studentFormPageRowInstance(
+          'Institute', form.instute!.instituteName.toString()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Course', form.course.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Speciality', form.speciality.toString()),
+      studentFormPageRowInstance('Course', form.course!.courseName.toString()),
       const SizedBox(
         height: 10,
       ),
       studentFormPageRowInstance(
-          'Klinik Eğitici', form.attendingPhysician.toString()),
+          'Speciality', form.speciality!.name.toString()),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance(
+          'Klinik Eğitici', form.attendingPhysician!.attendingName.toString()),
       const SizedBox(
         height: 10,
       ),

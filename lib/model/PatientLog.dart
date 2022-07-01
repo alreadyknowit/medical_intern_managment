@@ -18,7 +18,7 @@ class PatientLog with ChangeNotifier {
   Institute? _institute;
   String? _kayitNo;
   String? _yas;
-  Cinsiyet? _cinsiyet;
+  String? _cinsiyet;
   String? _sikayet;
   String? _ayiriciTani;
   String? _kesinTani;
@@ -36,9 +36,7 @@ class PatientLog with ChangeNotifier {
 
   PatientLog({
     coordinator,
-    institute,
     speciality,
-    tarih,
     id,
     kayitNo,
     course,
@@ -57,39 +55,38 @@ class PatientLog with ChangeNotifier {
   factory PatientLog.fromJson(Map<String, dynamic> myMap) {
     return PatientLog(
       id: checkID(myMap['id']),
-      kayitNo: myMap['kayit_no'],
-      institute: myMap['instituteId'],
-      speciality: myMap['specialityId'],
-      course: myMap['coursesId'],
-      doktor: myMap['attending_physicianId'],
+      kayitNo: myMap['kayitNo'],
+      speciality: Speciality.fromJSON(myMap['speciality']),
+      course: Course.fromJSON(myMap['course']),
+      doktor: AttendingPhysician.fromJSON(myMap['attending']),
+      coordinator: Coordinator.fromJson(myMap['coordinator']),
       yas: myMap['yas'],
       cinsiyet: myMap['cinsiyet'],
       sikayet: myMap['sikayet'],
-      ayiriciTani: myMap['ayirici_tani'],
-      kesinTani: myMap['kesin_tani'],
-      tedaviYontemi: myMap['tedavi_yontemi'],
-      etkilesimTuru: myMap['etkilesim_turu'],
+      ayiriciTani: myMap['ayiriciTani'],
+      kesinTani: myMap['kesinTanı'],
+      tedaviYontemi: myMap['tedaviYontemi'],
+      etkilesimTuru: myMap['etkilesimTuru'],
       kapsam: myMap['kapsam'],
-      gerceklestigiOrtam: myMap['ortam'],
+      gerceklestigiOrtam: myMap['gerceklestigiOrtam'],
     );
   }
 
   factory PatientLog.fromMap(Map<String, dynamic> myMap) => PatientLog(
         id: myMap['id'],
-        kayitNo: myMap['kayit_no'],
-        institute: myMap['instituteId'],
+        kayitNo: myMap['kayitNo'],
         speciality: myMap['specialityId'],
         course: myMap['coursesId'],
-        doktor: myMap['attending_physicianId'],
+        doktor: myMap['attending'],
         yas: myMap['yas'],
         cinsiyet: myMap['cinsiyet'],
         sikayet: myMap['sikayet'],
-        ayiriciTani: myMap['ayirici_tani'],
-        kesinTani: myMap['kesin_tani'],
-        tedaviYontemi: myMap['tedavi_yontemi'],
-        etkilesimTuru: myMap['etkilesim_turu'],
+        ayiriciTani: myMap['ayiriciTani'],
+        kesinTani: myMap['kesinTanı'],
+        tedaviYontemi: myMap['tedaviYontemi'],
+        etkilesimTuru: myMap['etkilesimTuru'],
         kapsam: myMap['kapsam'],
-        gerceklestigiOrtam: myMap['ortam'],
+        gerceklestigiOrtam: myMap['gerceklestigiOrtam'],
       );
 
   Map<String, dynamic> toMap() {
@@ -185,9 +182,9 @@ class PatientLog with ChangeNotifier {
     notifyListeners();
   }
 
-  Cinsiyet? get cinsiyet => _cinsiyet;
+  String? get cinsiyet => _cinsiyet;
 
-  void setCinsiyet(Cinsiyet value) {
+  void setCinsiyet(String value) {
     _cinsiyet = value;
     notifyListeners();
   }
@@ -240,6 +237,7 @@ class PatientLog with ChangeNotifier {
 
   void setCourse(Course value) {
     _course = value;
+    //_course?.courseName=value as String; denenebilir
     notifyListeners();
   }
 
