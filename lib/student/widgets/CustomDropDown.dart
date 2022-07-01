@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/student/widgets/widgets.dart';
-
 import '../../shared/constants.dart';
 
 class CustomDropDown extends StatefulWidget {
   List itemList;
   String hintText;
   Function onChanged;
-  CustomDropDown(this.itemList, this.hintText, this.onChanged);
+  String? selectedVal;
+  CustomDropDown(this.selectedVal,this.itemList, this.hintText, this.onChanged);
 
   @override
   _CustomDropDownState createState() => _CustomDropDownState();
@@ -18,7 +18,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   late int selectedCourseId;
   @override
   void initState() {
-    dropdownValue = widget.itemList[0];
+    dropdownValue =widget.selectedVal ?? widget.itemList[0];
 
     // TODO: implement initState
     super.initState();
@@ -62,7 +62,6 @@ class _CustomDropDownState extends State<CustomDropDown> {
 
                     dropdownValue != val;
                   });
-                  print(val);
                 },
                 items: widget.itemList
                     .map<DropdownMenuItem<String>>((dynamic val) {

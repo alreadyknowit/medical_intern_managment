@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../model/PatientLog.dart ';
+import '../../model/PatientLog.dart';
 import '../../shared/constants.dart';
 import '../../shared/custom_list_tile.dart';
 import '../../shared/custom_spinkit.dart';
@@ -42,7 +42,6 @@ class _HistoryFormsState extends State<HistoryForms> {
               ));
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(
                 child: RichText(
                   text: const TextSpan(

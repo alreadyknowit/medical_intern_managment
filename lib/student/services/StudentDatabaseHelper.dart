@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/model/Course.dart';
 import 'package:internship_managing_system/model/Institute.dart';
-import 'package:internship_managing_system/model/PatientLog.dart';
-import 'package:internship_managing_system/models/staj_turu_model.dart';
-
+import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
+import '../../model/PatientLog.dart';
 import '../../DBURL.dart';
 import '../../model/AttendingPhysician.dart';
 import '../../model/ProcedureLog.dart';
@@ -13,6 +12,7 @@ import '../../model/Speciality.dart';
 
 // TODO: linkler değişecek
 class StudentDatabaseHelper {
+  final SQFLiteHelper _helper =SQFLiteHelper.instance;
   //get data from sql
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
     var url = Uri.parse("${DBURL.url}/patient-logs?status=waiting&studentId=1");
@@ -24,28 +24,6 @@ class StudentDatabaseHelper {
     } else {
       throw Exception('Failed to load data');
     }
-  }
-
-  Future<List<PatientLog>> getData(String newsType) async {
-    // TODO: deneme kodları
-    List<PatientLog> list;
-    String link =
-        "http://medicalinternbackend-env.eba-d7ipqppw.eu-south-1.elasticbeanstalk.com/api/v1/patient-logs?status=waiting&studentId=1";
-    var res = await http
-        .get(Uri.parse(link), headers: {"Accept": "application/json"});
-    print(res.body);
-    if (res.statusCode == 200) {
-      var data = json.decode(res.body);
-      var rest = data["patient-logs"] as List;
-      print(rest);
-      list = rest.map<PatientLog>((json) => PatientLog.fromJson(json)).toList();
-    } else {
-      list = [];
-      print("la la land");
-      print(res.statusCode);
-    }
-    print("List Size: ${list.length}");
-    return list;
   }
 
   Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
@@ -62,20 +40,6 @@ class StudentDatabaseHelper {
     }
   }
 
-  //get staj_turu table
-  Future<List<StajTuru>> fetchStajTuruTable() async {
-    var url = Uri.parse("${DBURL.url}/staj_turu.php");
-    var response = await http.post(url);
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
-      List<StajTuru> content = data.map((e) => StajTuru.fromJSON(e)).toList();
-      return content;
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
   Future<List<Course>> fetchCourses() async {
     var url = Uri.parse("${DBURL.url}/courses");
     var response = await http.get(url);
@@ -83,6 +47,9 @@ class StudentDatabaseHelper {
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<Course> courses = data.map((e) => Course.fromJSON(e)).toList();
+      for(Course c in courses){
+        await _helper.insertCourse(c);
+      }
       return courses;
     } else {
       throw Exception('Failed to load ');
@@ -95,11 +62,14 @@ class StudentDatabaseHelper {
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<Speciality> speciality =
+      List<Speciality> specialities =
           data.map((e) => Speciality.fromJSON(e)).toList();
-      return speciality;
+     for(Speciality s in specialities){
+       await _helper.insertSpecialities(s);
+     }
+      return specialities;
     } else {
-      throw Exception('Failed to load ');
+      throw Exception('Failed to load specialities ');
     }
   }
 
@@ -109,10 +79,12 @@ class StudentDatabaseHelper {
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<Institute> institute =
+      List<Institute> institutes =
           data.map((e) => Institute.fromJSON(e)).toList();
-
-      return institute;
+      for(Institute i in institutes){
+        await _helper.insertInstitute(i);
+      }
+      return institutes;
     } else {
       throw Exception('Failed to load ');
     }
@@ -120,13 +92,18 @@ class StudentDatabaseHelper {
 
   //get attending physician table
   Future<List<AttendingPhysician>> fetchAttendingPhysicians() async {
-    var url = Uri.parse("${DBURL.url}/attending-physicians");
-    var response = await http.get(url);
+    var url = Uri.parse("${DBURL.url}/attending-physicians?specialityId=1");
+
+    var response = await http.get(url, headers: <String, String>{
+      'Accept': 'application/json; charset=UTF-8',
+    },);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<AttendingPhysician> listAttendings =
           data.map((e) => AttendingPhysician.fromJSON(e)).toList();
-
+      for(AttendingPhysician a in listAttendings){
+        await _helper.insertAttending(a);
+      }
       return listAttendings;
     } else {
       throw Exception('Failed to load data');
@@ -140,82 +117,17 @@ class StudentDatabaseHelper {
   }*/
 
   //add data to sql
-  /*Future insertFormToDatabase1(PatientLog patientLog) async {
-    var url = Uri.parse("${DBURL.url}/patient-logs");
-
-    var headers = {'Content-Type': 'application/json'};
-    var request = http.Request('POST', url);
-
-    print(patientLog.kayitNo);
-    request.bodyFields = {
-      "studentId": "1",
-      "kayitNo": patientLog.kayitNo.toString(),
-      "yas": patientLog.yas.toString(),
-      "specialityId": patientLog.speciality.toString(),
-      "coordinatorId": "1",
-      "attendingId": patientLog.attendingPhysician.toString(),
-      "cinsiyet": patientLog.cinsiyet.toString(),
-      "sikayet": patientLog.sikayet.toString(),
-      "ayiriciTani": patientLog.ayiriciTani.toString(),
-      "kesinTani": patientLog.kesinTani.toString(),
-      "tedaviYontemi": patientLog.tedaviYontemi.toString(),
-      "etkilesimTuru": patientLog.etkilesimTuru.toString(),
-      "kapsam": patientLog.kapsam.toString(),
-      "ortam": patientLog.gerceklestigiOrtam.toString(),
-      "status": patientLog.status.toString(),
-      "tarih": patientLog.createdAt.toString(),
-      "courseId": "1",
-      "instituteId": "1",
-    };
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }*/
-
   Future insertFormToDatabase(PatientLog patientLog) async {
-    var url = Uri.parse("${DBURL.url}/patient-logs");
 
-    print("attending");
-    print(patientLog.attendingPhysician?.attendingName.toString());
-    print("institute");
-    print(patientLog.instute?.instituteName.toString());
-    print("course");
-    print(patientLog.course?.id.toString());
-    print("spec");
-    print(patientLog.speciality?.id.toString());
-    print("ortam");
-    print(patientLog.gerceklestigiOrtam);
-    print("kapsam");
-    print(patientLog.kapsam);
-    print("etkileşim türü");
-    print(patientLog.etkilesimTuru);
-    print("cinsiyet");
-    print(patientLog.cinsiyet);
-    print("id");
-    print(patientLog.kayitNo);
-    print("hastanın yaşı");
-    print(patientLog.yas);
-    print("şikayet");
-    print(patientLog.sikayet);
-    print("ayırıcı tanı");
-    print(patientLog.ayiriciTani);
-    print("kesin tanı");
-    print(patientLog.kesinTani);
-    print("tedav, yöntemi");
-    print(patientLog.tedaviYontemi);
+    var url = Uri.parse("${DBURL.url}/patient-logs");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
+
         body: jsonEncode({
           "studentId": "3",
-          "instituteId": patientLog.instute?.id.toString(),
+          "instituteId": patientLog.institute?.id.toString(),
           "attendingId": patientLog.attendingPhysician?.id.toString(),
           "coordinatorId": "1",
           "specialityId": patientLog.speciality?.id.toString(),
@@ -230,10 +142,9 @@ class StudentDatabaseHelper {
           "etkilesimTuru": patientLog.etkilesimTuru.toString(),
           "kapsam": patientLog.kapsam.toString(),
           "gerceklestigiOrtam": patientLog.gerceklestigiOrtam.toString(),
-          "status": patientLog.status.toString()
+          "status": "waiting"
         }));
 
-    print(response.statusCode);
     if (response.statusCode == 201) {
       return true;
     } else {
@@ -241,7 +152,7 @@ class StudentDatabaseHelper {
     }
   }
 
-// adding tibbi data to sql
+
 
   Future insertTibbiFormToDatabase(ProcedureLog tibbiFormData) async {
     var res = await http.post(
@@ -267,32 +178,4 @@ class StudentDatabaseHelper {
     return (res.statusCode == 200) ? true : false;
   }
 
-  /* Future insertTibbiFormToDatabase(TibbiFormData tibbiFormData) async {
-    var url = Uri.parse("${DBURL.url}/tibbi/insert.php");
-
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request('POST', url);
-    request.bodyFields = {
-      "kayit_no": tibbiFormData.getKayitNo(),
-      "klinik_egitici": tibbiFormData.getDoktor(),
-      "etkilesim_turu": tibbiFormData.getTibbiEtkilesimTuru(),
-      "tibbi_uygulama": tibbiFormData.getTibbiUygulama(),
-      "dis_kurum": tibbiFormData.getDisKurum(),
-      "gerceklestigi_ortam": tibbiFormData.getTibbiOrtam(),
-      "form_status": tibbiFormData.getStatus(),
-      "tarih": tibbiFormData.getTarih(),
-    };
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print("success");
-
-      return true;
-    } else {
-      print("failed");
-      return false;
-    }
-  }*/
 }

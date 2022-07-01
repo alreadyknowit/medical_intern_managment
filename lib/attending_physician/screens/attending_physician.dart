@@ -8,7 +8,7 @@ import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/PatientLog.dart ';
+import '../../model/PatientLog.dart';
 import '../../model/ProcedureLog.dart';
 
 class AttendingPhysicianMain extends StatefulWidget {

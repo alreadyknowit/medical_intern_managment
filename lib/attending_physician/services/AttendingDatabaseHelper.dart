@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/DBURL.dart';
 import 'package:internship_managing_system/model/PatientLog.dart' as prefix;
 
-import '../../model/PatientLog.dart ';
+import '../../model/PatientLog.dart';
 import '../../model/ProcedureLog.dart';
 
 class AttendingDatabaseHelper {
@@ -57,12 +57,8 @@ class AttendingDatabaseHelper {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print("success");
-      print(await response.stream.bytesToString());
       return true;
     } else {
-      print("failed");
-      print(response.reasonPhrase);
       return false;
     }
   }

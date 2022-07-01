@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 
-import '../model/PatientLog.dart ';
+import '../model/PatientLog.dart';
 import 'constants.dart';
 
 class FormView extends StatelessWidget {
@@ -59,26 +59,24 @@ Column columnForm(
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      studentFormPageRowInstance('Kayit No', form.kayitNo.toString()),
+      studentFormPageRowInstance('Kayit No', form.kayitNo!),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance('Institute', form.institute!.instituteName),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance('Course', form.course!.courseName),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance('Speciality', form.speciality!.name),
       const SizedBox(
         height: 10,
       ),
       studentFormPageRowInstance(
-          'Institute', form.instute!.instituteName.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Course', form.course!.courseName.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance(
-          'Speciality', form.speciality!.name.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance(
-          'Klinik Eğitici', form.attendingPhysician!.attendingName.toString()),
+          'Klinik Eğitici', form.attendingPhysician!.attendingName),
       const SizedBox(
         height: 10,
       ),

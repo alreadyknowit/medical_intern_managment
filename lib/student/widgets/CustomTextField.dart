@@ -8,10 +8,11 @@ class CustomTextField extends StatefulWidget {
   String hintText;
   int maxLength;
   Function onChanged;
-
+  String? initialVal;
+  TextEditingController controller;
   double height;
 
-  CustomTextField(
+  CustomTextField(this.controller,
       this.minLine, this.hintText, this.maxLength, this.onChanged, this.height);
 
   @override
@@ -19,7 +20,6 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           SizedBox(
             height: widget.height,
             child: TextFormField(
-              controller: controller,
+              controller: widget.controller,
               validator: (value) =>
                   value == null || value.isEmpty ? "Should not be empty" : null,
               onChanged: (input) => widget.onChanged(input),

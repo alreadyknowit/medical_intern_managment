@@ -36,7 +36,6 @@ class _TibbiPendingFormsState extends State<TibbiPendingForms> {
               ));
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(
                 child: RichText(
                   text: const TextSpan(

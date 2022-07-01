@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../../../model/PatientLog.dart ';
+import '../../../model/PatientLog.dart';
 import '../../../shared/constants.dart';
 import '../../../shared/custom_list_tile.dart';
 

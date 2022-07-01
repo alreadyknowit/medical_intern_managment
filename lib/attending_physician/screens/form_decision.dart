@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../model/PatientLog.dart ';
+import '../../model/PatientLog.dart';
 import '../../shared/custom_alert.dart';
 import '../../shared/custom_snackbar.dart';
 import '../../shared/form_view.dart';

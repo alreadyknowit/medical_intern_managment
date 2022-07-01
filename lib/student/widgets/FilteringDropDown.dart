@@ -90,12 +90,10 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                               Provider.of<PatientLog>(context, listen: false)
                                   .setInstute(institutes[i]);
                               widget.changeInstitute(institutes[i]);
-                              print("1.log babababab");
                             } else {
                               Provider.of<ProcedureLog>(context, listen: false)
                                   .setInstute(institutes[i]);
                               widget.changeInstitute(institutes[i]);
-                              print("2.log babababab");
                             }
                           }
                         }
@@ -221,7 +219,6 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                           _getAttendings(id, idSpecialities);
                         }
 
-                        print(newValue);
                       });
                     },
                     items: specialities.map((item) {
@@ -302,20 +299,16 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
 
   Future getInstitues() async {
     await StudentDatabaseHelper().fetchInstitute().then((response) {
-//      print(data);
       setState(() {
         institutes = response;
         _selectedInstitute = institutes[0].instituteName;
       });
-      /*  institutes.forEach((element) {
-        print(element.instituteName);
-      });*/
+
     });
   }
 
   Future _getCourses() async {
     await StudentDatabaseHelper().fetchCourses().then((response) {
-//      print(data);
       setState(() {
         courses = response;
         _selectedCourse = courses[0].courseName;

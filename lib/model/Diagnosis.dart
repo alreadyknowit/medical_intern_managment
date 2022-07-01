@@ -16,4 +16,10 @@ class Diagnosis {
         diagnosisName: map['name'],
         speciality: map['speciality']);
   }
+
+  Map<String, dynamic> toMap() => {
+        'diagnosis_id': id,
+        'diagnosis_name': diagnosisName,
+        'speciality_id': speciality.id
+      };
 }

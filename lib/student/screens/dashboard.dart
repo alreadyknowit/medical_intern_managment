@@ -24,7 +24,6 @@ class _DashboardState extends State<Dashboard> {
 
   Future _getCourses() async {
     await StudentDatabaseHelper().fetchCourses().then((response) {
-//      print(data);
       setState(() {
         courses = response;
         _selectedCourse = courses[0].courseName;
@@ -106,8 +105,6 @@ class _DashboardState extends State<Dashboard> {
                             _selectedCourse != newValue;
                           });
 
-                          print(newValue);
-                          print(specialityData);
                         },
                         items: courses.map((item) {
                           return DropdownMenuItem(
@@ -154,10 +151,7 @@ class _DashboardState extends State<Dashboard> {
 
 //Onaylanan raporlar gösterilecek, kalan rapor sayısı kaç rapor gönderilmesi gerekiyorsa o sayıdan çıkarılıp eklenecek
 
-  Speciality speciality = Speciality(
-    id: 1,
-    name: "name",
-  );
+
   List<ExpenseData> specialityData = [];
 
   Future _getSpecialities(int id) async {
@@ -165,7 +159,7 @@ class _DashboardState extends State<Dashboard> {
     await StudentDatabaseHelper().fetchSpeciality().then((response) {
       setState(() {
         for (int i = 0; i < response.length; i++) {
-          if (response[i].id == id) {
+          if (response[i].courseId == id) {
             newList.add(response[i]);
             specialities = newList;
           }

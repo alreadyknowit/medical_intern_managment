@@ -28,7 +28,7 @@ class PatientLog with ChangeNotifier {
   String? _gerceklestigiOrtam;
   String? _status;
 
-  Institute? get instute => _institute;
+  Institute? get institute => _institute;
 
   static checkID(var id) {
     return id is int ? id : int.parse(id);
@@ -36,11 +36,13 @@ class PatientLog with ChangeNotifier {
 
   PatientLog({
     coordinator,
+    institute,
     speciality,
+    tarih,
     id,
     kayitNo,
     course,
-    doktor,
+    attending,
     yas,
     cinsiyet,
     sikayet,
@@ -55,63 +57,71 @@ class PatientLog with ChangeNotifier {
   factory PatientLog.fromJson(Map<String, dynamic> myMap) {
     return PatientLog(
       id: checkID(myMap['id']),
-      kayitNo: myMap['kayitNo'],
-      speciality: Speciality.fromJSON(myMap['speciality']),
-      course: Course.fromJSON(myMap['course']),
-      doktor: AttendingPhysician.fromJSON(myMap['attending']),
-      coordinator: Coordinator.fromJson(myMap['coordinator']),
+      kayitNo: myMap['kayit_no'],
+      institute: myMap['instituteId'],
+      speciality: myMap['specialityId'],
+      course: myMap['coursesId'],
+      attending: myMap['attending_physicianId'],
       yas: myMap['yas'],
       cinsiyet: myMap['cinsiyet'],
       sikayet: myMap['sikayet'],
-      ayiriciTani: myMap['ayiriciTani'],
-      kesinTani: myMap['kesinTanı'],
-      tedaviYontemi: myMap['tedaviYontemi'],
-      etkilesimTuru: myMap['etkilesimTuru'],
+      ayiriciTani: myMap['ayirici_tani'],
+      kesinTani: myMap['kesin_tani'],
+      tedaviYontemi: myMap['tedavi_yontemi'],
+      etkilesimTuru: myMap['etkilesim_turu'],
       kapsam: myMap['kapsam'],
-      gerceklestigiOrtam: myMap['gerceklestigiOrtam'],
+      gerceklestigiOrtam: myMap['ortam'],
     );
   }
 
-  factory PatientLog.fromMap(Map<String, dynamic> myMap) => PatientLog(
+  factory PatientLog.fromMap(
+          Map<String, dynamic> myMap,
+          Institute? institute,
+          Course? course,
+          AttendingPhysician? attendingPhysician,
+          Speciality? speciality) =>
+      PatientLog(
         id: myMap['id'],
-        kayitNo: myMap['kayitNo'],
-        speciality: myMap['specialityId'],
-        course: myMap['coursesId'],
-        doktor: myMap['attending'],
+        kayitNo: myMap['kayit_no'],
+        institute:institute,
+        speciality: speciality,
+        course: course,
+        attending: attendingPhysician,
         yas: myMap['yas'],
         cinsiyet: myMap['cinsiyet'],
         sikayet: myMap['sikayet'],
-        ayiriciTani: myMap['ayiriciTani'],
-        kesinTani: myMap['kesinTanı'],
-        tedaviYontemi: myMap['tedaviYontemi'],
-        etkilesimTuru: myMap['etkilesimTuru'],
+        ayiriciTani: myMap['ayirici_tani'],
+        kesinTani: myMap['kesin_tani'],
+        tedaviYontemi: myMap['tedavi_yontemi'],
+        etkilesimTuru: myMap['etkilesim_turu'],
         kapsam: myMap['kapsam'],
-        gerceklestigiOrtam: myMap['gerceklestigiOrtam'],
+        gerceklestigiOrtam: myMap['ortam'],
       );
 
   Map<String, dynamic> toMap() {
     return {
-      SQFLiteHelper.columnKayitNo: kayitNo,
       SQFLiteHelper.columnId: id,
-      //SQFLiteHelper.columnSpecialitiesId: speciality,
-      SQFLiteHelper.columnYas: yas,
-      SQFLiteHelper.columnAttendingPhysicianId: attendingPhysician,
-      SQFLiteHelper.columnCoursesId: course,
-      SQFLiteHelper.columnInstituteId: instute,
-      SQFLiteHelper.columnCinsiyet: cinsiyet,
+      SQFLiteHelper.columnInstituteId: institute?.id,
+      SQFLiteHelper.columnSpecialityId: speciality?.id,
+      SQFLiteHelper.columnCourseId: course?.id,
+      SQFLiteHelper.columnCoordinatorId: coordinator?.id,
+      SQFLiteHelper.columnAttendingPhysicianId: attendingPhysician?.id,
+      SQFLiteHelper.columnKayitNo: kayitNo,
       SQFLiteHelper.columnSikayet: sikayet,
+      SQFLiteHelper.columnCinsiyet: cinsiyet,
+      SQFLiteHelper.columnEtkilesimTuru: etkilesimTuru,
+      SQFLiteHelper.columnKapsam: kapsam,
+      SQFLiteHelper.columnOrtam: gerceklestigiOrtam,
+      SQFLiteHelper.columnYas: yas,
       SQFLiteHelper.columnAyiriciTani: ayiriciTani,
       SQFLiteHelper.columnKesinTani: kesinTani,
       SQFLiteHelper.columnTedaviYontemi: tedaviYontemi,
-      SQFLiteHelper.columnEtkilesimTuru: etkilesimTuru,
-      SQFLiteHelper.columnOrtam: gerceklestigiOrtam,
-      SQFLiteHelper.columnKapsam: kapsam,
       SQFLiteHelper.columnTarih: createdAt,
       SQFLiteHelper.columnStatus: status
     };
   }
 
-  void setInstute(Institute value) {
+  void setInstute(Institute? value) {
     _institute = value;
     notifyListeners();
   }
@@ -121,112 +131,112 @@ class PatientLog with ChangeNotifier {
 
   DateTime? get createdAt => _createdAt;
 
-  void setCreatedAt(DateTime value) {
+  void setCreatedAt(DateTime? value) {
     _createdAt = value;
     notifyListeners();
   }
 
   String? get status => _status;
 
-  void setStatus(String value) {
+  void setStatus(String? value) {
     _status = value;
     notifyListeners();
   }
 
   String? get gerceklestigiOrtam => _gerceklestigiOrtam;
 
-  void setGerceklestigiOrtam(String value) {
+  void setGerceklestigiOrtam(String? value) {
     _gerceklestigiOrtam = value;
     notifyListeners();
   }
 
   String? get kapsam => _kapsam;
 
-  void setKapsam(String value) {
+  void setKapsam(String? value) {
     _kapsam = value;
     notifyListeners();
   }
 
   String? get etkilesimTuru => _etkilesimTuru;
 
-  void setEtkilesimTuru(String value) {
+  void setEtkilesimTuru(String? value) {
     _etkilesimTuru = value;
     notifyListeners();
   }
 
   String? get tedaviYontemi => _tedaviYontemi;
 
-  void setTedaviYontemi(String value) {
+  void setTedaviYontemi(String? value) {
     _tedaviYontemi = value;
     notifyListeners();
   }
 
   String? get kesinTani => _kesinTani;
 
-  void setKesinTani(String value) {
+  void setKesinTani(String? value) {
     _kesinTani = value;
     notifyListeners();
   }
 
   String? get ayiriciTani => _ayiriciTani;
 
-  void setAyiriciTani(String value) {
+  void setAyiriciTani(String? value) {
     _ayiriciTani = value;
     notifyListeners();
   }
 
   String? get sikayet => _sikayet;
 
-  void setSikayet(String value) {
+  void setSikayet(String? value) {
     _sikayet = value;
     notifyListeners();
   }
 
   String? get cinsiyet => _cinsiyet;
 
-  void setCinsiyet(String value) {
+  void setCinsiyet(String? value) {
     _cinsiyet = value;
     notifyListeners();
   }
 
   String? get yas => _yas.toString();
 
-  void setYas(String value) {
+  void setYas(String? value) {
     _yas = value;
     notifyListeners();
   }
 
   String? get kayitNo => _kayitNo;
 
-  void setKayitNo(String value) {
+  void setKayitNo(String? value) {
     _kayitNo = value;
     notifyListeners();
   }
 
   Coordinator? get coordinator => _coordinator;
 
-  void setCoordinator(Coordinator value) {
+  void setCoordinator(Coordinator? value) {
     _coordinator = value;
     notifyListeners();
   }
 
   Student? get student => _student;
 
-  void setStudent(Student value) {
+  void setStudent(Student? value) {
     _student = value;
     notifyListeners();
   }
 
   AttendingPhysician? get attendingPhysician => _attendingPhysician;
 
-  void setAttendingPhysician(AttendingPhysician value) {
+  void setAttendingPhysician(AttendingPhysician? value) {
     _attendingPhysician = value;
     notifyListeners();
   }
 
   Speciality? get speciality => _speciality;
 
-  void setSpeciality(Speciality value) {
+  void setSpeciality(Speciality? value) {
     _speciality = value;
     notifyListeners();
   }
@@ -235,18 +245,16 @@ class PatientLog with ChangeNotifier {
 
   Course? get course => _course;
 
-  void setCourse(Course value) {
+  void setCourse(Course? value) {
     _course = value;
-    //_course?.courseName=value as String; denenebilir
     notifyListeners();
   }
 
   int? get id => _id;
 
-  void setId(int value) {
+  void setId(int? value) {
     _id = value;
     notifyListeners();
   }
 }
 
-enum Cinsiyet { ERKEK, KADIN, DIGER }

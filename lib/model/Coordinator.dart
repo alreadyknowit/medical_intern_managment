@@ -1,18 +1,32 @@
 class Coordinator {
-  int id;
-  String coordinatorName;
-  int oasisId;
+  int? _id;
+  String? _coordinatorName;
+  int? _oasisId;
 
-  Coordinator(
-      {required this.id, required this.coordinatorName, required this.oasisId});
+  Coordinator(this._id, this._coordinatorName, this._oasisId);
 
-  factory Coordinator.fromJson(Map<String, dynamic> map) {
-    return Coordinator(
-      id: map['id'],
-      coordinatorName: map['name'],
-      oasisId: map['oasisId'],
-    );
+
+  Map<String, dynamic> toMap() => {
+    'coordinator_id': id,
+    'coordinator_name': coordinatorName,
+    'oasis_id': oasisId,
+  };
+
+  int? get oasisId => _oasisId;
+
+  set oasisId(int? value) {
+    _oasisId = value;
   }
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'name': coordinatorName, 'oasisId': oasisId};
+
+  String? get coordinatorName => _coordinatorName;
+
+  set coordinatorName(String? value) {
+    _coordinatorName = value;
+  }
+
+  int? get id => _id;
+
+  set id(int? value) {
+    _id = value;
+  }
 }

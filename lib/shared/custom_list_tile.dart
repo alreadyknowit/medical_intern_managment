@@ -4,10 +4,14 @@ import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/student/screens/hasta_etkilesim_kaydi/form_page.dart';
+import 'package:internship_managing_system/student/screens/hasta_etkilesim_kaydi/showDraft.dart';
 
-import '../model/PatientLog.dart ';
+import '../model/PatientLog.dart';
 
 class CustomListTile extends StatelessWidget {
+
+
+
   final PatientLog formData;
   final int index;
   final int routeTo;
@@ -39,14 +43,14 @@ class CustomListTile extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const FormPage(),
+            builder: (context) =>  ShowDraft(patientLogFromDraft: formData),
             settings: RouteSettings(
               arguments: arguments,
             )),
       );
     }
 
-    void pushToDesicionPage() {
+    void pushToDecisionPage() {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -63,7 +67,7 @@ class CustomListTile extends StatelessWidget {
       } else if (routeTo == 2) {
         pushToFormView(formData);
       } else if (routeTo == 3) {
-        pushToDesicionPage();
+        pushToDecisionPage();
       }
     }
 
@@ -85,10 +89,10 @@ class CustomListTile extends StatelessWidget {
           onTap: () => whichPage(),
           leading: SizedBox(
             width: 80,
-            child: Text(formData.createdAt.toString()),
+            child: Text(formData.id.toString()),
           ),
-          title: Text(formData.speciality.toString()),
-          subtitle: Text(formData.attendingPhysician.toString()),
+          title: Text(formData.speciality?.name.toString() ?? "gelmedi"),
+          subtitle: Text(formData.attendingPhysician?.attendingName.toString() ?? "gelmedi"),
           isThreeLine: true,
         ),
       ),

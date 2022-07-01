@@ -30,16 +30,20 @@ class _SideBarState extends State<SideBar> {
   @override
   void initState() {
     super.initState();
+    getCounter();
   }
 
   //int counter = 0;
+  getCounter() async {
+    return await 1; // _helper.getForms().then((value) => value.length);
+  }
 
   @override
   Widget build(BuildContext context) {
     dynamic container;
     if (currentPage == DrawerSections.hastaEtkilesim) {
       title = const Text("Hasta Etkileşim Formu");
-      container = const FormPage();
+      container =  FormPage();
     } else if (currentPage == DrawerSections.taslaklar) {
       title = const Text("Taslaklar");
       container = Drafts();
@@ -77,7 +81,7 @@ class _SideBarState extends State<SideBar> {
       body: container,
       drawer: Drawer(
         child: ListView(
-          children: const [Text("sadfşa")],
+          children: [myDrawerList(getCounter())],
         ),
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:internship_managing_system/model/ProcedureLog.dart';
 
-import '../../model/PatientLog.dart ';
+import '../../model/PatientLog.dart';
 
 class FormArguments {
   PatientLog formData;

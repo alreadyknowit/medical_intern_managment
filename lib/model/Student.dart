@@ -8,6 +8,12 @@ class Student {
 
   Student(this._id, this._studentName, this._oasisId, this._course);
 
+  Map<String, dynamic> toMap() => {
+    'student_id': id,
+    'student_name': studentName,
+    'oasis_id': oasisId,
+  };
+
   List<Course> get course => _course;
 
   set course(List<Course> value) {

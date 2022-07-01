@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
-
-import '../../model/PatientLog.dart ' as prefix;
-import '../../shared/custom_spinkit.dart';
+import '../../model/PatientLog.dart';
 
 class Drafts extends StatefulWidget {
   const Drafts({Key? key}) : super(key: key);
@@ -19,27 +17,25 @@ class _DraftsState extends State<Drafts> {
   @override
   void initState() {
     super.initState();
-    _helper.getForms();
+   _refresh();
   }
 
-  Future<List<prefix.PatientLog>>? fromDatabase;
   Future<void> _refresh() async {
     await _helper.getForms().then((value) {
       setState(() {
-        fromDatabase = (_helper.getForms() as Future<List<prefix.PatientLog>>?);
       });
     });
+
   }
 
-//TODO: RefreshIndicator not working.
-//TODO:When the list changed nothing is happening until the draft section is rebuilt
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<prefix.PatientLog>?>(
-          future: fromDatabase,
+      body: FutureBuilder<List<PatientLog>>(
+          future:_helper.getForms() ,
           builder: (BuildContext context,
-              AsyncSnapshot<List<prefix.PatientLog>?> snapshot) {
+              AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -51,11 +47,13 @@ class _DraftsState extends State<Drafts> {
             if (snapshot.hasError) {
               return Center(
                   child: Text(
-                'Bir şeyler ters gitti.',
+                'Sanırım bir şeyler ters gitti.',
                 style: TEXT_STYLE,
               ));
             }
+
             if (snapshot.connectionState == ConnectionState.done) {
+              List<PatientLog> l = snapshot.data;
               return RefreshIndicator(
                 backgroundColor: Colors.grey[700],
                 color: LIGHT_BUTTON_COLOR,
@@ -69,6 +67,7 @@ class _DraftsState extends State<Drafts> {
                     ),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
+                      PatientLog log = snapshot.data![index];
                       return CustomListTile(
                         formData: snapshot.data![index],
                         index: index,
@@ -80,8 +79,8 @@ class _DraftsState extends State<Drafts> {
                 ),
               );
             }
-            return Center(
-              child: spinkit,
+            return const Center(
+              child: CircularProgressIndicator()
             );
           }),
     );

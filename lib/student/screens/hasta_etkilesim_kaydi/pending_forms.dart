@@ -15,9 +15,7 @@ class _PendingFormsState extends State<PendingForms> {
   final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   int limit = 50;
   Future<void> _refresh() async {
-    await _dbHelper
-        .fetchFormsFromDatabase('/patient-logs?status=waiting&studentId=1')
-        .then((value) {
+    await _dbHelper.fetchFormsFromDatabase("/waiting").then((value) {
       setState(() {});
     });
   }
@@ -26,8 +24,7 @@ class _PendingFormsState extends State<PendingForms> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<dynamic>>(
-          future: _dbHelper.fetchFormsFromDatabase(
-              "/patient-logs?status=waiting&studentId=1"),
+          future: _dbHelper.fetchFormsFromDatabase("/waiting"),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
@@ -38,8 +35,6 @@ class _PendingFormsState extends State<PendingForms> {
               ));
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
-
               return Center(
                 child: RichText(
                   text: const TextSpan(

@@ -39,7 +39,7 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
     if (tibbiFormArguments != null) {
       isDeletable = tibbiFormArguments!.isDeletable ?? true;
       args = tibbiFormArguments?.tibbiFormData;
-      _kayit.text = args!.kayitNo.toString();
+      _kayitController.text = args!.kayitNo.toString();
 
       //dropdown
       _valueTibbiOrtam = args!.gerceklestigiOrtam.toString();
@@ -47,8 +47,8 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
       //
 
       _doktorController.text = args!.attendingPhysician.toString();
-      _disKurum.text = args!.disKurum.toString();
-      _tibbiUygulama.text = args!.tibbiUygulama.toString();
+      _disKurumController.text = args!.disKurum.toString();
+      _tibbiUygulamaController.text = args!.tibbiUygulama.toString();
       _stajTuruController.text = args!.speciality.toString();
       _instituteController.text = args!.instute.toString();
       _courseController.text = args!.course.toString();
@@ -129,17 +129,17 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
                 _procedureLog.setCourse,
                 _procedureLog.setSpeciality,
                 _procedureLog.setAttendingPhysician),
-            CustomDropDown(map['etkilesim'], " Etkileşim Türü",
+            /*CustomDropDown(map['etkilesim'], " Etkileşim Türü",
                 _procedureLog.setEtkilesimTuru),
             CustomDropDown(map['ortam'], " Gerçekleştiği Ortam",
                 _procedureLog.setGerceklestigiOrtam),
-            CustomTextField(1, "Lütfen Dış Kurumu Yazınız", 10,
-                _procedureLog.setDisKurum, 80),
+            CustomTextField(_instituteController,1, "Lütfen Dış Kurumu Yazınız", 10,
+                _procedureLog.setDisKurum, 80),*/
             const SizedBox(
               height: 20,
             ),
-            CustomTextField(1, "Kayıt No ", 10, _procedureLog.setKayitNo, 80),
-            CustomTextField(5, "Tıbbi İşlem Uygulama", 200,
+            CustomTextField(_kayitController,1, "Kayıt No ", 10, _procedureLog.setKayitNo, 80),
+            CustomTextField(_kayitController,5, "Tıbbi İşlem Uygulama", 200,
                 _procedureLog.setTibbiUygulama, 130),
           ],
         ),
@@ -156,9 +156,9 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
   String _valueTibbiEtkilesimTuru = 'Gözlem';
   String _valueTibbiOrtam = 'Poliklinik';
 
-  final TextEditingController _kayit = TextEditingController();
-  final TextEditingController _tibbiUygulama = TextEditingController();
-  final TextEditingController _disKurum = TextEditingController();
+  final TextEditingController _kayitController = TextEditingController();
+  final TextEditingController _tibbiUygulamaController = TextEditingController();
+  final TextEditingController _disKurumController = TextEditingController();
   final TextEditingController _stajTuruController = TextEditingController();
   final TextEditingController _doktorController = TextEditingController();
   final TextEditingController _instituteController = TextEditingController();
@@ -222,7 +222,6 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
           });
           return val != null ? true : false;
         });
-        print(_procedureLog.kayitNo);
         if (res) {
           customSnackBar(context, 'Başarıyla gönderildi');
         } else {
@@ -268,9 +267,9 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
 
   void setFormArgumentState() {
     //textfield
-    tibbiFormArguments?.tibbiFormData.setKayitNo(_kayit.text);
-    tibbiFormArguments?.tibbiFormData.setDisKurum(_disKurum.text);
-    tibbiFormArguments?.tibbiFormData.setTibbiUygulama(_tibbiUygulama.text);
+    tibbiFormArguments?.tibbiFormData.setKayitNo(_kayitController.text);
+    tibbiFormArguments?.tibbiFormData.setDisKurum(_disKurumController.text);
+    tibbiFormArguments?.tibbiFormData.setTibbiUygulama(_tibbiUygulamaController.text);
     //typeahead
 
     tibbiFormArguments?.tibbiFormData

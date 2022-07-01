@@ -74,12 +74,10 @@ class ProcedureLog with ChangeNotifier {
       SQFLiteHelper.columnId: id,
       // SQFLiteHelper.columnSpecialitiesId: speciality,
       SQFLiteHelper.columnAttendingPhysicianId: attendingPhysician,
-      SQFLiteHelper.columnCoursesId: course,
+      SQFLiteHelper.columnCourseId: course?.id,
       SQFLiteHelper.columnInstituteId: instute,
-      SQFLiteHelper.columntibbiOrtam: gerceklestigiOrtam,
-      SQFLiteHelper.columntibbiUygulama: tibbiUygulama,
+      SQFLiteHelper.columnOrtam: gerceklestigiOrtam,
       SQFLiteHelper.columnTibbiEtkilesimTuru: etkilesimTuru,
-      SQFLiteHelper.columndisKurum: disKurum,
       SQFLiteHelper.columnTarih: createdAt,
       SQFLiteHelper.columnStatus: status
     };

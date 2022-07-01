@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../../../model/PatientLog.dart ';
+import '../../../model/PatientLog.dart';
 import '../../../shared/constants.dart';
 import '../../../shared/custom_list_tile.dart';
 
@@ -41,7 +41,6 @@ class _RejectedFormsState extends State<RejectedForms> {
               ));
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(
                 child: RichText(
                   text: const TextSpan(
