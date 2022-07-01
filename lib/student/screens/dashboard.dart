@@ -154,7 +154,10 @@ class _DashboardState extends State<Dashboard> {
 
 //Onaylanan raporlar gösterilecek, kalan rapor sayısı kaç rapor gönderilmesi gerekiyorsa o sayıdan çıkarılıp eklenecek
 
-  Speciality speciality = Speciality(id: 1, name: "name", courseId: 1);
+  Speciality speciality = Speciality(
+    id: 1,
+    name: "name",
+  );
   List<ExpenseData> specialityData = [];
 
   Future _getSpecialities(int id) async {
@@ -162,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
     await StudentDatabaseHelper().fetchSpeciality().then((response) {
       setState(() {
         for (int i = 0; i < response.length; i++) {
-          if (response[i].courseId == id) {
+          if (response[i].id == id) {
             newList.add(response[i]);
             specialities = newList;
           }

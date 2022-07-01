@@ -85,7 +85,7 @@ class SQFLiteHelper {
     Database db = await instance.getDatabase;
     var forms = await db.query(_tableName, orderBy: 'id DESC');
     List formList = forms.isNotEmpty
-        ? forms.map((e) => prefix.PatientLog.fromJson(e)).toList()
+        ? forms.map((e) => PatientLog.fromJson(e)).toList()
         : [];
 
     return formList;

@@ -15,7 +15,7 @@ import '../../model/Speciality.dart';
 class StudentDatabaseHelper {
   //get data from sql
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
-    var url = Uri.parse("${DBURL.url}$status");
+    var url = Uri.parse("${DBURL.url}/patient-logs?status=waiting&studentId=1");
     var response = await http.post(url);
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
@@ -24,6 +24,28 @@ class StudentDatabaseHelper {
     } else {
       throw Exception('Failed to load data');
     }
+  }
+
+  Future<List<PatientLog>> getData(String newsType) async {
+    // TODO: deneme kodları
+    List<PatientLog> list;
+    String link =
+        "http://medicalinternbackend-env.eba-d7ipqppw.eu-south-1.elasticbeanstalk.com/api/v1/patient-logs?status=waiting&studentId=1";
+    var res = await http
+        .get(Uri.parse(link), headers: {"Accept": "application/json"});
+    print(res.body);
+    if (res.statusCode == 200) {
+      var data = json.decode(res.body);
+      var rest = data["patient-logs"] as List;
+      print(rest);
+      list = rest.map<PatientLog>((json) => PatientLog.fromJson(json)).toList();
+    } else {
+      list = [];
+      print("la la land");
+      print(res.statusCode);
+    }
+    print("List Size: ${list.length}");
+    return list;
   }
 
   Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {

@@ -165,12 +165,6 @@ class _HomePageState extends State<FormPage> {
     );
   }
 
-  void onChangedInstitute(Institute newVal) {
-    setState(() {
-      _patientLog.setInstute(newVal);
-    });
-  }
-
   final PatientLog _patientLog = PatientLog();
   late PatientLog? args;
 
@@ -214,7 +208,7 @@ class _HomePageState extends State<FormPage> {
   formIlet() async {
     bool res = await _dbHelper.insertFormToDatabase(_patientLog);
     if (res) {
-      _helper.update(formArguments!.formData);
+      //_helper.update(formArguments!.formData);
       customSnackBar(context, 'Başarıyla gönderildi');
     } else {
       errorAlert(context);

@@ -38,9 +38,6 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
   String? _selectedCourse = "Course1";
   String? _selectedSpeciality = "";
 
-  final PatientLog _patientLog = PatientLog();
-  final ProcedureLog _procedureLog = ProcedureLog();
-
   @override
   void initState() {
     getInstitues();
@@ -94,7 +91,7 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                                   .setInstute(institutes[i]);
                               widget.changeInstitute(institutes[i]);
                               print("1.log babababab");
-                            } else if (widget.logs == 2) {
+                            } else {
                               Provider.of<ProcedureLog>(context, listen: false)
                                   .setInstute(institutes[i]);
                               widget.changeInstitute(institutes[i]);
@@ -332,7 +329,7 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
 
       setState(() {
         for (int i = 0; i < response.length; i++) {
-          if (response[i].courseId == id) {
+          if (response[i].id == id) {
             newList.add(response[i]);
             specialities = newList;
           }
