@@ -1,12 +1,13 @@
 import 'package:internship_managing_system/model/Course.dart';
 
 class Student {
-  int _id;
-  String _studentName;
-  int _oasisId;
-  List<Course> _course;
+  int id;
+  String studentName;
+  int oasisId;
+  List<Course>? course=[];
 
-  Student(this._id, this._studentName, this._oasisId, this._course);
+
+  Student({required this.id,required this.studentName, required this.oasisId, required this.course});
 
   Map<String, dynamic> toMap() => {
     'student_id': id,
@@ -14,27 +15,11 @@ class Student {
     'oasis_id': oasisId,
   };
 
-  List<Course> get course => _course;
+  factory Student.fromJson(Map<String, dynamic> map)=>
+      Student(id: map['id'], studentName: map['name'], oasisId: map['oasisID'], course: null);
 
-  set course(List<Course> value) {
-    _course = value;
-  }
-
-  int get oasisId => _oasisId;
-
-  set oasisId(int value) {
-    _oasisId = value;
-  }
-
-  String get studentName => _studentName;
-
-  set studentName(String value) {
-    _studentName = value;
-  }
-
-  int get id => _id;
-
-  set id(int value) {
-    _id = value;
+  @override
+  String toString() {
+    return 'Student{id: $id, studentName: $studentName, oasisId: $oasisId, course: $course}';
   }
 }

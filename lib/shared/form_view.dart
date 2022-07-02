@@ -59,38 +59,41 @@ Column columnForm(
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
+      studentFormPageRowInstance('Danışman', form.coordinator!.coordinatorName),
+      const SizedBox(
+        height: 5,
+      ),
+      studentFormPageRowInstance('Doktor', form.attendingPhysician!.attendingName),
+      const SizedBox(
+        height: 5,
+      ),
+      studentFormPageRowInstance('Kurum', form.institute!.instituteName),
+      const SizedBox(
+        height: 5,
+      ),
+      studentFormPageRowInstance('Kurs', form.course!.courseName),
+      const SizedBox(
+        height: 5,
+      ),
+      studentFormPageRowInstance('Uzmanlık', form.speciality!.name),
+      const SizedBox(
+        height: 5,
+      ),
       studentFormPageRowInstance('Kayit No', form.kayitNo!),
       const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Institute', form.institute!.instituteName),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Course', form.course!.courseName),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Speciality', form.speciality!.name),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance(
-          'Klinik Eğitici', form.attendingPhysician!.attendingName),
-      const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance('Hastanın Yaşı', form.yas.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance('Cinsiyet', form.cinsiyet.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance('Şikayet', form.sikayet.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance('Ayırıcı Tanı', form.ayiriciTani.toString()),
       const SizedBox(
@@ -98,26 +101,26 @@ Column columnForm(
       ),
       studentFormPageRowInstance('Kesin Tanı', form.kesinTani.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance(
-          'Tedavi YÖNTEMİ', form.tedaviYontemi.toString()),
+          'Tedavi yöntemi', form.tedaviYontemi.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
-      studentFormPageRowInstance('Kapsamı', form.kapsam.toString()),
+      studentFormPageRowInstance('Kapsam', form.kapsam.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance(
           'Etkileşim Türü', form.etkilesimTuru.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance(
           'Gerçekleştiği Ortam', form.gerceklestigiOrtam.toString()),
       const SizedBox(
-        height: 10,
+        height: 5,
       ),
       studentFormPageRowInstance('Tarih', form.createdAt.toString()),
     ],

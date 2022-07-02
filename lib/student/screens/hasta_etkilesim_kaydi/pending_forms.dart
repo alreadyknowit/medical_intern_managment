@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internship_managing_system/model/PatientLog.dart';
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_list_tile.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
@@ -15,7 +16,7 @@ class _PendingFormsState extends State<PendingForms> {
   final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   int limit = 50;
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase("/waiting").then((value) {
+    await _dbHelper.fetchFormsFromDatabase("waiting").then((value) {
       setState(() {});
     });
   }
@@ -23,10 +24,11 @@ class _PendingFormsState extends State<PendingForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<dynamic>>(
-          future: _dbHelper.fetchFormsFromDatabase("/waiting"),
+      body: FutureBuilder<List<PatientLog>>(
+          future: _dbHelper.fetchFormsFromDatabase("waiting"),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
+
               return Center(
                   child: Text(
                 "Henüz gönderilmiş formunuz bulunmamaktadır.",
@@ -56,7 +58,8 @@ class _PendingFormsState extends State<PendingForms> {
               );
             }
             if (snapshot.connectionState == ConnectionState.done) {
-              List<dynamic> list = snapshot.data;
+
+              List<PatientLog> list = snapshot.data;
 
               return RefreshIndicator(
                 backgroundColor: Colors.grey[700],
@@ -71,6 +74,7 @@ class _PendingFormsState extends State<PendingForms> {
                     ),
                     itemCount: list.length,
                     itemBuilder: (BuildContext context, int index) {
+                      PatientLog p = list[index];
                       return CustomListTile(
                         formData: list[index],
                         index: index,

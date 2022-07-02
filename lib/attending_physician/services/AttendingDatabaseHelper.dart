@@ -14,11 +14,11 @@ class AttendingDatabaseHelper {
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<PatientLog> forms = data
+      List<PatientLog> forms = [];/*data
           .map((e) => prefix.PatientLog.fromJson(e))
           .cast<PatientLog>()
           .toList();
-
+*/
       return forms;
     } else {
       throw Exception('Failed to load data');

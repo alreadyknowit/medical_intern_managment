@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   Future getEmail() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-    email = preferences.getString('email')!;
+    email = preferences.getString('email') ?? "";
 });
 
   }

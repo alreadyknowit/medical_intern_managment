@@ -1,28 +1,39 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/model/Course.dart';
 import 'package:internship_managing_system/model/Institute.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/PatientLog.dart';
 import '../../DBURL.dart';
 import '../../model/AttendingPhysician.dart';
 import '../../model/ProcedureLog.dart';
 import '../../model/Speciality.dart';
 
-// TODO: linkler değişecek
 class StudentDatabaseHelper {
   final SQFLiteHelper _helper =SQFLiteHelper.instance;
   //get data from sql
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
-    var url = Uri.parse("${DBURL.url}/patient-logs?status=waiting&studentId=1");
-    var response = await http.post(url);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    int id = preferences.getInt('id')!;
+
+    var url = Uri.parse("${DBURL.url}/patient-logs?status=$status&studentId=$id");
+    var response = await http.get(url,
+        headers: <String, String>{
+          'Accept': 'application/json; charset=UTF-8',
+        }
+    );
+
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<PatientLog> forms = data.map((e) => PatientLog.fromJson(e)).toList();
+      List<PatientLog> forms = data.map((map){
+        PatientLog p =  PatientLog();
+        PatientLog res = p.fromJson(map);
+        return res;
+      }).toList();
       return forms;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception("HATA!");
     }
   }
 
@@ -119,6 +130,8 @@ class StudentDatabaseHelper {
   //add data to sql
   Future insertFormToDatabase(PatientLog patientLog) async {
 
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    int id = preferences.getInt('id')!;
     var url = Uri.parse("${DBURL.url}/patient-logs");
     final response = await http.post(url,
         headers: <String, String>{
@@ -126,7 +139,7 @@ class StudentDatabaseHelper {
         },
 
         body: jsonEncode({
-          "studentId": "3",
+          "studentId":id ,
           "instituteId": patientLog.institute?.id.toString(),
           "attendingId": patientLog.attendingPhysician?.id.toString(),
           "coordinatorId": "1",

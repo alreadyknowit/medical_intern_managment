@@ -59,14 +59,14 @@ class _BodyState extends State<Body> {
                   sifreGonder(textController.text, "s");
                 }else{
                   ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: const Text("Giriş bilgileri hatalı.")));
+                      .showSnackBar(const SnackBar(content: Text("Giriş bilgileri hatalı.")));
                 }
 
               }
             ),
             SizedBox(height: size.height * 0.03),
-            AlreadyHaveAnAccountCheck(
-              login: false,
+            AlreadyHaveAnAccountCheck2(
+            /*  login: false,
               press: () {
                 Navigator.push(
                   context,
@@ -76,7 +76,7 @@ class _BodyState extends State<Body> {
                     },
                   ),
                 );
-              },
+              },*/
             ),
           ],
         ),
@@ -92,19 +92,19 @@ class _BodyState extends State<Body> {
       if (result==true) {
         if(role == 's'){
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Oasis mesaj kutunuza şifreniz gönderildi.")));
+              .showSnackBar(const SnackBar(content: Text("Oasis mesaj kutunuza şifreniz gönderildi.")));
         }else{
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Telefonunuza yeni şifre gönderildi.")));
+              .showSnackBar(const SnackBar(content: Text("Telefonunuza yeni şifre gönderildi.")));
         }
 
       } else if(result==false) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Giriş bilgileri hatalı.")));
+            .showSnackBar(const SnackBar(content: Text("Giriş bilgileri hatalı.")));
       }
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Bir hata oluştu.")));
+          .showSnackBar(const SnackBar(content: Text("Bir hata oluştu.")));
     }
   }
 }

@@ -9,7 +9,7 @@ class Speciality {
 
   factory Speciality.fromJSON(Map<String, dynamic> map) {
     return Speciality(
-        id: map['id'], name: map['description'], courseId:map['courseId'] );
+        id: map['id'], name: map['description'], courseId:map['courseId'] ??Course.fromJSON(map['course']).id );
   }
 
   Map<String, dynamic> toJson() =>

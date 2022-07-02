@@ -17,10 +17,9 @@ class _AcceptedFormsState extends State<AcceptedForms> {
   final StudentDatabaseHelper dbHelper = StudentDatabaseHelper();
   Future<List<PatientLog>>? fromDatabase;
   Future<void> _refresh() async {
-    await dbHelper.fetchFormsFromDatabase('/accepted').then((value) {
+    await dbHelper.fetchFormsFromDatabase('accept').then((value) {
       setState(() {
-        fromDatabase = (dbHelper.fetchFormsFromDatabase('/accepted')
-            as Future<List<PatientLog>>?)!;
+        fromDatabase = (dbHelper.fetchFormsFromDatabase('accept'));
       });
     });
   }
@@ -29,7 +28,7 @@ class _AcceptedFormsState extends State<AcceptedForms> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<PatientLog>>(
-          future: fromDatabase,
+          future: dbHelper.fetchFormsFromDatabase("accept"),
           builder:
               (BuildContext context, AsyncSnapshot<List<PatientLog>> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {

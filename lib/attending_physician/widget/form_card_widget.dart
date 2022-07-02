@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
+import 'package:internship_managing_system/model/PatientLog.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/PatientLog.dart';
 
 class FormCardWidget extends StatelessWidget {
   final PatientLog form;

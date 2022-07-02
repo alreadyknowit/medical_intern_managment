@@ -39,7 +39,7 @@ class CustomListTile extends StatelessWidget {
       );
     }
 
-    void pushToFormPage() {
+    void fromDraft() {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -63,7 +63,7 @@ class CustomListTile extends StatelessWidget {
 
     void whichPage() {
       if (routeTo == 1) {
-        pushToFormPage();
+        fromDraft();
       } else if (routeTo == 2) {
         pushToFormView(formData);
       } else if (routeTo == 3) {
@@ -91,8 +91,8 @@ class CustomListTile extends StatelessWidget {
             width: 80,
             child: Text(formData.id.toString()),
           ),
-          title: Text(formData.speciality?.name.toString() ?? "gelmedi"),
-          subtitle: Text(formData.attendingPhysician?.attendingName.toString() ?? "gelmedi"),
+          title: Text(formData.speciality?.name ?? "Null"),
+          subtitle: Text(formData.attendingPhysician?.attendingName ?? "Null"),
           isThreeLine: true,
         ),
       ),

@@ -1,22 +1,40 @@
+import 'package:internship_managing_system/model/Institute.dart';
+import 'package:internship_managing_system/model/Speciality.dart';
+
 class AttendingPhysician {
   int id;
   String attendingName;
   int specialityId;
   int instituteId;
 
-  AttendingPhysician(
-      {required this.id,
-      required this.attendingName,
-      required this.specialityId,
-      required this.instituteId});
+
+  AttendingPhysician({
+    required this.id, required this.attendingName, required this.specialityId, required this.instituteId
+}
+     );
 
   factory AttendingPhysician.fromJSON(Map<String, dynamic> map) {
     return AttendingPhysician(
         id: map['id'],
         attendingName: map['attendingName'],
-        specialityId: map['specialityId'],
-        instituteId: map['instituteId']);
+        specialityId: map['specialityId'] ?? Speciality.fromJSON(map['speciality']).id,
+        instituteId:map['instituteId'] ?? Institute.fromJSON(map['institute']).id);
   }
+/*   AttendingPhysician fromJSON2(Map<String, dynamic> map) {
+    AttendingPhysician attending = AttendingPhysician(
+      id: map['id'],
+      attendingName: map['attendingName'],
+      specialityId: map['speciality'],
+      inst
+
+    );
+      id= map['id'];
+     attendingName= map['attendingName'];
+     specialityId= map['specialityId'];
+     instituteId= map['instituteId'];
+
+     return attending;
+  }*/
   Map<String, dynamic> toJson() => {
         'id': id,
         'attendingName': attendingName,
