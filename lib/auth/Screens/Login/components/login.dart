@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internship_managing_system/attending_physician/screens/attending_physician.dart';
 import 'package:internship_managing_system/main.dart';
+import 'package:internship_managing_system/model/AttendingPhysician.dart';
 import 'package:internship_managing_system/model/Student.dart';
 import 'package:internship_managing_system/student/screens/side_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -101,11 +102,11 @@ class _LoginScreenState extends State<LoginScreen> {
       print(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> decoded = jsonDecode(response.body);
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.setBool('newUser', true);
 
         if (role == 's') {
           Student student = Student.fromJson(decoded);
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          preferences.setBool('newUser', true);
           preferences.setString('role', 's');
           preferences.setInt('oasisId', student.oasisId);
           preferences.setInt('id', student.id);
@@ -113,6 +114,11 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) =>  Direct2(role:'s')));
         } else {
+          AttendingPhysician attending=AttendingPhysician.fromJSON(decoded);
+          preferences.setString('role', 'a');
+          preferences.setString('phoneNo', attending.phoneNo);
+          preferences.setInt('id', attending.id);
+          preferences.setString('name', attending.attendingName);
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(

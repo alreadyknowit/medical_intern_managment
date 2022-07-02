@@ -6,16 +6,19 @@ class AttendingPhysician {
   String attendingName;
   int specialityId;
   int instituteId;
+  String phoneNo;
 
 
   AttendingPhysician({
-    required this.id, required this.attendingName, required this.specialityId, required this.instituteId
+    required this.id, required this.attendingName, required this.specialityId, required this.instituteId,
+    required this.phoneNo
 }
      );
 
   factory AttendingPhysician.fromJSON(Map<String, dynamic> map) {
     return AttendingPhysician(
         id: map['id'],
+        phoneNo: map['phoneNo'],
         attendingName: map['attendingName'],
         specialityId: map['specialityId'] ?? Speciality.fromJSON(map['speciality']).id,
         instituteId:map['instituteId'] ?? Institute.fromJSON(map['institute']).id);
@@ -53,6 +56,7 @@ class AttendingPhysician {
         id: map['attending_id'],
         attendingName: map['attending_name'],
         specialityId: map['speciality_id'],
+        phoneNo: map['phoneNo'],
         instituteId: map['institute_id']);
   }
 

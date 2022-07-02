@@ -1,32 +1,41 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/DBURL.dart';
-import 'package:internship_managing_system/model/PatientLog.dart' as prefix;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/PatientLog.dart';
-import '../../model/ProcedureLog.dart';
 
 class AttendingDatabaseHelper {
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
-    var url = Uri.parse("${DBURL.url}/attending$status.php");
-    var response = await http.post(url);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    int id = preferences.getInt('id')!;
+    print(id);
+    /*preferences.remove('newUser');
+    preferences.remove('role');
+    preferences.remove('oasisId');
+    preferences.remove('id');
+    preferences.remove('name');*/
+    var url = Uri.parse("${DBURL.url}/patient-logs/attending?status=$status&attendingId=$id");
+    var response = await http.get(url,
+        headers: <String, String>{
+          'Accept': 'application/json; charset=UTF-8',
+        }
+    );
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<PatientLog> forms = [];/*data
-          .map((e) => prefix.PatientLog.fromJson(e))
-          .cast<PatientLog>()
-          .toList();
-*/
+      List<PatientLog> forms = data.map((map){
+        PatientLog p =  PatientLog();
+        PatientLog res = p.fromJson(map);
+        return res;
+      }).toList();
       return forms;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception("HATA!");
     }
   }
 
 // TODO: linkler değişecek
-  Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
+/*  Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
     var url = Uri.parse("${DBURL.url}/attending$status.php");
     var response = await http.post(url);
 
@@ -39,22 +48,34 @@ class AttendingDatabaseHelper {
     } else {
       throw Exception('Failed to load data');
     }
-  }
+  }*/
 
-  Future<bool> updateFromStatus(PatientLog formData) async {
-    //if bool is true then accept
+  Future updateFormStatus(PatientLog patientLog) async {
+    var url = Uri.parse("${DBURL.url}/patient-logs/${patientLog.id}");
+    final response = await http.put(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
 
-    var url = Uri.parse("${DBURL.url}/attending/update.php");
-
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var request = http.Request('POST', url);
-    request.bodyFields = {
-      "form_status": formData.status.toString(),
-      "id": formData.id.toString(),
-    };
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
+        body: jsonEncode({
+          "studentId":patientLog.student?.id ,
+          "instituteId": patientLog.institute?.id,
+          "attendingId": patientLog.attendingPhysician?.id,
+          "coordinatorId": patientLog.coordinator?.id,
+          "specialityId": patientLog.speciality?.id,
+          "courseId": patientLog.course?.id,
+          "kayitNo": patientLog.kayitNo,
+          "yas": patientLog.yas,
+          "cinsiyet": patientLog.cinsiyet,
+          "sikayet": patientLog.sikayet,
+          "ayiriciTani": patientLog.ayiriciTani,
+          "kesinTani": patientLog.kesinTani,
+          "tedaviYontemi": patientLog.tedaviYontemi,
+          "etkilesimTuru": patientLog.etkilesimTuru,
+          "kapsam": patientLog.kapsam,
+          "gerceklestigiOrtam": patientLog.gerceklestigiOrtam,
+          "status": patientLog.status
+        }));
 
     if (response.statusCode == 200) {
       return true;

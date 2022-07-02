@@ -5,6 +5,7 @@ import 'package:internship_managing_system/model/Course.dart';
 import 'package:internship_managing_system/model/Institute.dart';
 import 'package:internship_managing_system/model/Speciality.dart';
 import 'package:internship_managing_system/model/Student.dart';
+import 'package:intl/intl.dart';
 
 import '../student/services/SQFLiteHelper.dart';
 
@@ -54,29 +55,7 @@ class PatientLog with ChangeNotifier {
     gerceklestigiOrtam,
   });
 
-  
-/*  PatientLog fromJson(Map<String,dynamic> map){
-    PatientLog patientLog = PatientLog();
-    patientLog.setId(map['id']);
-    patientLog.setStudent(Student.fromJson(map['student'])); // mapper ekle
-    patientLog.setAttendingPhysician(AttendingPhysician.fromJSON(map['attending']));
-    patientLog.setCoordinator(Coordinator(1, "Coordinator1", 20162003)); // TODO:
-    patientLog.setSpeciality(Speciality.fromJSON(map['speciality']));
-    patientLog.setCourse(Course.fromJSON(map['course']));
-    patientLog.setKayitNo(map['kayit_no']);
-    patientLog.setYas(map['yas']);
-    patientLog.setCinsiyet(map['cinsiyet']);
-    patientLog.setSikayet(map['sikayet']);
-    patientLog.setAyiriciTani(map['ayiriciTani']);
-    patientLog.setKesinTani(map['kesinTani']);
-    patientLog.setTedaviYontemi(map['tedaviYontemi']);
-    patientLog.setEtkilesimTuru(map['etkilesimTuru']);
-    patientLog.setKapsam(map['kapsam']);
-    patientLog.setGerceklestigiOrtam(map['gerceklestigiOrtam']);
-    patientLog.setStatus(map['status']);
-    patientLog.setCreatedAt(map['createdAt']);
-    return patientLog;
-  }*/
+
    PatientLog fromJson(Map<String, dynamic> map) {
     PatientLog patientLog = PatientLog();
 
@@ -137,7 +116,14 @@ class PatientLog with ChangeNotifier {
   String? get createdAt => _createdAt;
 
   void setCreatedAt(String? value) {
-    _createdAt = value;
+    if(value != null) {
+      var format = DateTime.parse(value);
+      var formatter =DateFormat('d/M/y hh:mm').format(format);
+      print(formatter);
+      _createdAt = formatter.toString();
+    }else{
+      _createdAt = value;
+    }
     notifyListeners();
   }
 
@@ -266,5 +252,30 @@ class PatientLog with ChangeNotifier {
   String toString() {
     return 'PatientLog{_id: $_id, _course: $_course, _speciality: $_speciality, _attendingPhysician: $_attendingPhysician, _student: $_student, _coordinator: $_coordinator, _institute: $_institute, _kayitNo: $_kayitNo, _yas: $_yas, _cinsiyet: $_cinsiyet, _sikayet: $_sikayet, _ayiriciTani: $_ayiriciTani, _kesinTani: $_kesinTani, _tedaviYontemi: $_tedaviYontemi, _etkilesimTuru: $_etkilesimTuru, _kapsam: $_kapsam, _gerceklestigiOrtam: $_gerceklestigiOrtam, _status: $_status, _createdAt: $_createdAt, updatedAt: $updatedAt}';
   }
+
+
+
+/*  PatientLog fromJson(Map<String,dynamic> map){
+    PatientLog patientLog = PatientLog();
+    patientLog.setId(map['id']);
+    patientLog.setStudent(Student.fromJson(map['student'])); // mapper ekle
+    patientLog.setAttendingPhysician(AttendingPhysician.fromJSON(map['attending']));
+    patientLog.setCoordinator(Coordinator(1, "Coordinator1", 20162003)); // TODO:
+    patientLog.setSpeciality(Speciality.fromJSON(map['speciality']));
+    patientLog.setCourse(Course.fromJSON(map['course']));
+    patientLog.setKayitNo(map['kayit_no']);
+    patientLog.setYas(map['yas']);
+    patientLog.setCinsiyet(map['cinsiyet']);
+    patientLog.setSikayet(map['sikayet']);
+    patientLog.setAyiriciTani(map['ayiriciTani']);
+    patientLog.setKesinTani(map['kesinTani']);
+    patientLog.setTedaviYontemi(map['tedaviYontemi']);
+    patientLog.setEtkilesimTuru(map['etkilesimTuru']);
+    patientLog.setKapsam(map['kapsam']);
+    patientLog.setGerceklestigiOrtam(map['gerceklestigiOrtam']);
+    patientLog.setStatus(map['status']);
+    patientLog.setCreatedAt(map['createdAt']);
+    return patientLog;
+  }*/
 }
 

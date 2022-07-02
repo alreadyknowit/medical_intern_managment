@@ -16,7 +16,11 @@ class StudentDatabaseHelper {
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
-
+    /*preferences.remove('newUser');
+    preferences.remove('role');
+    preferences.remove('oasisId');
+    preferences.remove('id');
+    preferences.remove('name');*/
     var url = Uri.parse("${DBURL.url}/patient-logs?status=$status&studentId=$id");
     var response = await http.get(url,
         headers: <String, String>{

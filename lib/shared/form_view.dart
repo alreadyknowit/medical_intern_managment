@@ -67,6 +67,10 @@ Column columnForm(
       const SizedBox(
         height: 5,
       ),
+      studentFormPageRowInstance('Student', form.student!.studentName),
+      const SizedBox(
+        height: 5,
+      ),
       studentFormPageRowInstance('Kurum', form.institute!.instituteName),
       const SizedBox(
         height: 5,

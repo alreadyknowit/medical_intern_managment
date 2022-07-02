@@ -31,20 +31,20 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
     setState(() {
       isLoading = true;
     });
-    formList = await _dbHelper.fetchFormsFromDatabase('/waiting').then((value) {
+    formList = await _dbHelper.fetchFormsFromDatabase('waiting').then((value) {
       setState(() {
         isLoading = false;
       });
       return value;
     });
-    tibbiFormList = await _dbHelper
+   /* tibbiFormList = await _dbHelper
         .fetchTibbiFormsFromDatabase('/tibbi/waiting')
         .then((value) {
       setState(() {
         isLoading = false;
       });
       return value;
-    });
+    });*/
   }
 
   @override
@@ -131,11 +131,11 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
     const minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
       form.setStatus('accept');
-      _dbHelper.updateFromStatus(form);
+      _dbHelper.updateFormStatus(form);
       setState(() => formList.remove(form));
     } else if (details.offset.dx < -minimumDrag) {
       form.setStatus('reject');
-      _dbHelper.updateFromStatus(form);
+      _dbHelper.updateFormStatus(form);
       setState(() => formList.remove(form));
     }
     return details.offset.dx;

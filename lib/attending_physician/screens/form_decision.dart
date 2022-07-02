@@ -16,7 +16,7 @@ class FormDecision extends StatelessWidget {
   Widget build(BuildContext context) {
     handleSubmit() async {
       formData.setStatus('accept');
-      bool res = await _dbHelper.updateFromStatus(formData);
+      bool res = await _dbHelper.updateFormStatus(formData);
       if (res) {
         Navigator.pop(context);
         customSnackBar(context, 'Form başarıyla onaylandı');

@@ -17,7 +17,7 @@ class _HistoryFormsState extends State<HistoryForms> {
   // final AttendingMySqlHelper _mySqlHelper = AttendingMySqlHelper();
   final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
   Future<void> _refresh() async {
-    await _dbHelper.fetchFormsFromDatabase('/reject').then((value) {
+    await _dbHelper.fetchFormsFromDatabase('reject').then((value) {
       setState(() {});
     });
   }
@@ -30,7 +30,7 @@ class _HistoryFormsState extends State<HistoryForms> {
         title: const Text('Reddedilen Formlar'),
       ),
       body: FutureBuilder<List<PatientLog>?>(
-          future: _dbHelper.fetchFormsFromDatabase('/reject'),
+          future: _dbHelper.fetchFormsFromDatabase('reject'),
           builder: (BuildContext context,
               AsyncSnapshot<List<PatientLog>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
