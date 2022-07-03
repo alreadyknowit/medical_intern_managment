@@ -18,11 +18,7 @@ class StudentDatabaseHelper {
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
-    /*  preferences.remove('newUser');
-    preferences.remove('role');
-    preferences.remove('oasisId');
-    preferences.remove('id');
-    preferences.remove('name');*/
+
     var url =
         Uri.parse("${DBURL.url}/patient-logs?status=$status&studentId=$id");
     var response = await http.get(url, headers: <String, String>{
@@ -80,7 +76,7 @@ class StudentDatabaseHelper {
   }
 
   Future<List<Speciality>> fetchSpeciality() async {
-    var url = Uri.parse("${DBURL.url}/specialities?courseId=1");
+    var url = Uri.parse("${DBURL.url}/specialities");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -115,7 +111,7 @@ class StudentDatabaseHelper {
 
   //get attending physician table
   Future<List<AttendingPhysician>> fetchAttendingPhysicians() async {
-    var url = Uri.parse("${DBURL.url}/attending-physicians?specialityId=1");
+    var url = Uri.parse("${DBURL.url}/attending-physicians");
 
     var response = await http.get(
       url,

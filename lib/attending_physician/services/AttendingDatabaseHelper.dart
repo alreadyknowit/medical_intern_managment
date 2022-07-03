@@ -11,11 +11,12 @@ class AttendingDatabaseHelper {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
     print(id);
-    /*preferences.remove('newUser');
+   /* preferences.remove('newUser');
     preferences.remove('role');
-    preferences.remove('oasisId');
+    preferences.remove('phoneNo');
     preferences.remove('id');
-    preferences.remove('name');*/
+    preferences.remove('name');
+    preferences.remove('email');*/
     var url = Uri.parse(
         "${DBURL.url}/patient-logs/attending?status=$status&attendingId=$id");
     var response = await http.get(url, headers: <String, String>{
