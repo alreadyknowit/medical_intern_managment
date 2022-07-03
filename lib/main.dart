@@ -21,7 +21,7 @@ class InternshipManagingSystem extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => FeedbackPositionProvider()),
         ChangeNotifierProvider(create: (context) => PatientLog()),
-        ChangeNotifierProvider(create: (context) => ProcedureLog())
+        ChangeNotifierProvider(create: (context) => ProcedureLog()),
       ],
       builder: (context, _) => MaterialApp(
         theme: ThemeData.dark(),

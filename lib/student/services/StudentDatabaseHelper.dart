@@ -175,6 +175,15 @@ class StudentDatabaseHelper {
   }
 
   Future insertTibbiFormToDatabase(ProcedureLog procedureLog) async {
+    print(procedureLog.institute?.instituteName);
+    print(procedureLog.course?.courseName);
+    print(procedureLog.speciality?.name);
+    print(procedureLog.attendingPhysician?.attendingName);
+    print(procedureLog.etkilesimTuru);
+    print(procedureLog.kayitNo);
+    print(procedureLog.tibbiUygulama);
+    print(procedureLog.gerceklestigiOrtam);
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
     var url = Uri.parse("${DBURL.url}/procedures");

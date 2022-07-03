@@ -7,4 +7,9 @@ class Coordinator {
 
   factory Coordinator.fromJson(Map<String, dynamic> map) =>
       Coordinator(map['id'], map['name'], map['oasisId']);
+
+  @override
+  String toString() {
+    return '{id: $id, coordinatorName: $coordinatorName, oasisId: $oasisId}';
+  }
 }

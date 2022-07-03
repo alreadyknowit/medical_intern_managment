@@ -52,13 +52,19 @@ class AttendingPhysician {
         'attending_name': attendingName,
         'speciality_id': specialityId,
         'institute_id': instituteId,
+        'phone_no':phoneNo
       };
   factory AttendingPhysician.fromMap(Map<String, dynamic> map) {
     return AttendingPhysician(
         id: map['attending_id'],
         attendingName: map['attending_name'],
         specialityId: map['speciality_id'],
-        phoneNo: map['phoneNo'],
+        phoneNo: map['phone_no'],
         instituteId: map['institute_id']);
+  }
+
+  @override
+  String toString() {
+    return '{id: $id, attendingName: $attendingName, specialityId: $specialityId, instituteId: $instituteId, phoneNo: $phoneNo}';
   }
 }

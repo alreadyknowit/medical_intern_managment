@@ -28,7 +28,7 @@ class FilteringDropDown extends StatefulWidget {
 class _FilteringDropDownState extends State<FilteringDropDown> {
   late int id;
   late int idCourse;
-  late int idSpecialities;
+  int? idSpecialities;
   List<Institute> institutes = [];
   List<Course> courses = [];
   List<Speciality> specialities = [];
