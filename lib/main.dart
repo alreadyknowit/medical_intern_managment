@@ -17,20 +17,25 @@ class InternshipManagingSystem extends StatelessWidget {
   const InternshipManagingSystem({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => FeedbackPositionProvider()),
         ChangeNotifierProvider(create: (context) => PatientLog()),
         ChangeNotifierProvider(create: (context) => ProcedureLog()),
+
       ],
       builder: (context, _) => MaterialApp(
         theme: ThemeData.dark(),
         themeMode: ThemeMode.dark,
-        home: Direct(),
+        home:Direct(),
+
+
       ),
     );
   }
 }
+
 
 class Direct extends StatefulWidget {
   @override
@@ -38,44 +43,36 @@ class Direct extends StatefulWidget {
 }
 
 class _DirectState extends State<Direct> {
-  bool isSingedIn = false;
-  String role = '';
+   bool isSingedIn=false;
+   String role = '';
   @override
-  initState() {
-    checkUser();
-    checkType();
+  initState(){
+   checkUser();
+   checkType();
   }
+   Future checkUser()async{
+     SharedPreferences pref = await SharedPreferences.getInstance();
+     setState(() { isSingedIn= pref.getBool('newUser') ?? false; });
+     print(isSingedIn);
+   }
 
-  Future checkUser() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      isSingedIn = pref.getBool('newUser') ?? false;
-    });
-    print(isSingedIn);
-  }
-
-  Future checkType() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      role = pref.getString('role') ?? "s";
-    });
-    print(role);
-  }
+   Future checkType()async{
+     SharedPreferences pref = await SharedPreferences.getInstance();
+     setState(() { role= pref.getString('role') ?? "s"; });
+     print(role);
+   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: isSingedIn
-          ? Direct2(
-              role: role,
-            )
-          : LoginScreen(), //AttendingPhysician()//,
+      body:isSingedIn  ? Direct2(role: role,) : LoginScreen() ,//AttendingPhysician()//,
     );
   }
 }
 
 class Direct2 extends StatefulWidget {
-  String? role;
+  String? role ;
   Direct2({this.role});
 
   @override
@@ -85,10 +82,8 @@ class Direct2 extends StatefulWidget {
 class _Direct2State extends State<Direct2> {
   @override
   Widget build(BuildContext context) {
-    return widget.role == 's'
-        ? const SideBar()
-        : widget.role == null
-            ? LoginScreen()
-            : AttendingPhysicianMain();
+    return widget.role== 's' ? const SideBar() : widget.role == null ? LoginScreen() :AttendingPhysicianMain();
   }
 }
+
+

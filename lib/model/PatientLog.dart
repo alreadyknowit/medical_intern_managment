@@ -62,7 +62,6 @@ class PatientLog with ChangeNotifier {
     patientLog.setStudent(Student.fromJson(map['student'])); // mapper ekle
     patientLog
         .setCoordinator(Coordinator.fromJson(map['coordinator'])); // TODO:
-    print(Speciality.fromJSON(map['speciality']));
     patientLog.setSpeciality(Speciality.fromJSON(map['speciality']));
     patientLog.setCourse(Course.fromJSON(map['course']));
     patientLog.setInstute(Institute(id: 1, instituteName: "EMOT")); //TODO
@@ -119,7 +118,6 @@ class PatientLog with ChangeNotifier {
     if (value != null) {
       var format = DateTime.parse(value);
       var formatter = DateFormat('d/M/y hh:mm').format(format);
-      print(formatter);
       _createdAt = formatter.toString();
     } else {
       _createdAt = value;

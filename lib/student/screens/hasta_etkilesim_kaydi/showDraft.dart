@@ -93,6 +93,7 @@ class _HomePageState extends State<ShowDraft> {
           children: [
             submitButton(Icons.send, context, "İLET", formIlet),
             submitButton(Icons.drafts_sharp, context, "GÜNCELLE", formSakla),
+            submitButton(Icons.drafts_sharp, context, "SİL", formSil),
           ],
         ),
       ),
@@ -169,7 +170,21 @@ class _HomePageState extends State<ShowDraft> {
   void fillContent(){
     PatientLog? draftedLog = widget.patientLogFromDraft;
     if(draftedLog != null){
-      print(draftedLog.kesinTani);
+
+      //dropdown
+      patientLog.setId(draftedLog.id);
+      patientLog.setKapsam(draftedLog.kapsam);
+      patientLog.setInstute(draftedLog.institute);
+      patientLog.setCinsiyet(draftedLog.cinsiyet);
+      patientLog.setCourse(draftedLog.course);
+      patientLog.setSpeciality(draftedLog.speciality);
+      patientLog.setCoordinator(draftedLog.coordinator);
+      patientLog.setAttendingPhysician(draftedLog.attendingPhysician);
+      patientLog.setStudent(draftedLog.student);
+      patientLog.setGerceklestigiOrtam(draftedLog.gerceklestigiOrtam);
+      patientLog.setEtkilesimTuru(draftedLog.etkilesimTuru);
+
+      //text
       patientLog.setSikayet(draftedLog.sikayet);
       _sikayetController.text=draftedLog.sikayet ?? "";
 
@@ -191,15 +206,15 @@ class _HomePageState extends State<ShowDraft> {
     }
   }
   formSil() async {
-    setState(() {
-      _helper.remove(patientLog.id);
-      Navigator.pop(context);
-      customSnackBar(context, 'Başarıyla silindi');
-      //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
-    });
-  }
-
-  void handleDelete() {
+   int res =  await _helper.remove(patientLog.id).then((value) {
+     Navigator.pop(context);
+     return value;
+   });
+   if(res==1){
+     setState(() {
+       customSnackBar(context, 'Başarıyla silindi');
+     });
+   }
 
   }
 

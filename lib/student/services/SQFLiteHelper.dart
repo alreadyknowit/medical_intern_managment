@@ -208,7 +208,6 @@ class SQFLiteHelper {
       log.setTedaviYontemi(dto.tedaviYontemi);
       listLogs.add(log);
       log.setKayitNo(log.kayitNo);
-      print(log.toString());
     }
 
     /*  Institute? institute;

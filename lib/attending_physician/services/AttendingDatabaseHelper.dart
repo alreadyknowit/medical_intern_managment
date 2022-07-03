@@ -10,7 +10,6 @@ class AttendingDatabaseHelper {
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
-    print(id);
    /* preferences.remove('newUser');
     preferences.remove('role');
     preferences.remove('phoneNo');
