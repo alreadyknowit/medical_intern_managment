@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/model/AttendingPhysician.dart';
 import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
-import 'package:internship_managing_system/student/arguments/form_args.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 import 'package:internship_managing_system/student/widgets/FilteringDropDown.dart';
@@ -34,25 +33,6 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
   late bool isDeletable;
   @override
   Widget build(BuildContext context) {
-    tibbiFormArguments =
-        ModalRoute.of(context)?.settings.arguments as TibbiFormArguments?;
-    if (tibbiFormArguments != null) {
-      isDeletable = tibbiFormArguments!.isDeletable ?? true;
-      args = tibbiFormArguments?.tibbiFormData;
-      _kayitController.text = args!.kayitNo.toString();
-
-      //dropdown
-      _valueTibbiOrtam = args!.gerceklestigiOrtam.toString();
-      _valueTibbiEtkilesimTuru = args!.etkilesimTuru.toString();
-      //
-
-      _doktorController.text = args!.attendingPhysician.toString();
-      _tibbiUygulamaController.text = args!.tibbiUygulama.toString();
-      _stajTuruController.text = args!.speciality.toString();
-      _instituteController.text = args!.instute.toString();
-      _courseController.text = args!.course.toString();
-    }
-
     return Scaffold(
       body: SafeArea(
           child: FutureBuilder(
@@ -105,9 +85,6 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             submitButton(Icons.send, context, "İLET", formIlet),
-            tibbiFormArguments != null && isDeletable
-                ? submitButton(Icons.delete, context, "SİL", handleDelete)
-                : Container(),
             submitButton(Icons.drafts_sharp, context, "SAKLA", formSakla),
           ],
         ),
@@ -115,6 +92,7 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
     );
   }
 
+  @override
   Form formWidget(Map<String, dynamic> map) {
     return Form(
       key: _formKey,
@@ -137,8 +115,8 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
             ),
             CustomTextField(_kayitController, 1, "Kayıt No ", 10,
                 _procedureLog.setKayitNo, 80),
-            CustomTextField(_kayitController, 5, "Tıbbi İşlem Uygulama", 200,
-                _procedureLog.setTibbiUygulama, 130),
+            CustomTextField(_tibbiUygulamaController, 5, "Tıbbi İşlem Uygulama",
+                200, _procedureLog.setTibbiUygulama, 130),
           ],
         ),
       ),
@@ -147,26 +125,14 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
 
   final ProcedureLog _procedureLog = ProcedureLog();
   late ProcedureLog? args;
-  //late int? index;
 
-  TibbiFormArguments? tibbiFormArguments;
   final _formKey = GlobalKey<FormState>();
-  String _valueTibbiEtkilesimTuru = 'Gözlem';
-  String _valueTibbiOrtam = 'Poliklinik';
 
   final TextEditingController _kayitController = TextEditingController();
   final TextEditingController _tibbiUygulamaController =
       TextEditingController();
-  final TextEditingController _disKurumController = TextEditingController();
-  final TextEditingController _stajTuruController = TextEditingController();
-  final TextEditingController _doktorController = TextEditingController();
-  final TextEditingController _instituteController = TextEditingController();
-  final TextEditingController _courseController = TextEditingController();
 
   bool isLoading = false;
-  /*formSakla() {}
-  formIlet() {}
-  handleDelete() {}*/
 
   void formSakla() async {
     Course course = await _helper.getCourse(3);
@@ -179,15 +145,6 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
     _procedureLog.setSpeciality(speciality);
     //final res = await _helper.insertPatientLog(_procedureLog);
     //res==false ? errorAlert(context) : customSnackBar(context, 'Başarıyla taslağa kaydedildi');
-  }
-
-  void handleDelete() {
-    setState(() {
-      _helper.remove(tibbiFormArguments!.tibbiFormData.id);
-      Navigator.pop(context);
-      customSnackBar(context, 'Başarıyla silindi');
-      //  Navigator.pop(context, MaterialPageRoute(builder: (context) => Drafts()));
-    });
   }
 
   formIlet() async {

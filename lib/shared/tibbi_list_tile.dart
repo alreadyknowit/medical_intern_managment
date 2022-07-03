@@ -35,8 +35,18 @@ class TibbiCustomListTile extends StatelessWidget {
       );
     }
 
+    void fromDraft() {}
+
+    void pushToDecisionPage() {}
+
     void whichPage() {
-      pushToFormView(tibbiFormData);
+      if (routeTo == 1) {
+        fromDraft();
+      } else if (routeTo == 2) {
+        pushToFormView(tibbiFormData);
+      } else if (routeTo == 3) {
+        pushToDecisionPage();
+      }
     }
 
     return Padding(
@@ -57,10 +67,11 @@ class TibbiCustomListTile extends StatelessWidget {
           onTap: () => whichPage(),
           leading: SizedBox(
             width: 80,
-            child: Text(tibbiFormData.createdAt!),
+            child: Text(tibbiFormData.createdAt.toString()),
           ),
-          title: Text(tibbiFormData.speciality!.name),
-          subtitle: Text(tibbiFormData.attendingPhysician!.attendingName),
+          title: Text(tibbiFormData.speciality?.name ?? "Null"),
+          subtitle:
+              Text(tibbiFormData.attendingPhysician?.attendingName ?? "Null"),
           isThreeLine: true,
         ),
       ),

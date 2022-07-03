@@ -275,7 +275,7 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                             } else if (widget.logs == 2) {
                               Provider.of<ProcedureLog>(context, listen: false)
                                   .setAttendingPhysician(attendingList[i]);
-                              widget.changeAttendingPhysician(specialities[i]);
+                              widget.changeAttendingPhysician(attendingList[i]);
                             }
                           }
                         }
@@ -320,7 +320,7 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
 
       setState(() {
         for (int i = 0; i < response.length; i++) {
-          if (response[i].id == id) {
+          if (response[i].courseId == id) {
             newList.add(response[i]);
             specialities = newList;
           }

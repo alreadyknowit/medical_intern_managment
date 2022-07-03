@@ -35,19 +35,6 @@ class ProcedureLog with ChangeNotifier {
     etkilesimTuru,
     gerceklestigiOrtam,
   });
-  factory ProcedureLog.fromJson(Map<String, dynamic> myMap) {
-    return ProcedureLog(
-      id: checkID(myMap['id']),
-      kayitNo: myMap['kayit_no'],
-      institute: myMap['instituteId'],
-      speciality: myMap['specialityId'],
-      course: myMap['coursesId'],
-      doktor: myMap['attending_physicianId'],
-      etkilesimTuru: myMap['etkilesim_turu'],
-      gerceklestigiOrtam: myMap['tibbi_ortam'],
-      tibbiUygulama: myMap['tibbi_uygulama'],
-    );
-  }
 
   static checkID(var id) {
     return id is int ? id : int.parse(id);
@@ -62,6 +49,7 @@ class ProcedureLog with ChangeNotifier {
         .setCoordinator(Coordinator.fromJson(map['coordinator'])); // TODO:
     procedureLog.setSpeciality(Speciality.fromJSON(map['speciality']));
     procedureLog.setCourse(Course.fromJSON(map['course']));
+    procedureLog.setInstute(Institute(id: 1, instituteName: "EMOT"));
     procedureLog
         .setAttendingPhysician(AttendingPhysician.fromJSON(map['attending']));
     procedureLog.setKayitNo(map['kayitNo']);
@@ -77,10 +65,10 @@ class ProcedureLog with ChangeNotifier {
     return {
       SQFLiteHelper.columnKayitNo: kayitNo,
       SQFLiteHelper.columnId: id,
-      // SQFLiteHelper.columnSpecialitiesId: speciality,
-      SQFLiteHelper.columnAttendingPhysicianId: attendingPhysician,
+      SQFLiteHelper.columnSpecialityId: speciality?.id,
+      SQFLiteHelper.columnAttendingPhysicianId: attendingPhysician?.id,
       SQFLiteHelper.columnCourseId: course?.id,
-      SQFLiteHelper.columnInstituteId: instute,
+      SQFLiteHelper.columnInstituteId: institute?.id,
       SQFLiteHelper.columnOrtam: gerceklestigiOrtam,
       SQFLiteHelper.columnTibbiEtkilesimTuru: etkilesimTuru,
       SQFLiteHelper.columnTarih: createdAt,
@@ -88,9 +76,9 @@ class ProcedureLog with ChangeNotifier {
     };
   }
 
-  Institute? get instute => _institute;
+  Institute? get institute => _institute;
 
-  void setInstute(Institute value) {
+  void setInstute(Institute? value) {
     _institute = value;
     notifyListeners();
   }
@@ -163,28 +151,28 @@ class ProcedureLog with ChangeNotifier {
 
   AttendingPhysician? get attendingPhysician => _attendingPhysician;
 
-  void setAttendingPhysician(AttendingPhysician value) {
+  void setAttendingPhysician(AttendingPhysician? value) {
     _attendingPhysician = value;
     notifyListeners();
   }
 
   Speciality? get speciality => _speciality;
 
-  void setSpeciality(Speciality value) {
+  void setSpeciality(Speciality? value) {
     _speciality = value;
     notifyListeners();
   }
 
   Course? get course => _course;
 
-  void setCourse(Course value) {
+  void setCourse(Course? value) {
     _course = value;
     notifyListeners();
   }
 
   int? get id => _id;
 
-  void setId(int value) {
+  void setId(int? value) {
     _id = value;
     notifyListeners();
   }

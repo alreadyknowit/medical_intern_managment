@@ -362,7 +362,7 @@ class SQFLiteHelper {
     return await db.insert(_tablePatientLog, form.toMap());
   }
 
-  Future<List<ProcedureLog>> getTibbiForms() async {
+  /* Future<List<ProcedureLog>> getTibbiForms() async {
     Database db = await instance.getDatabase;
     var forms = await db.query(_tablePatientLog, orderBy: 'id DESC');
     List<ProcedureLog> formList = forms.isNotEmpty
@@ -370,7 +370,7 @@ class SQFLiteHelper {
         : [];
 
     return formList;
-  }
+  }*/
 
   Future<int> updateTibbi(ProcedureLog form) async {
     Database db = await instance.getDatabase;
