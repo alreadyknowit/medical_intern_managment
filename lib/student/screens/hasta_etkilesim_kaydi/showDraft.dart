@@ -92,7 +92,7 @@ class _HomePageState extends State<ShowDraft> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             submitButton(Icons.send, context, "İLET", formIlet),
-            submitButton(Icons.drafts_sharp, context, "GÜNCELLE", formSakla),
+            submitButton(Icons.drafts_sharp, context, "GÜNCELLE", formGuncelle),
             submitButton(Icons.drafts_sharp, context, "SİL", formSil),
           ],
         ),
@@ -225,17 +225,13 @@ class _HomePageState extends State<ShowDraft> {
         : errorAlert(context);
   }
 
-  void formSakla() async {
-    Course course = await _helper.getCourse(3);
-    Speciality speciality = await _helper.getSpeciality(1);
-    AttendingPhysician attendingPhysician = await _helper.getAttending(3);
-    Institute institute = await _helper.getInstitute(2);
-    patientLog.setCourse(course);
-    patientLog.setAttendingPhysician(attendingPhysician);
-    patientLog.setInstute(institute);
-    patientLog.setSpeciality(speciality);
-    final res = await _helper.insertPatientLog(patientLog);
-    res == false
+  void formGuncelle() async {
+    int? id = patientLog.id;
+    int res=0;
+    if(id != null){
+       res = await _helper.update(patientLog);
+    }
+    res != 1
         ? errorAlert(context)
         : customSnackBar(context, 'Başarıyla taslağa kaydedildi');
   }
