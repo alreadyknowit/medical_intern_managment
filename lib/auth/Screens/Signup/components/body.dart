@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+
 import '../../../../DBURL.dart';
 import '../../../components/already_have_an_account_acheck.dart';
 import '../../../components/rounded_button.dart';
 import '../../../constants.dart';
 import '../../Login/components/background.dart';
-import '../../Login/components/login.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -17,7 +17,6 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   var textController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,24 +48,21 @@ class _BodyState extends State<Body> {
               ),
             ),
             RoundedButton(
-              text: "Şifre Gönder",
-              press: () {
-                if(textController.text.startsWith("0") || textController.text.startsWith("5")){
-                  sifreGonder(textController.text, "a");
-
-                }
-                else if(textController.text.startsWith("2")){
-                  sifreGonder(textController.text, "s");
-                }else{
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(content: Text("Giriş bilgileri hatalı.")));
-                }
-
-              }
-            ),
+                text: "Şifre Gönder",
+                press: () {
+                  if (textController.text.startsWith("0") ||
+                      textController.text.startsWith("5")) {
+                    sifreGonder(textController.text, "a");
+                  } else if (textController.text.startsWith("2")) {
+                    sifreGonder(textController.text, "s");
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Giriş bilgileri hatalı.")));
+                  }
+                }),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck2(
-            /*  login: false,
+                /*  login: false,
               press: () {
                 Navigator.push(
                   context,
@@ -77,30 +73,30 @@ class _BodyState extends State<Body> {
                   ),
                 );
               },*/
-            ),
+                ),
           ],
         ),
       ),
     );
   }
 
-  Future<void> sifreGonder(String no,String role) async {
-    if (textController.text.isNotEmpty ) {
-      var response = await http.post(Uri.parse("${DBURL.url}/login/check?no=$no&role=$role"));
-      var result =jsonDecode(response.body);
+  Future<void> sifreGonder(String no, String role) async {
+    if (textController.text.isNotEmpty) {
+      var response = await http
+          .post(Uri.parse("${DBURL.url}/login/check?no=$no&role=$role"));
+      var result = jsonDecode(response.body);
       print(result);
-      if (result==true) {
-        if(role == 's'){
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Oasis mesaj kutunuza şifreniz gönderildi.")));
-        }else{
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Telefonunuza yeni şifre gönderildi.")));
+      if (result == true) {
+        if (role == 's') {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Oasis mesaj kutunuza şifreniz gönderildi.")));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Telefonunuza yeni şifre gönderildi.")));
         }
-
-      } else if(result==false) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Giriş bilgileri hatalı.")));
+      } else if (result == false) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Giriş bilgileri hatalı.")));
       }
     } else {
       ScaffoldMessenger.of(context)

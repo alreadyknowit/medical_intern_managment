@@ -218,7 +218,6 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
                           }
                           _getAttendings(id, idSpecialities);
                         }
-
                       });
                     },
                     items: specialities.map((item) {
@@ -303,7 +302,6 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
         institutes = response;
         _selectedInstitute = institutes[0].instituteName;
       });
-
     });
   }
 

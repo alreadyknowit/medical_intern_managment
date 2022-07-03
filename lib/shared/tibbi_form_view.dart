@@ -40,17 +40,22 @@ Widget TibbiformViewBody(ProcedureLog form) {
   }
 
   return SafeArea(
-    child: Center(
-      child: Container(
-        decoration: BoxDecoration(
-          color: BACKGROUND_COLOR,
-          borderRadius: BorderRadius.circular(10),
+    child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Tibbi Uygulama Formu'),
         ),
-        child: SingleChildScrollView(
-          child: columnForm(studentFormPageRowInstance, form),
-        ),
-      ),
-    ),
+        body: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: BACKGROUND_COLOR,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: SingleChildScrollView(
+              child: columnForm(studentFormPageRowInstance, form),
+            ),
+          ),
+        )),
   );
 }
 
@@ -64,16 +69,35 @@ Column columnForm(
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Staj Türü', form.speciality.toString()),
+      studentFormPageRowInstance('Kurs', form.course!.courseName),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance('Staj Türü', form.speciality!.name),
       const SizedBox(
         height: 10,
       ),
       studentFormPageRowInstance(
-          'Klinik Eğitici', form.attendingPhysician.toString()),
+          'Tibbi Uygulama', form.tibbiUygulama.toString()),
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Ortam', form.gerceklestigiOrtam.toString()),
+      studentFormPageRowInstance(
+          'Etkileşim Türü', form.etkilesimTuru.toString()),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance(
+          'Gerçekleştiği Ortam', form.gerceklestigiOrtam.toString()),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance('Tarih', form.createdAt.toString()),
+      const SizedBox(
+        height: 10,
+      ),
+      studentFormPageRowInstance(
+          'Klinik Eğitici', form.attendingPhysician!.attendingName),
       const SizedBox(
         height: 10,
       ),
@@ -81,21 +105,9 @@ Column columnForm(
       const SizedBox(
         height: 10,
       ),
-      studentFormPageRowInstance('Dış Kurum', form.disKurum.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance(
-          'Etkileşim Türü', form.etkilesimTuru.toString()),
       const SizedBox(
         height: 5,
       ),
-      studentFormPageRowInstance(
-          'Tibbi Uygulama', form.tibbiUygulama.toString()),
-      const SizedBox(
-        height: 10,
-      ),
-      studentFormPageRowInstance('Tarih', form.createdAt.toString()),
     ],
   );
 }

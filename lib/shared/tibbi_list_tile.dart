@@ -57,10 +57,10 @@ class TibbiCustomListTile extends StatelessWidget {
           onTap: () => whichPage(),
           leading: SizedBox(
             width: 80,
-            child: Text(tibbiFormData.createdAt.toString()),
+            child: Text(tibbiFormData.createdAt!),
           ),
-          title: Text(tibbiFormData.speciality.toString()),
-          subtitle: Text(tibbiFormData.attendingPhysician.toString()),
+          title: Text(tibbiFormData.speciality!.name),
+          subtitle: Text(tibbiFormData.attendingPhysician!.attendingName),
           isThreeLine: true,
         ),
       ),

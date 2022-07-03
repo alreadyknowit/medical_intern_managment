@@ -3,15 +3,11 @@ import 'package:internship_managing_system/attending_physician/screens/form_deci
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
-import 'package:internship_managing_system/student/screens/hasta_etkilesim_kaydi/form_page.dart';
 import 'package:internship_managing_system/student/screens/hasta_etkilesim_kaydi/showDraft.dart';
 
 import '../model/PatientLog.dart';
 
 class CustomListTile extends StatelessWidget {
-
-
-
   final PatientLog formData;
   final int index;
   final int routeTo;
@@ -43,7 +39,7 @@ class CustomListTile extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>  ShowDraft(patientLogFromDraft: formData),
+            builder: (context) => ShowDraft(patientLogFromDraft: formData),
             settings: RouteSettings(
               arguments: arguments,
             )),

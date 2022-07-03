@@ -1,6 +1,5 @@
-/*
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/tibbi_form_data.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
@@ -17,7 +16,7 @@ class TibbiRejectedForms extends StatefulWidget {
 class _TibbiRejectedFormsState extends State<TibbiRejectedForms> {
   final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   Future<void> _refresh() async {
-    await _dbHelper.fetchTibbiFormsFromDatabase('/rejected').then((value) {
+    await _dbHelper.fetchTibbiFormsFromDatabase("reject").then((value) {
       setState(() {});
     });
   }
@@ -25,10 +24,10 @@ class _TibbiRejectedFormsState extends State<TibbiRejectedForms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<TibbiFormData>?>(
-          future: _dbHelper.fetchTibbiFormsFromDatabase('/rejected'),
+      body: FutureBuilder<List<ProcedureLog>?>(
+          future: _dbHelper.fetchTibbiFormsFromDatabase('reject'),
           builder: (BuildContext context,
-              AsyncSnapshot<List<TibbiFormData>?> snapshot) {
+              AsyncSnapshot<List<ProcedureLog>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -86,4 +85,3 @@ class _TibbiRejectedFormsState extends State<TibbiRejectedForms> {
     );
   }
 }
-*/

@@ -16,7 +16,7 @@ class _TibbiPendingFormsState extends State<TibbiPendingForms> {
   final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   int limit = 50;
   Future<void> _refresh() async {
-    await _dbHelper.fetchTibbiFormsFromDatabase("/waiting").then((value) {
+    await _dbHelper.fetchTibbiFormsFromDatabase("waiting").then((value) {
       setState(() {});
     });
   }
@@ -25,7 +25,7 @@ class _TibbiPendingFormsState extends State<TibbiPendingForms> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<dynamic>>(
-          future: _dbHelper.fetchTibbiFormsFromDatabase("/tibbi/waiting"),
+          future: _dbHelper.fetchTibbiFormsFromDatabase("waiting"),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
@@ -72,7 +72,7 @@ class _TibbiPendingFormsState extends State<TibbiPendingForms> {
                     ),
                     itemCount: list.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return TibbiCustomListTile(
+                      return TibbiCustomListTile( //TODO : ??
                           tibbiFormData: snapshot.data![index],
                           index: index,
                           routeTo: 2);

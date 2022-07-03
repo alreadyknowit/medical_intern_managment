@@ -63,7 +63,8 @@ Column columnForm(
       const SizedBox(
         height: 5,
       ),
-      studentFormPageRowInstance('Doktor', form.attendingPhysician!.attendingName),
+      studentFormPageRowInstance(
+          'Doktor', form.attendingPhysician!.attendingName),
       const SizedBox(
         height: 5,
       ),

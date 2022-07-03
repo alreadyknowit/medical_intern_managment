@@ -1,10 +1,8 @@
-/*
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/models/tibbi_form_data.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:internship_managing_system/student/services/StudentDatabaseHelper.dart';
 
-import '../../../models/tibbi_form_data.dart';
 import '../../../shared/constants.dart';
 import '../../../shared/tibbi_list_tile.dart';
 
@@ -16,20 +14,23 @@ class TibbiAcceptedForms extends StatefulWidget {
 }
 
 class _TibbiAcceptedFormsState extends State<TibbiAcceptedForms> {
-  final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
+  final StudentDatabaseHelper dbHelper = StudentDatabaseHelper();
+  Future<List<ProcedureLog>>? fromDatabase;
   Future<void> _refresh() async {
-    await _dbHelper.fetchTibbiFormsFromDatabase('/accepted').then((value) {
-      setState(() {});
+    await dbHelper.fetchTibbiFormsFromDatabase('accept').then((value) {
+      setState(() {
+        fromDatabase = (dbHelper.fetchTibbiFormsFromDatabase('accept'));
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<TibbiFormData>?>(
-          future: _dbHelper.fetchTibbiFormsFromDatabase('/accepted'),
+      body: FutureBuilder<List<ProcedureLog>?>(
+          future: dbHelper.fetchTibbiFormsFromDatabase("accept"),
           builder: (BuildContext context,
-              AsyncSnapshot<List<TibbiFormData>?> snapshot) {
+              AsyncSnapshot<List<ProcedureLog>?> snapshot) {
             if (snapshot.hasData && snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
@@ -87,4 +88,3 @@ class _TibbiAcceptedFormsState extends State<TibbiAcceptedForms> {
     );
   }
 }
-*/

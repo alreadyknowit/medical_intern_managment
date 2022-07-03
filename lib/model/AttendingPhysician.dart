@@ -8,20 +8,22 @@ class AttendingPhysician {
   int instituteId;
   String phoneNo;
 
-
-  AttendingPhysician({
-    required this.id, required this.attendingName, required this.specialityId, required this.instituteId,
-    required this.phoneNo
-}
-     );
+  AttendingPhysician(
+      {required this.id,
+      required this.attendingName,
+      required this.specialityId,
+      required this.instituteId,
+      required this.phoneNo});
 
   factory AttendingPhysician.fromJSON(Map<String, dynamic> map) {
     return AttendingPhysician(
         id: map['id'],
         phoneNo: map['phoneNo'],
         attendingName: map['attendingName'],
-        specialityId: map['specialityId'] ?? Speciality.fromJSON(map['speciality']).id,
-        instituteId:map['instituteId'] ?? Institute.fromJSON(map['institute']).id);
+        specialityId:
+            map['specialityId'] ?? Speciality.fromJSON(map['speciality']).id,
+        instituteId:
+            map['instituteId'] ?? Institute.fromJSON(map['institute']).id);
   }
 /*   AttendingPhysician fromJSON2(Map<String, dynamic> map) {
     AttendingPhysician attending = AttendingPhysician(
@@ -46,11 +48,11 @@ class AttendingPhysician {
       };
 
   Map<String, dynamic> toMap() => {
-    'attending_id':id,
-    'attending_name': attendingName,
-    'speciality_id': specialityId,
-    'institute_id': instituteId,
-  };
+        'attending_id': id,
+        'attending_name': attendingName,
+        'speciality_id': specialityId,
+        'institute_id': instituteId,
+      };
   factory AttendingPhysician.fromMap(Map<String, dynamic> map) {
     return AttendingPhysician(
         id: map['attending_id'],
@@ -59,6 +61,4 @@ class AttendingPhysician {
         phoneNo: map['phoneNo'],
         instituteId: map['institute_id']);
   }
-
-
 }

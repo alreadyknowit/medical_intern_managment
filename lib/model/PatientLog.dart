@@ -55,18 +55,19 @@ class PatientLog with ChangeNotifier {
     gerceklestigiOrtam,
   });
 
-
-   PatientLog fromJson(Map<String, dynamic> map) {
+  PatientLog fromJson(Map<String, dynamic> map) {
     PatientLog patientLog = PatientLog();
 
     patientLog.setId(map['id']);
     patientLog.setStudent(Student.fromJson(map['student'])); // mapper ekle
-    patientLog.setCoordinator(Coordinator.fromJson(map['coordinator'])); // TODO:
+    patientLog
+        .setCoordinator(Coordinator.fromJson(map['coordinator'])); // TODO:
     print(Speciality.fromJSON(map['speciality']));
     patientLog.setSpeciality(Speciality.fromJSON(map['speciality']));
     patientLog.setCourse(Course.fromJSON(map['course']));
     patientLog.setInstute(Institute(id: 1, instituteName: "EMOT")); //TODO
-    patientLog.setAttendingPhysician(AttendingPhysician.fromJSON(map['attending']));
+    patientLog
+        .setAttendingPhysician(AttendingPhysician.fromJSON(map['attending']));
     patientLog.setKayitNo(map['kayitNo']);
     patientLog.setYas(map['yas'].toString());
     patientLog.setCinsiyet(map['cinsiyet']);
@@ -116,12 +117,12 @@ class PatientLog with ChangeNotifier {
   String? get createdAt => _createdAt;
 
   void setCreatedAt(String? value) {
-    if(value != null) {
+    if (value != null) {
       var format = DateTime.parse(value);
-      var formatter =DateFormat('d/M/y hh:mm').format(format);
+      var formatter = DateFormat('d/M/y hh:mm').format(format);
       print(formatter);
       _createdAt = formatter.toString();
-    }else{
+    } else {
       _createdAt = value;
     }
     notifyListeners();
@@ -253,8 +254,6 @@ class PatientLog with ChangeNotifier {
     return 'PatientLog{_id: $_id, _course: $_course, _speciality: $_speciality, _attendingPhysician: $_attendingPhysician, _student: $_student, _coordinator: $_coordinator, _institute: $_institute, _kayitNo: $_kayitNo, _yas: $_yas, _cinsiyet: $_cinsiyet, _sikayet: $_sikayet, _ayiriciTani: $_ayiriciTani, _kesinTani: $_kesinTani, _tedaviYontemi: $_tedaviYontemi, _etkilesimTuru: $_etkilesimTuru, _kapsam: $_kapsam, _gerceklestigiOrtam: $_gerceklestigiOrtam, _status: $_status, _createdAt: $_createdAt, updatedAt: $updatedAt}';
   }
 
-
-
 /*  PatientLog fromJson(Map<String,dynamic> map){
     PatientLog patientLog = PatientLog();
     patientLog.setId(map['id']);
@@ -278,4 +277,3 @@ class PatientLog with ChangeNotifier {
     return patientLog;
   }*/
 }
-

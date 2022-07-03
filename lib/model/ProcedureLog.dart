@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 import '../student/services/SQFLiteHelper.dart';
 import 'AttendingPhysician.dart';
@@ -17,7 +18,6 @@ class ProcedureLog with ChangeNotifier {
   Coordinator? _coordinator;
   Institute? _institute;
   String? _kayitNo;
-  String? _disKurum;
   String? _tibbiUygulama;
   String? _etkilesimTuru;
   String? _gerceklestigiOrtam;
@@ -33,7 +33,6 @@ class ProcedureLog with ChangeNotifier {
     doktor,
     tibbiUygulama,
     etkilesimTuru,
-    disKurum,
     gerceklestigiOrtam,
   });
   factory ProcedureLog.fromJson(Map<String, dynamic> myMap) {
@@ -47,7 +46,6 @@ class ProcedureLog with ChangeNotifier {
       etkilesimTuru: myMap['etkilesim_turu'],
       gerceklestigiOrtam: myMap['tibbi_ortam'],
       tibbiUygulama: myMap['tibbi_uygulama'],
-      disKurum: myMap['dis_kurum'],
     );
   }
 
@@ -55,18 +53,25 @@ class ProcedureLog with ChangeNotifier {
     return id is int ? id : int.parse(id);
   }
 
-  factory ProcedureLog.fromMap(Map<String, dynamic> myMap) => ProcedureLog(
-        id: myMap['id'],
-        kayitNo: myMap['kayit_no'],
-        institute: myMap['instituteId'],
-        speciality: myMap['specialityId'],
-        course: myMap['coursesId'],
-        doktor: myMap['attending_physicianId'],
-        etkilesimTuru: myMap['etkilesim_turu'],
-        gerceklestigiOrtam: myMap['tibbi_ortam'],
-        tibbiUygulama: myMap['tibbi_uygulama'],
-        disKurum: myMap['dis_kurum'],
-      );
+  ProcedureLog fromJson(Map<String, dynamic> map) {
+    ProcedureLog procedureLog = ProcedureLog();
+
+    procedureLog.setId(map['id']);
+    procedureLog.setStudent(Student.fromJson(map['student'])); // mapper ekle
+    procedureLog
+        .setCoordinator(Coordinator.fromJson(map['coordinator'])); // TODO:
+    procedureLog.setSpeciality(Speciality.fromJSON(map['speciality']));
+    procedureLog.setCourse(Course.fromJSON(map['course']));
+    procedureLog
+        .setAttendingPhysician(AttendingPhysician.fromJSON(map['attending']));
+    procedureLog.setKayitNo(map['kayitNo']);
+    procedureLog.setEtkilesimTuru(map['etkilesimTuru']);
+    procedureLog.setGerceklestigiOrtam(map['gerceklestigiOrtam']);
+    procedureLog.setTibbiUygulama(map['tibbiUygulama']);
+    procedureLog.setStatus(map['status']);
+    procedureLog.setCreatedAt(map['createdAt']);
+    return procedureLog;
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -90,13 +95,20 @@ class ProcedureLog with ChangeNotifier {
     notifyListeners();
   }
 
-  DateTime? _createdAt;
-  DateTime? updatedAt;
+  String? _createdAt;
+  String? updatedAt;
 
-  DateTime? get createdAt => _createdAt;
+  String? get createdAt => _createdAt;
 
-  void setCreatedAt(DateTime value) {
-    _createdAt = value;
+  void setCreatedAt(String? value) {
+    if (value != null) {
+      var format = DateTime.parse(value);
+      var formatter = DateFormat('d/M/y hh:mm').format(format);
+      print(formatter);
+      _createdAt = formatter.toString();
+    } else {
+      _createdAt = value;
+    }
     notifyListeners();
   }
 
@@ -125,13 +137,6 @@ class ProcedureLog with ChangeNotifier {
 
   void setTibbiUygulama(String value) {
     _tibbiUygulama = value;
-    notifyListeners();
-  }
-
-  String? get disKurum => _disKurum;
-
-  void setDisKurum(String value) {
-    _disKurum = value;
     notifyListeners();
   }
 

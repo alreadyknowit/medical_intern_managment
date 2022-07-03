@@ -1,4 +1,3 @@
 class DBURL {
-  static const String url =
-      "http://192.168.1.52:8080/api/v1";
+  static const String url = "http://192.168.1.236:9090/api/v1";
 }

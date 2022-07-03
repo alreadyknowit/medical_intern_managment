@@ -2,21 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internship_managing_system/attending_physician/screens/attending_physician.dart';
+import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/main.dart';
-import 'package:internship_managing_system/model/AttendingPhysician.dart';
 import 'package:internship_managing_system/model/Student.dart';
-import 'package:internship_managing_system/student/screens/side_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../DBURL.dart';
+import '../../../../model/AttendingPhysician.dart';
 import '../../../components/already_have_an_account_acheck.dart';
 import '../../../components/rounded_button.dart';
 import '../../../constants.dart';
-import '../../Home_Page/home_page.dart';
 import '../../Signup/components/background.dart';
-import 'package:http/http.dart' as http;
-
-import '../../Signup/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -112,9 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
           preferences.setInt('id', student.id);
           preferences.setString('name', student.studentName);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) =>  Direct2(role:'s')));
+              MaterialPageRoute(builder: (context) => Direct2(role: 's')));
         } else {
-          AttendingPhysician attending=AttendingPhysician.fromJSON(decoded);
+          AttendingPhysician attending = AttendingPhysician.fromJSON(decoded);
           preferences.setString('role', 'a');
           preferences.setString('phoneNo', attending.phoneNo);
           preferences.setInt('id', attending.id);
@@ -122,7 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => Direct2(role: 'a',)));
+                  builder: (context) => Direct2(
+                        role: 'a',
+                      )));
         }
       } else if (response.statusCode == 500) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -5,6 +5,7 @@ import 'package:internship_managing_system/model/PatientLogDto.dart';
 import 'package:internship_managing_system/model/Speciality.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+
 import '../../model/Course.dart';
 import '../../model/PatientLog.dart';
 import '../../model/ProcedureLog.dart';
@@ -13,6 +14,7 @@ class SQFLiteHelper {
   final _databaseName = 'taslak3.db';
   final _databaseVersion = 1;
   final _tablePatientLog = 'patient_log_tbl';
+  //TODO: Procedure Log table ekle
   final _tableCourse = 'course';
   final _tableAttending = 'attending';
   final _tableDiagnosis = 'diagnosis';
@@ -59,7 +61,7 @@ class SQFLiteHelper {
     await db.execute('''  
                 CREATE TABLE "institute" (
                   "institute_id"	INTEGER,
-                  "institute_name"	TEXT NOT NULL,
+                  "institute_name"	TEXT NOT NULL
                 )
   
     ''');
@@ -172,10 +174,9 @@ class SQFLiteHelper {
     Coordinator coordinator;
     List<PatientLog> listLogs = [];
 
-
-    List<PatientLogDto> dtoList = forms.map((e)=>PatientLogDto.fromMap(e)).toList();
-    for(PatientLogDto dto in dtoList){
-    }
+    List<PatientLogDto> dtoList =
+        forms.map((e) => PatientLogDto.fromMap(e)).toList();
+    for (PatientLogDto dto in dtoList) {}
     for (PatientLogDto dto in dtoList) {
       if (dto.attendingPhysician != null) {
         attendingPhysician = await getAttending(dto.attendingPhysician!);

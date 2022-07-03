@@ -1,37 +1,38 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/model/Course.dart';
 import 'package:internship_managing_system/model/Institute.dart';
 import 'package:internship_managing_system/student/services/SQFLiteHelper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../model/PatientLog.dart';
+
 import '../../DBURL.dart';
 import '../../model/AttendingPhysician.dart';
+import '../../model/PatientLog.dart';
 import '../../model/ProcedureLog.dart';
 import '../../model/Speciality.dart';
 
 class StudentDatabaseHelper {
-  final SQFLiteHelper _helper =SQFLiteHelper.instance;
+  final SQFLiteHelper _helper = SQFLiteHelper.instance;
   //get data from sql
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
-    /*preferences.remove('newUser');
+    /*  preferences.remove('newUser');
     preferences.remove('role');
     preferences.remove('oasisId');
     preferences.remove('id');
     preferences.remove('name');*/
-    var url = Uri.parse("${DBURL.url}/patient-logs?status=$status&studentId=$id");
-    var response = await http.get(url,
-        headers: <String, String>{
-          'Accept': 'application/json; charset=UTF-8',
-        }
-    );
+    var url =
+        Uri.parse("${DBURL.url}/patient-logs?status=$status&studentId=$id");
+    var response = await http.get(url, headers: <String, String>{
+      'Accept': 'application/json; charset=UTF-8',
+    });
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<PatientLog> forms = data.map((map){
-        PatientLog p =  PatientLog();
+      List<PatientLog> forms = data.map((map) {
+        PatientLog p = PatientLog();
         PatientLog res = p.fromJson(map);
         return res;
       }).toList();
@@ -42,16 +43,23 @@ class StudentDatabaseHelper {
   }
 
   Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
-    //TODO: change url
-    var url = Uri.parse("${DBURL.url}$status.php");
-    var response = await http.post(url);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    int id = preferences.getInt('id')!;
+    var url = Uri.parse(
+        "${DBURL.url}/procedures?status=$status&studentId=1"); //TODO: id değiş.
+    var response = await http.get(url, headers: <String, String>{
+      'Accept': 'application/json; charset=UTF-8',
+    });
     if (response.statusCode == 200) {
-      List<dynamic> tibbidata = jsonDecode(response.body);
-      List<ProcedureLog> tibbiforms =
-          tibbidata.map((e) => ProcedureLog.fromJson(e)).toList();
-      return tibbiforms;
+      List<dynamic> data = jsonDecode(response.body);
+      List<ProcedureLog> forms = data.map((map) {
+        ProcedureLog p = ProcedureLog();
+        ProcedureLog res = p.fromJson(map);
+        return res;
+      }).toList();
+      return forms;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception("HATA!");
     }
   }
 
@@ -62,7 +70,7 @@ class StudentDatabaseHelper {
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<Course> courses = data.map((e) => Course.fromJSON(e)).toList();
-      for(Course c in courses){
+      for (Course c in courses) {
         await _helper.insertCourse(c);
       }
       return courses;
@@ -79,9 +87,9 @@ class StudentDatabaseHelper {
       List<dynamic> data = jsonDecode(response.body);
       List<Speciality> specialities =
           data.map((e) => Speciality.fromJSON(e)).toList();
-     for(Speciality s in specialities){
-       await _helper.insertSpecialities(s);
-     }
+      for (Speciality s in specialities) {
+        await _helper.insertSpecialities(s);
+      }
       return specialities;
     } else {
       throw Exception('Failed to load specialities ');
@@ -96,7 +104,7 @@ class StudentDatabaseHelper {
       List<dynamic> data = jsonDecode(response.body);
       List<Institute> institutes =
           data.map((e) => Institute.fromJSON(e)).toList();
-      for(Institute i in institutes){
+      for (Institute i in institutes) {
         await _helper.insertInstitute(i);
       }
       return institutes;
@@ -109,14 +117,17 @@ class StudentDatabaseHelper {
   Future<List<AttendingPhysician>> fetchAttendingPhysicians() async {
     var url = Uri.parse("${DBURL.url}/attending-physicians?specialityId=1");
 
-    var response = await http.get(url, headers: <String, String>{
-      'Accept': 'application/json; charset=UTF-8',
-    },);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Accept': 'application/json; charset=UTF-8',
+      },
+    );
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<AttendingPhysician> listAttendings =
           data.map((e) => AttendingPhysician.fromJSON(e)).toList();
-      for(AttendingPhysician a in listAttendings){
+      for (AttendingPhysician a in listAttendings) {
         await _helper.insertAttending(a);
       }
       return listAttendings;
@@ -133,7 +144,6 @@ class StudentDatabaseHelper {
 
   //add data to sql
   Future insertFormToDatabase(PatientLog patientLog) async {
-
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
     var url = Uri.parse("${DBURL.url}/patient-logs");
@@ -141,9 +151,8 @@ class StudentDatabaseHelper {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-
         body: jsonEncode({
-          "studentId":id ,
+          "studentId": id,
           "instituteId": patientLog.institute?.id.toString(),
           "attendingId": patientLog.attendingPhysician?.id.toString(),
           "coordinatorId": "1",
@@ -169,30 +178,32 @@ class StudentDatabaseHelper {
     }
   }
 
-
-
-  Future insertTibbiFormToDatabase(ProcedureLog tibbiFormData) async {
-    var res = await http.post(
-      Uri.parse(
-          'https://medinternshipapp.000webhostapp.com/flutter/tibbi/insert.php'),
+  Future insertTibbiFormToDatabase(ProcedureLog procedureLog) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    int id = preferences.getInt('id')!;
+    var url = Uri.parse("${DBURL.url}/patient-logs");
+    final response = await http.post(
+      url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        "studentId": "1",
-        "specialityId": tibbiFormData.speciality.toString(),
+      body: jsonEncode({
+        "studentId": id,
+        "specialityId": procedureLog.speciality.toString(),
         "coordinatorId": "1",
-        "kayit_no": tibbiFormData.kayitNo.toString(),
-        "attendingId": tibbiFormData.attendingPhysician.toString(),
-        "etkilesim_turu": tibbiFormData.etkilesimTuru.toString(),
-        "tibbi_uygulama": tibbiFormData.tibbiUygulama.toString(),
-        "dis_kurum": tibbiFormData.disKurum.toString(),
-        "gerceklestigi_ortam": tibbiFormData.gerceklestigiOrtam.toString(),
-        "form_status": tibbiFormData.status.toString(),
-        "tarih": tibbiFormData.createdAt.toString()
+        "kayit_no": procedureLog.kayitNo.toString(),
+        "attendingId": procedureLog.attendingPhysician.toString(),
+        "etkilesim_turu": procedureLog.etkilesimTuru.toString(),
+        "tibbi_uygulama": procedureLog.tibbiUygulama.toString(),
+        "gerceklestigi_ortam": procedureLog.gerceklestigiOrtam.toString(),
+        "form_status": procedureLog.status.toString(),
+        "tarih": procedureLog.createdAt.toString()
       }),
     );
-    return (res.statusCode == 200) ? true : false;
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
   }
-
 }

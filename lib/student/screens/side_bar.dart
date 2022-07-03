@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/t%C4%B1bbi_etkilesim_kayd%C4%B1.dart';
+import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_accepted_forms.dart';
 import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_pending_forms.dart';
+import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_rejected_forms.dart';
 
 import '../../shared/constants.dart';
 import '../not_managed/notifications.dart';
@@ -43,7 +45,7 @@ class _SideBarState extends State<SideBar> {
     dynamic container;
     if (currentPage == DrawerSections.hastaEtkilesim) {
       title = const Text("Hasta Etkileşim Formu");
-      container =  FormPage();
+      container = FormPage();
     } else if (currentPage == DrawerSections.taslaklar) {
       title = const Text("Taslaklar");
       container = Drafts();
@@ -62,9 +64,15 @@ class _SideBarState extends State<SideBar> {
     } else if (currentPage == DrawerSections.settings) {
       title = const Text("Ayarlar");
       container = const Settings();
+    } else if (currentPage == DrawerSections.tibbiAcceptedForms) {
+      title = const Text("Tibbi Kabul Edilen Formlar");
+      container = const TibbiAcceptedForms();
     } else if (currentPage == DrawerSections.tibbiGonderilenFormlar) {
       title = const Text("Tibbi Onay Bekleyenler");
       container = const TibbiPendingForms();
+    } else if (currentPage == DrawerSections.tibbiRejectedForms) {
+      title = const Text("Tibbi Reddedilen Formlar");
+      container = const TibbiRejectedForms();
     } else if (currentPage == DrawerSections.notifications) {
       title = const Text("Bildirimler");
       container = const Notifications();
@@ -101,27 +109,67 @@ class _SideBarState extends State<SideBar> {
           menuItem(11, "Dashboard", FontAwesomeIcons.chartPie,
               currentPage == DrawerSections.dashboard ? true : false),
           const Divider(),
-          menuItem(1, "Hasta Etkileşim Kaydı", FontAwesomeIcons.map,
-              currentPage == DrawerSections.hastaEtkilesim ? true : false),
-          menuItem(3, "Onay Bekleyen Formlar", FontAwesomeIcons.ellipsisH,
-              currentPage == DrawerSections.gonderilenFormlar ? true : false),
-          menuItem(4, "Onaylanan Formlar", FontAwesomeIcons.heart,
-              currentPage == DrawerSections.onaylananFormlar ? true : false),
-          menuItem(
-              5,
-              "Reddedilen Formlar",
-              FontAwesomeIcons.exclamationTriangle,
-              currentPage == DrawerSections.reddedilenFormlar ? true : false),
+          ExpansionTile(
+            title: const Text(
+              "Hasta Etkileşim Kaydı",
+            ),
+            leading: const Icon(FontAwesomeIcons.map),
+            children: [
+              menuItem(1, "Hasta Etkileşim Kaydı", FontAwesomeIcons.map,
+                  currentPage == DrawerSections.hastaEtkilesim ? true : false),
+              menuItem(
+                  3,
+                  "Onay Bekleyen Formlar",
+                  FontAwesomeIcons.ellipsisH,
+                  currentPage == DrawerSections.gonderilenFormlar
+                      ? true
+                      : false),
+              menuItem(
+                  4,
+                  "Onaylanan Formlar",
+                  FontAwesomeIcons.heart,
+                  currentPage == DrawerSections.onaylananFormlar
+                      ? true
+                      : false),
+              menuItem(
+                  5,
+                  "Reddedilen Formlar",
+                  FontAwesomeIcons.exclamationTriangle,
+                  currentPage == DrawerSections.reddedilenFormlar
+                      ? true
+                      : false),
+            ],
+          ),
           const Divider(),
-          menuItem(2, "Tıbbi Uygulama Kaydı", FontAwesomeIcons.stethoscope,
-              currentPage == DrawerSections.tibbiUygulama ? true : false),
-          menuItem(
-              12,
-              "Onay Bekleyen Formlar",
-              FontAwesomeIcons.ellipsisH,
-              currentPage == DrawerSections.tibbiGonderilenFormlar
-                  ? true
-                  : false),
+          ExpansionTile(
+            title: const Text("Tibbi Uygulama Kaydı"),
+            leading: const Icon(FontAwesomeIcons.stethoscope),
+            children: [
+              menuItem(2, "Tıbbi Uygulama Kaydı", FontAwesomeIcons.stethoscope,
+                  currentPage == DrawerSections.tibbiUygulama ? true : false),
+              menuItem(
+                  12,
+                  "Onay Bekleyen Formlar",
+                  FontAwesomeIcons.ellipsisH,
+                  currentPage == DrawerSections.tibbiGonderilenFormlar
+                      ? true
+                      : false),
+              menuItem(
+                  13,
+                  "Onaylanan Formlar",
+                  FontAwesomeIcons.heart,
+                  currentPage == DrawerSections.tibbiAcceptedForms
+                      ? true
+                      : false),
+              menuItem(
+                  14,
+                  "Reddilen Formlar",
+                  FontAwesomeIcons.exclamationTriangle,
+                  currentPage == DrawerSections.tibbiRejectedForms
+                      ? true
+                      : false),
+            ],
+          ),
           const Divider(),
           menuItem(6, "Taslaklar(0))", FontAwesomeIcons.database,
               currentPage == DrawerSections.taslaklar ? true : false),
@@ -171,7 +219,12 @@ class _SideBarState extends State<SideBar> {
               currentPage = DrawerSections.dashboard;
             } else if (id == 12) {
               currentPage = DrawerSections.tibbiGonderilenFormlar;
+            } else if (id == 13) {
+              currentPage = DrawerSections.tibbiAcceptedForms;
+            } else if (id == 14) {
+              currentPage = DrawerSections.tibbiRejectedForms;
             }
+            print(id);
           });
         },
         child: Padding(
@@ -197,6 +250,8 @@ class _SideBarState extends State<SideBar> {
 }
 
 enum DrawerSections {
+  tibbiAcceptedForms,
+  tibbiRejectedForms,
   hastaEtkilesim,
   tibbiUygulama,
   gonderilenFormlar,

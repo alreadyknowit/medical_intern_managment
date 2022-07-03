@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:internship_managing_system/DBURL.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../model/PatientLog.dart';
 
 class AttendingDatabaseHelper {
@@ -14,17 +16,16 @@ class AttendingDatabaseHelper {
     preferences.remove('oasisId');
     preferences.remove('id');
     preferences.remove('name');*/
-    var url = Uri.parse("${DBURL.url}/patient-logs/attending?status=$status&attendingId=$id");
-    var response = await http.get(url,
-        headers: <String, String>{
-          'Accept': 'application/json; charset=UTF-8',
-        }
-    );
+    var url = Uri.parse(
+        "${DBURL.url}/patient-logs/attending?status=$status&attendingId=$id");
+    var response = await http.get(url, headers: <String, String>{
+      'Accept': 'application/json; charset=UTF-8',
+    });
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      List<PatientLog> forms = data.map((map){
-        PatientLog p =  PatientLog();
+      List<PatientLog> forms = data.map((map) {
+        PatientLog p = PatientLog();
         PatientLog res = p.fromJson(map);
         return res;
       }).toList();
@@ -56,9 +57,8 @@ class AttendingDatabaseHelper {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-
         body: jsonEncode({
-          "studentId":patientLog.student?.id ,
+          "studentId": patientLog.student?.id,
           "instituteId": patientLog.institute?.id,
           "attendingId": patientLog.attendingPhysician?.id,
           "coordinatorId": patientLog.coordinator?.id,
