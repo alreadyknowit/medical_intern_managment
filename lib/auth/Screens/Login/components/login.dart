@@ -95,7 +95,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (passwordController.text.isNotEmpty && emailController.text.isNotEmpty) {
       var response = await http.post(
           Uri.parse("${DBURL.url}/login?no=$no&password=$pass&role=$role"));
-      print(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> decoded = jsonDecode(response.body);
         SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -224,7 +224,6 @@ class _SideBarState extends State<SideBar> {
             } else if (id == 14) {
               currentPage = DrawerSections.tibbiRejectedForms;
             }
-            print(id);
           });
         },
         child: Padding(

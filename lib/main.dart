@@ -53,13 +53,11 @@ class _DirectState extends State<Direct> {
    Future checkUser()async{
      SharedPreferences pref = await SharedPreferences.getInstance();
      setState(() { isSingedIn= pref.getBool('newUser') ?? false; });
-     print(isSingedIn);
    }
 
    Future checkType()async{
      SharedPreferences pref = await SharedPreferences.getInstance();
      setState(() { role= pref.getString('role') ?? "s"; });
-     print(role);
    }
 
   @override

@@ -85,7 +85,6 @@ class _BodyState extends State<Body> {
       var response = await http
           .post(Uri.parse("${DBURL.url}/login/check?no=$no&role=$role"));
       var result = jsonDecode(response.body);
-      print(result);
       if (result == true) {
         if (role == 's') {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

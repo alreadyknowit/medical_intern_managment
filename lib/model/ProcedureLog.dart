@@ -104,7 +104,6 @@ class ProcedureLog with ChangeNotifier {
     if (value != null) {
       var format = DateTime.parse(value);
       var formatter = DateFormat('d/M/y hh:mm').format(format);
-      print(formatter);
       _createdAt = formatter.toString();
     } else {
       _createdAt = value;

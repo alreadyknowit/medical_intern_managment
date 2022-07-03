@@ -37,7 +37,6 @@ class _TibbiRejectedFormsState extends State<TibbiRejectedForms> {
               ));
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(
                 child: RichText(
                   text: const TextSpan(
