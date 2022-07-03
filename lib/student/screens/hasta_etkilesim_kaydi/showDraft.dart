@@ -1,8 +1,5 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/model/Student.dart';
-import '../../../model/Coordinator.dart';
 import '../../../model/Speciality.dart';
 import 'package:internship_managing_system/student/widgets/FilteringDropDown.dart';
 import '../../../model/PatientLog.dart';
@@ -181,10 +178,15 @@ class _HomePageState extends State<ShowDraft> {
 
       patientLog.setAyiriciTani(draftedLog.ayiriciTani);
       _ayiriciTaniController.text =draftedLog.ayiriciTani ?? "";
+
       patientLog.setKesinTani(draftedLog.kesinTani);
       _kesinTaniController.text = draftedLog.kesinTani ?? "";
+
       patientLog.setAyiriciTani(draftedLog.tedaviYontemi);
       _tedaviController.text = draftedLog.tedaviYontemi ?? "";
+
+      patientLog.setKayitNo(draftedLog.kayitNo);
+      _kayitController.text=draftedLog.kayitNo ?? "";
 
     }
   }

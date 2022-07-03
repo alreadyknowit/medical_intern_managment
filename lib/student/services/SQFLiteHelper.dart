@@ -11,7 +11,7 @@ import '../../model/PatientLog.dart';
 import '../../model/ProcedureLog.dart';
 
 class SQFLiteHelper {
-  final _databaseName = 'taslak3.db';
+  final _databaseName = 'taslak.db';
   final _databaseVersion = 1;
   final _tablePatientLog = 'patient_log_tbl';
   //TODO: Procedure Log table ekle
@@ -139,7 +139,7 @@ class SQFLiteHelper {
                   "ayirici_tani"	TEXT,
                   "kesin_tani"	TEXT,
                   "tedavi_yontemi"	TEXT,
-                  "tarih"	TEXT,
+                  "tarih" datetime DEFAULT CURRENT_TIMESTAMP,
                   "form_status"	TEXT,
                   "coordinator_id"	INTEGER,
                   FOREIGN KEY("coordinator_id") REFERENCES "coordinator"("coordinator_id"),
@@ -173,10 +173,8 @@ class SQFLiteHelper {
     Course? course;
     Coordinator coordinator;
     List<PatientLog> listLogs = [];
-
     List<PatientLogDto> dtoList =
         forms.map((e) => PatientLogDto.fromMap(e)).toList();
-    for (PatientLogDto dto in dtoList) {}
     for (PatientLogDto dto in dtoList) {
       if (dto.attendingPhysician != null) {
         attendingPhysician = await getAttending(dto.attendingPhysician!);
@@ -205,7 +203,12 @@ class SQFLiteHelper {
       log.setSikayet(dto.sikayet);
       log.setStatus("waiting");
       log.setYas(dto.yas.toString());
+      log.setCreatedAt(dto.tarih);
+      log.setKesinTani(dto.kesinTani);
+      log.setTedaviYontemi(dto.tedaviYontemi);
       listLogs.add(log);
+      log.setKayitNo(log.kayitNo);
+      print(log.toString());
     }
 
     /*  Institute? institute;
@@ -255,7 +258,6 @@ class SQFLiteHelper {
     return listLogs;
   }
 
-  Future getFormDetails(PatientLog log) async {}
 
   Future<bool> insertSpecialities(Speciality speciality) async {
     Database db = await instance.getDatabase;

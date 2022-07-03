@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:internship_managing_system/auth/Screens/Login/components/login.dart';
 import 'package:internship_managing_system/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

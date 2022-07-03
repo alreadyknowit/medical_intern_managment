@@ -16,4 +16,9 @@ class Institute {
   factory Institute.fromMap(Map<String, dynamic> map) {
     return Institute(id: map['institute_id'], instituteName: map['institute_name']);
   }
+
+  @override
+  String toString() {
+    return '{id: $id, instituteName: $instituteName}';
+  }
 }

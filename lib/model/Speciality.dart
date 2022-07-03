@@ -22,4 +22,9 @@ class Speciality {
     return Speciality(
         id: map['speciality_id'], name: map['description'], courseId:map['course_id'] );
   }
+
+  @override
+  String toString() {
+    return '{id: $id, name: $name, courseId: $courseId}';
+  }
 }

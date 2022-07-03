@@ -21,4 +21,9 @@ class Course with ChangeNotifier {
   factory Course.fromMap(Map<String, dynamic> map) {
     return Course(id: map['course_id'], courseName: map['course_name']);
   }
+
+  @override
+  String toString() {
+    return '{id: $id, courseName: $courseName}';
+  }
 }

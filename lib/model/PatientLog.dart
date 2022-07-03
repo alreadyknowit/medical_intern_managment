@@ -101,7 +101,6 @@ class PatientLog with ChangeNotifier {
       SQFLiteHelper.columnAyiriciTani: ayiriciTani,
       SQFLiteHelper.columnKesinTani: kesinTani,
       SQFLiteHelper.columnTedaviYontemi: tedaviYontemi,
-      SQFLiteHelper.columnTarih: createdAt,
       SQFLiteHelper.columnStatus: status
     };
   }
@@ -251,7 +250,7 @@ class PatientLog with ChangeNotifier {
 
   @override
   String toString() {
-    return 'PatientLog{_id: $_id, _course: $_course, _speciality: $_speciality, _attendingPhysician: $_attendingPhysician, _student: $_student, _coordinator: $_coordinator, _institute: $_institute, _kayitNo: $_kayitNo, _yas: $_yas, _cinsiyet: $_cinsiyet, _sikayet: $_sikayet, _ayiriciTani: $_ayiriciTani, _kesinTani: $_kesinTani, _tedaviYontemi: $_tedaviYontemi, _etkilesimTuru: $_etkilesimTuru, _kapsam: $_kapsam, _gerceklestigiOrtam: $_gerceklestigiOrtam, _status: $_status, _createdAt: $_createdAt, updatedAt: $updatedAt}';
+    return 'PatientLog{_id: $_id, _course: ${_course.toString()}, _speciality: ${speciality.toString()}, _attendingPhysician: ${_attendingPhysician.toString()}, _student: ${student.toString()}, _coordinator: ${_coordinator.toString()}, _institute: ${_institute.toString()}, _kayitNo: $_kayitNo, _yas: $_yas, _cinsiyet: $_cinsiyet, _sikayet: $_sikayet, _ayiriciTani: $_ayiriciTani, _kesinTani: $_kesinTani, _tedaviYontemi: $_tedaviYontemi, _etkilesimTuru: $_etkilesimTuru, _kapsam: $_kapsam, _gerceklestigiOrtam: $_gerceklestigiOrtam, _status: $_status, _createdAt: $_createdAt, updatedAt: $updatedAt}';
   }
 
 /*  PatientLog fromJson(Map<String,dynamic> map){

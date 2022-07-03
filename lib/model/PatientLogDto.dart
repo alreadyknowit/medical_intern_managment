@@ -55,7 +55,8 @@ class PatientLogDto {
          etkilesimTuru= myMap['etkilesim_turu'],
          kapsam= myMap['kapsam'],
          gerceklestigiOrtam= myMap['ortam'],
-         coordinator=1 ,
+         coordinator=myMap['coordinator'] ,
+         student=myMap['student'],
          tarih= myMap['tarih'];
 
 

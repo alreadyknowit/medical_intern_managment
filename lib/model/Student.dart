@@ -20,6 +20,8 @@ class Student {
 
   @override
   String toString() {
-    return 'Student{id: $id, studentName: $studentName, oasisId: $oasisId, course: $course}';
+    return '{id: $id, studentName: $studentName, oasisId: $oasisId, course: $course}';
   }
+
+
 }

@@ -3,11 +3,10 @@ import 'package:internship_managing_system/attending_physician/provider/feedback
 import 'package:internship_managing_system/attending_physician/screens/attending_physician.dart';
 import 'package:internship_managing_system/auth/Screens/Login/components/login.dart';
 import 'package:internship_managing_system/model/PatientLog.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/student/screens/side_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'auth/Screens/Home_Page/home_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +21,9 @@ class InternshipManagingSystem extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => FeedbackPositionProvider()),
-        ChangeNotifierProvider(create: (context) => PatientLog())
+        ChangeNotifierProvider(create: (context) => PatientLog()),
+        ChangeNotifierProvider(create: (context) => ProcedureLog()),
+
       ],
       builder: (context, _) => MaterialApp(
         theme: ThemeData.dark(),
