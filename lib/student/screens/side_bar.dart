@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internship_managing_system/student/screens/tibbiDrafts.dart';
 import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/t%C4%B1bbi_etkilesim_kayd%C4%B1.dart';
 import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_accepted_forms.dart';
 import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_pending_forms.dart';
@@ -49,6 +50,9 @@ class _SideBarState extends State<SideBar> {
     } else if (currentPage == DrawerSections.taslaklar) {
       title = const Text("Taslaklar");
       container = Drafts();
+    } else if (currentPage == DrawerSections.tibbiTaslaklar) {
+      title = const Text("Tibbi Uyuglama Taslaklar");
+      container = TibbiDrafts();
     } else if (currentPage == DrawerSections.tibbiUygulama) {
       title = const Text("Tıbbi Uygulama Kaydı");
       container = TibbiUygulama();
@@ -168,6 +172,8 @@ class _SideBarState extends State<SideBar> {
                   currentPage == DrawerSections.tibbiRejectedForms
                       ? true
                       : false),
+              menuItem(15, "Taslaklar", FontAwesomeIcons.database,
+                  currentPage == DrawerSections.tibbiTaslaklar ? true : false),
             ],
           ),
           const Divider(),
@@ -223,6 +229,8 @@ class _SideBarState extends State<SideBar> {
               currentPage = DrawerSections.tibbiAcceptedForms;
             } else if (id == 14) {
               currentPage = DrawerSections.tibbiRejectedForms;
+            } else if (id == 15) {
+              currentPage = DrawerSections.tibbiTaslaklar;
             }
           });
         },
@@ -263,4 +271,5 @@ enum DrawerSections {
   send_feedback,
   dashboard,
   tibbiGonderilenFormlar,
+  tibbiTaslaklar
 }

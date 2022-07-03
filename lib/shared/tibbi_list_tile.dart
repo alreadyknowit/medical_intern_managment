@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/tibbi_form_view.dart';
 import 'package:internship_managing_system/student/arguments/form_args.dart';
+import 'package:internship_managing_system/student/screens/tibbi_uygulama_kaydi/tibbi_shoftDraft.dart';
 
 import 'constants.dart';
 
@@ -35,7 +36,17 @@ class TibbiCustomListTile extends StatelessWidget {
       );
     }
 
-    void fromDraft() {}
+    void fromDraft() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                TibbiShowDraft(procedureLogDraft: tibbiFormData),
+            settings: RouteSettings(
+              arguments: tibbiFormArguments,
+            )),
+      );
+    }
 
     void pushToDecisionPage() {}
 

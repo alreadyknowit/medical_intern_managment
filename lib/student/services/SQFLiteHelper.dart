@@ -9,12 +9,13 @@ import 'package:sqflite/sqflite.dart';
 import '../../model/Course.dart';
 import '../../model/PatientLog.dart';
 import '../../model/ProcedureLog.dart';
+import '../../model/ProcedureLogDto.dart';
 
 class SQFLiteHelper {
-  final _databaseName = 'taslak.db';
+  final _databaseName = 'taslak4.db';
   final _databaseVersion = 1;
   final _tablePatientLog = 'patient_log_tbl';
-  //TODO: Procedure Log table ekle
+  final _tableProcedureLog = 'procedure_log_tbl';
   final _tableCourse = 'course';
   final _tableAttending = 'attending';
   final _tableDiagnosis = 'diagnosis';
@@ -31,6 +32,7 @@ class SQFLiteHelper {
   static const columnSikayet = 'sikayet';
   static const columnCinsiyet = 'cinsiyet';
   static const columnEtkilesimTuru = 'etkilesim_turu';
+  static const columnTibbiUygulama = 'tibbi_uygulama';
   static const columnKapsam = 'kapsam';
   static const columnOrtam = 'ortam';
   static const columnYas = 'yas';
@@ -150,6 +152,28 @@ class SQFLiteHelper {
                   FOREIGN KEY("attending_id") REFERENCES "attending"("attending_id")
                 )
     ''');
+    await db.execute('''
+        CREATE TABLE  "procedure_log_tbl" (
+                  "id"	INTEGER,
+                  "institute_id"	INTEGER,
+                  "speciality_id"	INTEGER COLLATE BINARY,
+                  "course_id"	INTEGER,
+                  "attending_id"	INTEGER,
+                  "kayit_no"	TEXT,
+                  "etkilesim_turu"	TEXT,
+                  "tibbi_uygulama"	TEXT,
+                  "ortam"	TEXT,
+                  "tarih" datetime DEFAULT CURRENT_TIMESTAMP,
+                  "form_status"	TEXT,
+                  "coordinator_id"	INTEGER,
+                  FOREIGN KEY("coordinator_id") REFERENCES "coordinator"("coordinator_id"),
+                  PRIMARY KEY("id" AUTOINCREMENT),
+                  FOREIGN KEY("speciality_id") REFERENCES "speciality"("speciality_id"),
+                  FOREIGN KEY("institute_id") REFERENCES "institute"("institute_id"),
+                  FOREIGN KEY("course_id") REFERENCES "course"("course_id"),
+                  FOREIGN KEY("attending_id") REFERENCES "attending"("attending_id")
+                )
+    ''');
   }
 
   Future<bool> insertPatientLog(PatientLog form) async {
@@ -161,6 +185,60 @@ class SQFLiteHelper {
     } else {
       return true;
     }
+  }
+
+  Future<bool> insertProcedureLog(ProcedureLog form) async {
+    Database db = await instance.getDatabase;
+    int res = await db.insert(_tableProcedureLog, form.toMap());
+
+    if (res == 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<List<ProcedureLog>> getTibbiForms() async {
+    Database db = await instance.getDatabase;
+    List<Map<String, dynamic>> forms =
+        await db.query(_tableProcedureLog, orderBy: 'id DESC');
+    Institute? institute;
+    AttendingPhysician? attendingPhysician;
+    Speciality? speciality;
+    Course? course;
+    Coordinator coordinator;
+    List<ProcedureLog> listLogs = [];
+    List<ProcedureLogDto> dtoList =
+        forms.map((e) => ProcedureLogDto.fromMap(e)).toList();
+    for (ProcedureLogDto dto in dtoList) {
+      if (dto.attendingPhysician != null) {
+        attendingPhysician = await getAttending(dto.attendingPhysician!);
+      }
+      if (dto.speciality != null) {
+        speciality = await getSpeciality(dto.speciality!);
+      }
+      if (dto.course != null) {
+        course = await getCourse(dto.course!);
+      }
+      if (dto.institute != null) {
+        institute = await getInstitute(dto.institute!);
+      }
+
+      ProcedureLog log = ProcedureLog();
+      log.setId(dto.id);
+      log.setInstute(institute);
+      log.setCourse(course);
+      log.setSpeciality(speciality);
+      log.setAttendingPhysician(attendingPhysician);
+      log.setTibbiUygulama(dto.tibbiUygulama);
+      log.setEtkilesimTuru(dto.etkilesimTuru);
+      log.setKayitNo(dto.kayitNo);
+      log.setStatus("waiting");
+      log.setCreatedAt(dto.tarih);
+      listLogs.add(log);
+      log.setKayitNo(log.kayitNo);
+    }
+    return listLogs;
   }
 
   Future<List<PatientLog>> getForms() async {
@@ -257,7 +335,6 @@ class SQFLiteHelper {
     return listLogs;
   }
 
-
   Future<bool> insertSpecialities(Speciality speciality) async {
     Database db = await instance.getDatabase;
     int res = await db.insert(_tableSpeciality, speciality.toMap(),
@@ -351,38 +428,22 @@ class SQFLiteHelper {
         where: '$columnId =?', whereArgs: [id]);
   }
 
+  Future<int> updateTibbi(ProcedureLog form) async {
+    Database db = await instance.getDatabase;
+    int id = form.toMap()['id'];
+    return await db.update(_tableProcedureLog, form.toMap(),
+        where: '$columnId =?', whereArgs: [id]);
+  }
+
   Future<int> remove(int? id) async {
     Database db = await instance.getDatabase;
     return await db
         .delete(_tablePatientLog, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  Future<int> insertTibbi(ProcedureLog form) async {
-    Database db = await instance.getDatabase;
-
-    return await db.insert(_tablePatientLog, form.toMap());
-  }
-
-  /* Future<List<ProcedureLog>> getTibbiForms() async {
-    Database db = await instance.getDatabase;
-    var forms = await db.query(_tablePatientLog, orderBy: 'id DESC');
-    List<ProcedureLog> formList = forms.isNotEmpty
-        ? forms.map((e) => ProcedureLog.fromJson(e)).toList()
-        : [];
-
-    return formList;
-  }*/
-
-  Future<int> updateTibbi(ProcedureLog form) async {
-    Database db = await instance.getDatabase;
-    int id = form.toMap()['id'];
-    return await db.update(_tablePatientLog, form.toMap(),
-        where: '$columnId =?', whereArgs: [id]);
-  }
-
   Future<int> removeTibbi(int? id) async {
     Database db = await instance.getDatabase;
     return await db
-        .delete(_tablePatientLog, where: '$columnId = ?', whereArgs: [id]);
+        .delete(_tableProcedureLog, where: '$columnId = ?', whereArgs: [id]);
   }
 }

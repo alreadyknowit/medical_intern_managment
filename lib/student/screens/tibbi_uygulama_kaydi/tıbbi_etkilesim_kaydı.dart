@@ -135,16 +135,18 @@ class _TibbiUyglamaState extends State<TibbiUygulama> {
   bool isLoading = false;
 
   void formSakla() async {
-    Course course = await _helper.getCourse(3);
+    /*Course course = await _helper.getCourse(3);
     Speciality speciality = await _helper.getSpeciality(1);
     AttendingPhysician attendingPhysician = await _helper.getAttending(3);
     Institute institute = await _helper.getInstitute(2);
     _procedureLog.setCourse(course);
     _procedureLog.setAttendingPhysician(attendingPhysician);
     _procedureLog.setInstute(institute);
-    _procedureLog.setSpeciality(speciality);
-    //final res = await _helper.insertPatientLog(_procedureLog);
-    //res==false ? errorAlert(context) : customSnackBar(context, 'Başarıyla taslağa kaydedildi');
+    _procedureLog.setSpeciality(speciality);*/
+    final res = await _helper.insertProcedureLog(_procedureLog);
+    res == false
+        ? errorAlert(context)
+        : customSnackBar(context, 'Başarıyla taslağa kaydedildi');
   }
 
   formIlet() async {

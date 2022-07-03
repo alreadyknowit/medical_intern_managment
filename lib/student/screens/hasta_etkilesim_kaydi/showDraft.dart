@@ -1,12 +1,12 @@
-
 import 'package:flutter/material.dart';
-import '../../../model/Speciality.dart';
 import 'package:internship_managing_system/student/widgets/FilteringDropDown.dart';
-import '../../../model/PatientLog.dart';
+
 import '/../shared/custom_spinkit.dart';
 import '../../../model/AttendingPhysician.dart';
 import '../../../model/Course.dart';
 import '../../../model/Institute.dart';
+import '../../../model/PatientLog.dart';
+import '../../../model/Speciality.dart';
 import '../../../shared/custom_alert.dart';
 import '../../../shared/custom_snackbar.dart';
 import '../../services/SQFLiteHelper.dart';
@@ -25,7 +25,6 @@ class ShowDraft extends StatefulWidget {
 }
 
 class _HomePageState extends State<ShowDraft> {
-
   final SQFLiteHelper _helper = SQFLiteHelper.instance;
   final StudentDatabaseHelper _dbHelper = StudentDatabaseHelper();
   late bool isDeletable;
@@ -110,31 +109,34 @@ class _HomePageState extends State<ShowDraft> {
                 _selectedStajTuru, 'Staj Türü'),
             customTypeAhead(
                 map['doktor'], _doktorController, _selectedDoktor, 'Doktor'),*/
-            FilteringDropDown(
-                1,
-                patientLog.setInstute,
-                patientLog.setCourse,
-                patientLog.setSpeciality,
-                patientLog.setAttendingPhysician),
-            CustomDropDown(patientLog.gerceklestigiOrtam,
-                map['ortam'], "Ortam", patientLog.setGerceklestigiOrtam),
-            CustomDropDown(patientLog.kapsam,map['kapsam'], "Kapsam", patientLog.setKapsam),
-            CustomDropDown(patientLog.etkilesimTuru,map['etkilesim'], "Etkileşim Türü",
-                patientLog.setEtkilesimTuru),
-            CustomDropDown("Erkek",map['cinsiyet'], "Cinsiyet", patientLog.setCinsiyet),
-            CustomTextField(_kayitController,1, "Kayıt No ", 10, patientLog.setKayitNo, 80),
-            CustomTextField(_yasContoller,1, "Hastanın Yaşı", 3, patientLog.setYas, 80),
-            CustomTextField(_sikayetController,1, "Şikayet", 10, patientLog.setSikayet, 80),
+            FilteringDropDown(1, patientLog.setInstute, patientLog.setCourse,
+                patientLog.setSpeciality, patientLog.setAttendingPhysician),
+            CustomDropDown(patientLog.gerceklestigiOrtam, map['ortam'], "Ortam",
+                patientLog.setGerceklestigiOrtam),
+            CustomDropDown(patientLog.kapsam, map['kapsam'], "Kapsam",
+                patientLog.setKapsam),
+            CustomDropDown(patientLog.etkilesimTuru, map['etkilesim'],
+                "Etkileşim Türü", patientLog.setEtkilesimTuru),
+            CustomDropDown(
+                "Erkek", map['cinsiyet'], "Cinsiyet", patientLog.setCinsiyet),
+            CustomTextField(_kayitController, 1, "Kayıt No ", 10,
+                patientLog.setKayitNo, 80),
             CustomTextField(
-                _ayiriciTaniController,1, "Ayırıcı Tanı", 10, patientLog.setAyiriciTani, 80),
-            CustomTextField(_kesinTaniController,5, "Kesin Tanı", 50, patientLog.setKesinTani, 130),
-            CustomTextField(_tedaviController,
-                5, "Tedavi Yöntemi", 200, patientLog.setTedaviYontemi, 130),
+                _yasContoller, 1, "Hastanın Yaşı", 3, patientLog.setYas, 80),
+            CustomTextField(_sikayetController, 1, "Şikayet", 10,
+                patientLog.setSikayet, 80),
+            CustomTextField(_ayiriciTaniController, 1, "Ayırıcı Tanı", 10,
+                patientLog.setAyiriciTani, 80),
+            CustomTextField(_kesinTaniController, 5, "Kesin Tanı", 50,
+                patientLog.setKesinTani, 130),
+            CustomTextField(_tedaviController, 5, "Tedavi Yöntemi", 200,
+                patientLog.setTedaviYontemi, 130),
           ],
         ),
       ),
     );
   }
+
   final TextEditingController _kayitController = TextEditingController();
   final TextEditingController _sikayetController = TextEditingController();
   final TextEditingController _yasContoller = TextEditingController();
@@ -149,8 +151,6 @@ class _HomePageState extends State<ShowDraft> {
   bool isLoading = false;
 
   Future<List<List<dynamic>>> fetchFormContent() async {
-
-
     List<List<dynamic>> res = [];
     List<AttendingPhysician> attendings =
         await _dbHelper.fetchAttendingPhysicians();
@@ -167,10 +167,9 @@ class _HomePageState extends State<ShowDraft> {
     return res;
   }
 
-  void fillContent(){
+  void fillContent() {
     PatientLog? draftedLog = widget.patientLogFromDraft;
-    if(draftedLog != null){
-
+    if (draftedLog != null) {
       //dropdown
       patientLog.setId(draftedLog.id);
       patientLog.setKapsam(draftedLog.kapsam);
@@ -186,13 +185,13 @@ class _HomePageState extends State<ShowDraft> {
 
       //text
       patientLog.setSikayet(draftedLog.sikayet);
-      _sikayetController.text=draftedLog.sikayet ?? "";
+      _sikayetController.text = draftedLog.sikayet ?? "";
 
       patientLog.setYas(draftedLog.yas);
-      _yasContoller.text=draftedLog.yas ?? "";
+      _yasContoller.text = draftedLog.yas ?? "";
 
       patientLog.setAyiriciTani(draftedLog.ayiriciTani);
-      _ayiriciTaniController.text =draftedLog.ayiriciTani ?? "";
+      _ayiriciTaniController.text = draftedLog.ayiriciTani ?? "";
 
       patientLog.setKesinTani(draftedLog.kesinTani);
       _kesinTaniController.text = draftedLog.kesinTani ?? "";
@@ -201,21 +200,20 @@ class _HomePageState extends State<ShowDraft> {
       _tedaviController.text = draftedLog.tedaviYontemi ?? "";
 
       patientLog.setKayitNo(draftedLog.kayitNo);
-      _kayitController.text=draftedLog.kayitNo ?? "";
-
+      _kayitController.text = draftedLog.kayitNo ?? "";
     }
   }
-  formSil() async {
-   int res =  await _helper.remove(patientLog.id).then((value) {
-     Navigator.pop(context);
-     return value;
-   });
-   if(res==1){
-     setState(() {
-       customSnackBar(context, 'Başarıyla silindi');
-     });
-   }
 
+  formSil() async {
+    int res = await _helper.remove(patientLog.id).then((value) {
+      Navigator.pop(context);
+      return value;
+    });
+    if (res == 1) {
+      setState(() {
+        customSnackBar(context, 'Başarıyla silindi');
+      });
+    }
   }
 
   formIlet() async {
@@ -227,9 +225,9 @@ class _HomePageState extends State<ShowDraft> {
 
   void formGuncelle() async {
     int? id = patientLog.id;
-    int res=0;
-    if(id != null){
-       res = await _helper.update(patientLog);
+    int res = 0;
+    if (id != null) {
+      res = await _helper.update(patientLog);
     }
     res != 1
         ? errorAlert(context)

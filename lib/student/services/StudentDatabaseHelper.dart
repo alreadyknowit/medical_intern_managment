@@ -175,15 +175,6 @@ class StudentDatabaseHelper {
   }
 
   Future insertTibbiFormToDatabase(ProcedureLog procedureLog) async {
-    print(procedureLog.institute?.instituteName);
-    print(procedureLog.course?.courseName);
-    print(procedureLog.speciality?.name);
-    print(procedureLog.attendingPhysician?.attendingName);
-    print(procedureLog.etkilesimTuru);
-    print(procedureLog.kayitNo);
-    print(procedureLog.tibbiUygulama);
-    print(procedureLog.gerceklestigiOrtam);
-
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
     var url = Uri.parse("${DBURL.url}/procedures");
@@ -194,19 +185,19 @@ class StudentDatabaseHelper {
       },
       body: jsonEncode({
         "studentId": id,
-        "instituteId": procedureLog.institute?.id.toString(),
-        "specialityId": procedureLog.speciality?.toString(),
-        "courseId": procedureLog.course?.id.toString(),
-        "attendingId": procedureLog.attendingPhysician?.id.toString(),
+        "instituteId": procedureLog.institute?.id,
+        "specialityId": procedureLog.speciality?.id,
+        "courseId": procedureLog.course?.id,
+        "attendingId": procedureLog.attendingPhysician?.id,
         "coordinatorId": "1",
-        "kayitNo": procedureLog.kayitNo.toString(),
-        "etkilesimTuru": procedureLog.etkilesimTuru.toString(),
-        "tibbiUygulama": procedureLog.tibbiUygulama.toString(),
-        "gerceklestigiOrtam": procedureLog.gerceklestigiOrtam.toString(),
+        "kayitNo": procedureLog.kayitNo,
+        "etkilesimTuru": procedureLog.etkilesimTuru,
+        "tibbiUygulama": procedureLog.tibbiUygulama,
+        "gerceklestigiOrtam": procedureLog.gerceklestigiOrtam,
         "status": "waiting",
       }),
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return true;
     } else {
       print(response.statusCode);

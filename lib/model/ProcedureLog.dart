@@ -22,6 +22,7 @@ class ProcedureLog with ChangeNotifier {
   String? _etkilesimTuru;
   String? _gerceklestigiOrtam;
   String? _status;
+  String? _tarih;
   ProcedureLog({
     kayitNo,
     status,
@@ -70,9 +71,10 @@ class ProcedureLog with ChangeNotifier {
       SQFLiteHelper.columnCourseId: course?.id,
       SQFLiteHelper.columnInstituteId: institute?.id,
       SQFLiteHelper.columnOrtam: gerceklestigiOrtam,
-      SQFLiteHelper.columnTibbiEtkilesimTuru: etkilesimTuru,
-      SQFLiteHelper.columnTarih: createdAt,
-      SQFLiteHelper.columnStatus: status
+      SQFLiteHelper.columnEtkilesimTuru: etkilesimTuru,
+      SQFLiteHelper.columnTibbiUygulama: tibbiUygulama,
+      SQFLiteHelper.columnStatus: status,
+      SQFLiteHelper.columnCoordinatorId: coordinator?.id,
     };
   }
 
@@ -108,42 +110,42 @@ class ProcedureLog with ChangeNotifier {
 
   String? get gerceklestigiOrtam => _gerceklestigiOrtam;
 
-  void setGerceklestigiOrtam(String value) {
+  void setGerceklestigiOrtam(String? value) {
     _gerceklestigiOrtam = value;
     notifyListeners();
   }
 
   String? get etkilesimTuru => _etkilesimTuru;
 
-  void setEtkilesimTuru(String value) {
+  void setEtkilesimTuru(String? value) {
     _etkilesimTuru = value;
     notifyListeners();
   }
 
   String? get tibbiUygulama => _tibbiUygulama;
 
-  void setTibbiUygulama(String value) {
+  void setTibbiUygulama(String? value) {
     _tibbiUygulama = value;
     notifyListeners();
   }
 
   String? get kayitNo => _kayitNo;
 
-  void setKayitNo(String value) {
+  void setKayitNo(String? value) {
     _kayitNo = value;
     notifyListeners();
   }
 
   Coordinator? get coordinator => _coordinator;
 
-  void setCoordinator(Coordinator value) {
+  void setCoordinator(Coordinator? value) {
     _coordinator = value;
     notifyListeners();
   }
 
   Student? get student => _student;
 
-  void setStudent(Student value) {
+  void setStudent(Student? value) {
     _student = value;
     notifyListeners();
   }
