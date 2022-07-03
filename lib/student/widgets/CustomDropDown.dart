@@ -20,7 +20,6 @@ class _CustomDropDownState extends State<CustomDropDown> {
   void initState() {
     dropdownValue =widget.selectedVal ?? widget.itemList[0];
 
-    // TODO: implement initState
     super.initState();
   }
 

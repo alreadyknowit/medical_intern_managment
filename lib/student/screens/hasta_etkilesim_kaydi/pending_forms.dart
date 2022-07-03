@@ -45,7 +45,6 @@ class _PendingFormsState extends State<PendingForms> {
                         text:
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
-                      //TODO: emoji
                       TextSpan(
                         text: ' 🧭', // emoji characters
                         style: TextStyle(

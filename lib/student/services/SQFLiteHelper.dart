@@ -14,7 +14,6 @@ class SQFLiteHelper {
   final _databaseName = 'taslak.db';
   final _databaseVersion = 1;
   final _tablePatientLog = 'patient_log_tbl';
-  //TODO: Procedure Log table ekle
   final _tableCourse = 'course';
   final _tableAttending = 'attending';
   final _tableDiagnosis = 'diagnosis';

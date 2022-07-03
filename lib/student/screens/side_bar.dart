@@ -25,7 +25,6 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  //TODO: The list item counter is not refreshing when it changed.
   var currentPage = DrawerSections.hastaEtkilesim;
   Text? title;
   final SQFLiteHelper _helper = SQFLiteHelper.instance;

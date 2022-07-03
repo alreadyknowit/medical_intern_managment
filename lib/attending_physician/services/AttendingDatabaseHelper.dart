@@ -37,7 +37,6 @@ class AttendingDatabaseHelper {
     }
   }
 
-// TODO: linkler değişecek
   Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
     SharedPreferences pref =await SharedPreferences.getInstance();
     int id = pref.getInt('id')!;
@@ -85,7 +84,6 @@ class AttendingDatabaseHelper {
       return false;
     }
   }
-  //TODO
   Future updateFormStatus(PatientLog patientLog) async {
     var url = Uri.parse("${DBURL.url}/patient-logs/${patientLog.id}");
     final response = await http.put(url,

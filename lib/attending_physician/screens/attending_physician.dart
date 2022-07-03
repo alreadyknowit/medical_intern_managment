@@ -211,7 +211,6 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
      }
     }
     return details.offset.dx;
-//TODO:When scrolling the form the "Onayla" and "Reddet" writings should be invisible.
   }
 
   AppBar buildAppBar() => AppBar(

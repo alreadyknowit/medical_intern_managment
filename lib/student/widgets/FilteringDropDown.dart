@@ -43,7 +43,6 @@ class _FilteringDropDownState extends State<FilteringDropDown> {
     getInstitues();
     _getCourses();
 
-    // TODO: implement initState
     super.initState();
   }
 

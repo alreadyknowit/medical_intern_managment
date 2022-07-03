@@ -61,7 +61,7 @@ class PatientLog with ChangeNotifier {
     patientLog.setId(map['id']);
     patientLog.setStudent(Student.fromJson(map['student'])); // mapper ekle
     patientLog
-        .setCoordinator(Coordinator.fromJson(map['coordinator'])); // TODO:
+        .setCoordinator(Coordinator.fromJson(map['coordinator']));
     print(Speciality.fromJSON(map['speciality']));
     patientLog.setSpeciality(Speciality.fromJSON(map['speciality']));
     patientLog.setCourse(Course.fromJSON(map['course']));
@@ -253,26 +253,4 @@ class PatientLog with ChangeNotifier {
     return 'PatientLog{_id: $_id, _course: ${_course.toString()}, _speciality: ${speciality.toString()}, _attendingPhysician: ${_attendingPhysician.toString()}, _student: ${student.toString()}, _coordinator: ${_coordinator.toString()}, _institute: ${_institute.toString()}, _kayitNo: $_kayitNo, _yas: $_yas, _cinsiyet: $_cinsiyet, _sikayet: $_sikayet, _ayiriciTani: $_ayiriciTani, _kesinTani: $_kesinTani, _tedaviYontemi: $_tedaviYontemi, _etkilesimTuru: $_etkilesimTuru, _kapsam: $_kapsam, _gerceklestigiOrtam: $_gerceklestigiOrtam, _status: $_status, _createdAt: $_createdAt, updatedAt: $updatedAt}';
   }
 
-/*  PatientLog fromJson(Map<String,dynamic> map){
-    PatientLog patientLog = PatientLog();
-    patientLog.setId(map['id']);
-    patientLog.setStudent(Student.fromJson(map['student'])); // mapper ekle
-    patientLog.setAttendingPhysician(AttendingPhysician.fromJSON(map['attending']));
-    patientLog.setCoordinator(Coordinator(1, "Coordinator1", 20162003)); // TODO:
-    patientLog.setSpeciality(Speciality.fromJSON(map['speciality']));
-    patientLog.setCourse(Course.fromJSON(map['course']));
-    patientLog.setKayitNo(map['kayit_no']);
-    patientLog.setYas(map['yas']);
-    patientLog.setCinsiyet(map['cinsiyet']);
-    patientLog.setSikayet(map['sikayet']);
-    patientLog.setAyiriciTani(map['ayiriciTani']);
-    patientLog.setKesinTani(map['kesinTani']);
-    patientLog.setTedaviYontemi(map['tedaviYontemi']);
-    patientLog.setEtkilesimTuru(map['etkilesimTuru']);
-    patientLog.setKapsam(map['kapsam']);
-    patientLog.setGerceklestigiOrtam(map['gerceklestigiOrtam']);
-    patientLog.setStatus(map['status']);
-    patientLog.setCreatedAt(map['createdAt']);
-    return patientLog;
-  }*/
 }

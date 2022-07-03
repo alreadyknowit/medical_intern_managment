@@ -48,7 +48,6 @@ class _AcceptedFormsState extends State<AcceptedForms> {
                         text:
                             'Sanırım bir şeyler ters gitti', // non-emoji characters
                       ),
-                      //TODO:Emoji eklenecek
                       TextSpan(
                         text: ' 🧭', // emoji characters
                         style: TextStyle(

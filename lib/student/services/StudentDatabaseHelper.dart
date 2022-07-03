@@ -42,7 +42,7 @@ class StudentDatabaseHelper {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int id = preferences.getInt('id')!;
     var url = Uri.parse(
-        "${DBURL.url}/procedures?status=$status&studentId=1"); //TODO: id değiş.
+        "${DBURL.url}/procedures?status=$status&studentId=$id");
     var response = await http.get(url, headers: <String, String>{
       'Accept': 'application/json; charset=UTF-8',
     });
