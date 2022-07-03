@@ -41,10 +41,7 @@ Widget TibbiformViewBody(ProcedureLog form) {
 
   return SafeArea(
     child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Tibbi Uygulama Formu'),
-        ),
+
         body: Center(
           child: Container(
             decoration: BoxDecoration(

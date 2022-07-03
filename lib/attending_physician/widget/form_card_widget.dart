@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:internship_managing_system/attending_physician/provider/feedback_position_provider.dart';
 import 'package:internship_managing_system/model/PatientLog.dart';
+import 'package:internship_managing_system/model/ProcedureLog.dart';
 import 'package:internship_managing_system/shared/form_view.dart';
+import 'package:internship_managing_system/shared/tibbi_form_view.dart';
 import 'package:provider/provider.dart';
 
 
 class FormCardWidget extends StatelessWidget {
-  final PatientLog form;
+  final PatientLog? form;
+  final ProcedureLog? procedure;
   final bool isFormInFocus;
+
   const FormCardWidget({
     required this.form,
+    required this.procedure,
     required this.isFormInFocus,
   });
 
@@ -26,7 +31,8 @@ class FormCardWidget extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          FormView(formData: form),
+          form != null ?
+          FormView(formData: form!) : TibbiFormView(tibbiFormData: procedure!),
           if (isFormInFocus) buildLikeBadge(swipingDirection),
         ],
       ),

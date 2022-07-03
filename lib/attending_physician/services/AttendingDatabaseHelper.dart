@@ -5,6 +5,7 @@ import 'package:internship_managing_system/DBURL.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/PatientLog.dart';
+import '../../model/ProcedureLog.dart';
 
 class AttendingDatabaseHelper {
   Future<List<PatientLog>> fetchFormsFromDatabase(String status) async {
@@ -37,21 +38,54 @@ class AttendingDatabaseHelper {
   }
 
 // TODO: linkler değişecek
-/*  Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
-    var url = Uri.parse("${DBURL.url}/attending$status.php");
-    var response = await http.post(url);
+  Future<List<ProcedureLog>> fetchTibbiFormsFromDatabase(String status) async {
+    SharedPreferences pref =await SharedPreferences.getInstance();
+    int id = pref.getInt('id')!;
+    var url = Uri.parse("${DBURL.url}/procedures/attending?status=$status&attendingId=$id");
+    var response = await http.get(url);
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       List<ProcedureLog> forms =
-          data.map((e) => ProcedureLog.fromJson(e)).toList();
+          data.map((e) {
+            ProcedureLog log = ProcedureLog();
+            log = log.fromJson(e);
+            return log;
+          }) .toList();
 
       return forms;
     } else {
       throw Exception('Failed to load data');
     }
-  }*/
 
+  }
+
+  Future updateProcedureStatus(ProcedureLog procedure) async {
+    var url = Uri.parse("${DBURL.url}/procedures/${procedure.id}");
+    final response = await http.put(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          "studentId":procedure.student?.id,
+          "courseId": procedure.course?.id,
+          "attendingId":procedure.attendingPhysician?.id,
+          "kayitNo": procedure.kayitNo,
+          "specialityId":procedure.speciality?.id,
+          "coordinatorId":procedure.coordinator?.id,
+          "tibbiUygulama": procedure.tibbiUygulama,
+          "etkilesimTuru": procedure.etkilesimTuru,
+          "gerceklestigiOrtam": procedure.gerceklestigiOrtam,
+          "status": procedure.status
+        }));
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  //TODO
   Future updateFormStatus(PatientLog patientLog) async {
     var url = Uri.parse("${DBURL.url}/patient-logs/${patientLog.id}");
     final response = await http.put(url,

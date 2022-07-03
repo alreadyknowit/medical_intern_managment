@@ -7,7 +7,6 @@ import 'package:internship_managing_system/attending_physician/services/Attendin
 import 'package:internship_managing_system/shared/constants.dart';
 import 'package:internship_managing_system/shared/custom_spinkit.dart';
 import 'package:provider/provider.dart';
-
 import '../../model/PatientLog.dart';
 import '../../model/ProcedureLog.dart';
 
@@ -19,14 +18,11 @@ class AttendingPhysicianMain extends StatefulWidget {
 class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
   final AttendingDatabaseHelper _dbHelper = AttendingDatabaseHelper();
   List<PatientLog> formList = [];
-  List<ProcedureLog> tibbiFormList = [];
-  var lists;
-  CombineList() {
-    lists = List.from(formList)..add(tibbiFormList);
-  }
+  List<ProcedureLog> procedureList = [];
+  bool isProcedure=false;
 
-// TODO: linkler değişecek
   bool isLoading = false;
+
   getForms() async {
     setState(() {
       isLoading = true;
@@ -37,14 +33,14 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
       });
       return value;
     });
-   /* tibbiFormList = await _dbHelper
-        .fetchTibbiFormsFromDatabase('/tibbi/waiting')
-        .then((value) {
+
+    procedureList =
+        await _dbHelper.fetchTibbiFormsFromDatabase('waiting').then((value) {
       setState(() {
         isLoading = false;
       });
       return value;
-    });*/
+    });
   }
 
   @override
@@ -63,7 +59,30 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
               padding: const EdgeInsets.all(8),
               child: isLoading
                   ? spinkit
-                  : Column(
+                  : isProcedure ?
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  procedureList.isEmpty
+                      ? const Center(
+                    child: Text('Başka form kalmadı...'),
+                  )
+                      : Stack(
+                    children: procedureList.map((e) => buildForm(null, e),).toList(),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Expanded(
+                      child: Text(
+                        "Onaylamak için sağa doğru, reddetmek için sola doğru kaydırın.",
+                        textAlign: TextAlign.center,
+                        style: TEXT_STYLE.copyWith(fontSize: 14),
+                      )),
+                ],
+              )
+                  :
+              Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         formList.isEmpty
@@ -71,7 +90,7 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
                                 child: Text('Başka form kalmadı...'),
                               )
                             : Stack(
-                                children: formList.map(buildForm).toList(),
+                                children: formList.map((e) => buildForm(e,null),).toList(),
                               ),
                         const SizedBox(
                           height: 40,
@@ -94,49 +113,102 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
         );
       });
 
-  Widget buildForm(PatientLog form) {
-    final formIndex = formList.indexOf(form);
+  Widget buildForm(PatientLog? form, ProcedureLog? procedure) {
+    bool isFormInFocus;
+    if(form != null){
+      final formIndex = formList.indexOf(form);
+       isFormInFocus = formIndex == formList.length - 1;
+      print(isFormInFocus);
 
-    bool isFormInFocus = formIndex == formList.length - 1;
+      return buildListener(form,null, isFormInFocus);
+    }else{
+      final formIndex = procedureList.indexOf(procedure!);
+       isFormInFocus = formIndex == formList.length - 1;
+      print(isFormInFocus);
+      return buildListener(null,procedure, isFormInFocus);
+    }
 
-    return Listener(
+
+  }
+
+  Listener buildListener(PatientLog? form,ProcedureLog? procedure, bool isFormInFocus) {
+
+    return form != null ? Listener(
       onPointerMove: (pointerEvent) {
         final provider =
-            Provider.of<FeedbackPositionProvider>(context, listen: false);
+        Provider.of<FeedbackPositionProvider>(context, listen: false);
         provider.updatePosition(pointerEvent.localDelta.dx);
       },
       onPointerCancel: (_) {
         final provider =
-            Provider.of<FeedbackPositionProvider>(context, listen: false);
+        Provider.of<FeedbackPositionProvider>(context, listen: false);
         provider.resetPosition();
       },
       onPointerUp: (_) {
         final provider =
-            Provider.of<FeedbackPositionProvider>(context, listen: false);
+        Provider.of<FeedbackPositionProvider>(context, listen: false);
         provider.resetPosition();
       },
       child: Draggable(
-        child: FormCardWidget(form: form, isFormInFocus: isFormInFocus),
+        child: FormCardWidget(form: form,procedure: null, isFormInFocus: isFormInFocus),
         feedback: Material(
           type: MaterialType.transparency,
-          child: FormCardWidget(form: form, isFormInFocus: isFormInFocus),
+          child: FormCardWidget(form: form,procedure: null, isFormInFocus: isFormInFocus),
         ),
         childWhenDragging: Container(),
-        onDragEnd: (details) => onDragEnd(details, form),
+        onDragEnd: (details) => onDragEnd(details, form,null),
       ),
-    );
+    ) : Listener(
+      onPointerMove: (pointerEvent) {
+        final provider =
+        Provider.of<FeedbackPositionProvider>(context, listen: false);
+        provider.updatePosition(pointerEvent.localDelta.dx);
+      },
+      onPointerCancel: (_) {
+        final provider =
+        Provider.of<FeedbackPositionProvider>(context, listen: false);
+        provider.resetPosition();
+      },
+      onPointerUp: (_) {
+        final provider =
+        Provider.of<FeedbackPositionProvider>(context, listen: false);
+        provider.resetPosition();
+      },
+      child: Draggable(
+        child: FormCardWidget(form: null,procedure: procedure, isFormInFocus: isFormInFocus=true),
+        feedback: Material(
+          type: MaterialType.transparency,
+          child: FormCardWidget(form: null,procedure: procedure, isFormInFocus: isFormInFocus=true),
+        ),
+        childWhenDragging: Container(),
+        onDragEnd: (details) => onDragEnd(details, null,procedure),
+      ),
+    )
+    ;
   }
 
-  double onDragEnd(DraggableDetails details, PatientLog form) {
+  double onDragEnd(DraggableDetails details, PatientLog? form, ProcedureLog? procedure) {
     const minimumDrag = 100;
-    if (details.offset.dx > minimumDrag) {
-      form.setStatus('accept');
-      _dbHelper.updateFormStatus(form);
-      setState(() => formList.remove(form));
+    if (details.offset.dx > minimumDrag ) {
+      if(form != null){
+        form.setStatus('accept');
+        _dbHelper.updateFormStatus(form);
+        setState(() => formList.remove(form));
+      }else{
+        procedure!.setStatus('accept');
+        _dbHelper.updateProcedureStatus(procedure);
+        setState(() => procedureList.remove(procedure));
+      }
     } else if (details.offset.dx < -minimumDrag) {
-      form.setStatus('reject');
-      _dbHelper.updateFormStatus(form);
-      setState(() => formList.remove(form));
+     if(form != null){
+       form.setStatus('reject');
+       _dbHelper.updateFormStatus(form);
+       setState(() => formList.remove(form));
+     }else{
+       procedure!.setStatus('reject');
+       _dbHelper.updateProcedureStatus(procedure);
+       setState(() => procedureList.remove(procedure));
+     }
     }
     return details.offset.dx;
 //TODO:When scrolling the form the "Onayla" and "Reddet" writings should be invisible.
@@ -159,7 +231,14 @@ class _AttendingPhysicianMainState extends State<AttendingPhysicianMain> {
           ),
           const SizedBox(width: 16),
         ],
-        leading: Icon(Icons.person, color: BACKGROUND_COLOR.withOpacity(0.8)),
+        leading: InkWell(
+            onTap: () {
+              setState(() {
+                isProcedure = !isProcedure;
+              });
+            },
+            child:
+                Icon(FontAwesomeIcons.swift, color: BACKGROUND_COLOR.withOpacity(0.8),size: 40,)),
         title: FaIcon(
           FontAwesomeIcons.bookMedical,
           color: BACKGROUND_COLOR.withOpacity(0.8),

@@ -176,4 +176,9 @@ class ProcedureLog with ChangeNotifier {
     _id = value;
     notifyListeners();
   }
+
+  @override
+  String toString() {
+    return 'ProcedureLog{_id: $_id, _course: $_course, _speciality: $_speciality, _attendingPhysician: $_attendingPhysician, _student: $_student, _coordinator: $_coordinator, _institute: $_institute, _kayitNo: $_kayitNo, _tibbiUygulama: $_tibbiUygulama, _etkilesimTuru: $_etkilesimTuru, _gerceklestigiOrtam: $_gerceklestigiOrtam, _status: $_status, _createdAt: $_createdAt, updatedAt: $updatedAt}';
+  }
 }
